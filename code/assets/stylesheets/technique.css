@@ -1,0 +1,76 @@
+#logo {
+  width: 60px;
+  margin-left: 10px;
+}
+
+#technique_button_bar .dropdown-toggle {
+  width: 100px !important;
+}
+
+#technique_board {
+  height: 675px;
+  background-image: url("../images/field_white_half.jpg");
+  background-size: calc(100% - 20px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+}
+
+.player {
+  width: 60px;
+  height: 30px;
+  position: absolute;
+  margin-top: -15px;
+  margin-left: -30px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  z-index: 9;
+}
+
+.player:hover {
+  background-image: url("../images/player_active.png");
+  border: 3px dashed #28a745;
+}
+
+.player.defense {
+  -webkit-transform: rotateX(180deg);
+  transform: rotateX(180deg);
+  background-image: url("../images/player_defense.png");
+}
+
+.player.offense {
+  background-image: url("../images/player_offense.png");
+}
+
+.jersey_nr.defense,
+.jersey_role.defense {
+  color: #007bff;
+}
+
+.jersey_nr.offense,
+.jersey_role.offense {
+  color: #dc3545;
+}
+
+.jersey_nr,
+.jersey_role {
+  position: relative;
+  top: 30px;
+  font-size: 20px;
+  display: none;
+}
+
+.jersey_nr {
+  left: 0px;
+}
+
+.jersey_role {
+  left: 15px;
+}
+
+.action_arc {
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+}

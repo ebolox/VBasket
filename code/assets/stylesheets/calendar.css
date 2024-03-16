@@ -1,0 +1,99 @@
+#btn_calendar_activities > .btn-group-append,
+#btn_calendar_teams > .btn-group-append {
+  width: 150px;
+}
+
+#calendar_board table tbody td {
+  border: 1px solid var(--smurf);
+}
+
+#calendar_board table thead th,
+.hours,
+.minutes {
+  color: var(--cacao);
+}
+
+#calendar_board table {
+  border: 0;
+}
+
+#calendar_board table thead th {
+	font-weight: 600;
+  text-align: center;
+  border: 0;
+}
+
+#calendar_board table tbody td:first-child {
+  width: 40px;
+	vertical-align: top;
+  border: 0;
+}
+
+#calendar_board table thead th.cell-limit {
+	height: 8px;
+  border-left: 1px solid var(--smurf);
+}
+
+#calendar_board table thead th.cell-limit:last-child {
+  border-right: 1px solid var(--smurf);
+}
+
+#calendar_board table tbody td.cell-limit {
+	width: 8px;
+  border-top: 1px solid var(--smurf);
+	border-left: 0;
+}
+
+.hours {
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.minutes {
+  font-size: 12px;
+}
+
+.field-1,
+.field-2 {
+  width: 80px !important;
+  max-width: 80px !important;
+  height: 60px;
+  padding: 4px;
+}
+
+
+.field-1 {
+  background-color: var(--mint-light);
+  border-right: 0 !important;
+}
+
+.field-2 {
+  background-color: var(--hazelnut-light);
+  border-left: 0 !important;
+}
+
+.activity-event,
+.activity-game,
+.activity-training {
+	position: absolute;
+  width: 60px;
+  color: white;
+  text-align: center;
+  padding: 1px;
+  border: 1px solid var(--apricot);
+  border-top: 8px solid var(--apricot);
+  border-radius: 0 0 30px 30px;
+  opacity: .8;
+}
+
+.activity-event {
+  background-color: var(--air-light);
+}
+
+.activity-game {
+  background-color: var(--cacao);
+}
+
+.activity-training {
+  background-color: var(--bluegrey);
+}

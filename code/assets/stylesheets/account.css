@@ -1,0 +1,21 @@
+#btn_account_named > .btn-group {
+  width: 180px !important;
+}
+
+#btn_account_named #account_named {
+  border-top-left-radius: .2rem;
+  border-bottom-left-radius: .2rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#btn_account_named > .btn-secondary {
+  border-radius: 0;
+}
+
+#btn_account_named > .btn-secondary:disabled {
+  font-weight: 600;
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 200px !important;
+}

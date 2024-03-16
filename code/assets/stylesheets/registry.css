@@ -1,0 +1,24 @@
+/* Select dropdown */
+#registry_teams,
+#registry_teams + .dropdown-menu,
+#registry_columns,
+#registry_columns + .dropdown-menu {
+  width: 130px;
+  text-align: left;
+}
+
+#registry_columns.dropdown-toggle::after,
+#registry_teams.dropdown-toggle::after {
+  float: right;
+}
+
+#btn_registry_teams .dropdown-item:hover,
+#btn_registry_columns .dropdown-item:hover {
+  color: #0069d9;
+  background-color: unset;
+}
+
+#btn_registry_teams .dropdown-item.hidden
+#btn_registry_columns .dropdown-item.hidden {
+  color: #212529;
+}
