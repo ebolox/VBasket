@@ -49,11 +49,11 @@
           <?= button_dropdown ($model, "team", $team_icon, $game["team"], $team_options, $team_attributes); ?>
           <?= button_dropdown ($model, "opponent", $team_icon, $game["opponent"], $team_options, $team_attributes); ?>
 
-          <?= button_dropdown ($model, "frequence", "Frequenza", $game["frequence"], $frequence_options, $frequence_attributes); ?>
-          <?= button_dropdown ($model, "week_day", "Giorno", $game["week_day"], $week_day_options, $week_day_attributes); ?>
-          <?= field_date ($model, "date_on", "Data", $game["date_on"], array("icon" => "fas fa-calendar")); ?>
-          <?= field_text ($model, "time_start", "Inizio", $game["time_start"]); ?>
-          <?= field_text ($model, "time_stop", "Fine", $game["time_stop"]); ?>
+          <?= button_dropdown ("date", "frequence", "Frequenza", $game["frequence"], $frequence_options, $frequence_attributes); ?>
+          <?= button_dropdown ("date", "week_day", "Giorno", $game["week_day"], $week_day_options, $week_day_attributes); ?>
+          <?= field_date ("date", "date_on", "Data", $game["date_on"], array("icon" => "fas fa-calendar")); ?>
+          <?= field_text ("date", "time_start", "Inizio", $game["time_start"]); ?>
+          <?= field_text ("date", "time_stop", "Fine", $game["time_stop"]); ?>
 
         </div>
       </div>

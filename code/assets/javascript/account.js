@@ -20,7 +20,7 @@ $(document).ready( function () {
   });
 
   // Gestione pulsanti form
-  set_tab_buttons (action, model, item_id);
+  set_tab_buttons (action, false, model, item_id);
 
   if (action == "edit") {
 

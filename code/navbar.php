@@ -3,7 +3,7 @@
   $account_image = get_image("account", $account_id, array("main" => false));
   $account_name = compose_account_name($account_id);
 
-  $account_btn = '<a id="navlink_account" class="nav-link" href="#"><i class="bi bi-person-lines-fill"></i></a>';
+  $account_btn = '<a id="navlink_account" class="navlink btn-link" href="#"><i class="bi bi-person-lines-fill"></i></a>';
   $account_script = '';
   if (isset($account_image)) {
     $account_btn = '<div id="navlink_account" class="btn-link" title="' . $account_name . '" /></div>';
@@ -20,11 +20,11 @@
           <a id="navlink_home" class="p-2 text-dark" href="#"><img id="logo" src="assets/images/logo_big.jpg" /></a>
         </div>
         <div class="col row">
-          <a id="navlink_calendar" class="col navlink active" href="#">Calendario</a>
-          <a id="navlink_registry" class="col navlink" href="#">Anagrafica</a>
-          <a id="navlink_activity" class="col navlink" href="#">Attività</a>
-          <a id="navlink_technique" class="col navlink" href="#">Area tecnica</a>
-          <a id="navlink_book" class="col navlink" href="#">Rubrica</a>
+          <a id="navlink_calendar" class="col navlink btn-link active" href="#">Calendario</a>
+          <a id="navlink_activity" class="col navlink btn-link" href="#">Attività</a>
+          <a id="navlink_registry" class="col navlink btn-link" href="#">Anagrafica</a>
+          <a id="navlink_book" class="col navlink btn-link" href="#">Rubrica</a>
+          <a id="navlink_technique" class="col navlink btn-link" href="#">Area tecnica</a>
         </div>
       </nav>
       <input type="hidden" id="account_id" name="account[id]" value="<?= $account_id; ?>" />

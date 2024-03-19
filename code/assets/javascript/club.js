@@ -17,7 +17,7 @@ $(document).ready( function () {
   });
 
   // Gestione pulsanti form
-  set_tab_buttons (action, model, item_id);
+  set_tab_buttons (action, "book", model, item_id);
 
   if (action == "edit") {
 

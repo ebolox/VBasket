@@ -50,7 +50,7 @@
         get_registry_by_team($_POST['team_id']);
 
       } elseif ($_POST['action'] === 'get_book') {
-        get_book($_POST['section_tag']);
+        get_book($_POST['section']);
 
       } elseif ($_POST['action'] === 'get_calendar_by') {
         get_calendar_by($_POST['activity_tag'], $_POST['team_tag'], $_POST['account_id']);
@@ -509,7 +509,8 @@
   // o ne crea uno nuovo
   function get_item_tab () {
     global $db_conn;
-
+    global $sql_games;
+echo "<pre>" . var_dump($_POST) . "</pre>";
     if (isset($_POST) && isset($_POST["action"]) && $_POST["action"] == "new") {
 
       $sql = "SELECT MAX(id) as id FROM " . $_POST["model"] . "s";
@@ -552,7 +553,7 @@
       }
     } else {
 
-      $sql = "SELECT * FROM " . $_POST["model"] . "s WHERE id=" . $_POST["id"];
+      $sql = ($_POST["model"] == "game") ? $sql_games : "SELECT * FROM " . $_POST["model"] . "s WHERE id=" . $_POST["id"];
       $result = $db_conn->query($sql);
 
       $response = $result->fetch_array();

@@ -107,10 +107,10 @@ function get_account_tab (action, account_id = null) {
 }
 
 // Carica la scheda dell'elemento desiderato
-function get_item_tab (model, action, tab = null, item_id = null) {
+function get_item_tab (action, model, tab = null, item_id = null) {
 
   if (!tab) {
-    tab = $("input[name='" + model + "[section]']").val();
+    tab = $("#section_btn").attr("data-value");
   }
   if (action == "edit" && !item_id) {
     item_id = $("#" + model + "_list > table > tbody > tr.text-success").attr("id").replace("item_", "");
@@ -126,17 +126,17 @@ function get_item_tab (model, action, tab = null, item_id = null) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("get_item_tab complete"); },
-    onLoading: function() { console.log("get_item_tab loading"); }
+    onComplete: function() { console.log("get " + tab + " tab complete"); },
+    onLoading: function() { console.log("get " + tab + " tab loading"); }
   });
 }
 
-// Aggiorna la tabella al click su opzione dropdown Area
-function get_activity (section_tag) {
+// Aggiorna la tabella al click su pulsante Sezione
+function get_activity (section) {
 
   params = {
     action: "get_activity",
-    section_tag: section_tag
+    model: section
   };
 
   update_frontend("activity_list", "activity.php", {
@@ -290,7 +290,7 @@ function set_radio_value (btn_radio) {
 }
 
 // Gestione dei pulsanti Scheda (tab)
-function set_tab_buttons (action, model, item_id) {
+function set_tab_buttons (action, model_area, model, item_id) {
 
   if (action == "new") {
     $.each(["new", "edit", "print"],  function (i, param) {
@@ -300,7 +300,7 @@ function set_tab_buttons (action, model, item_id) {
 
   if (action == "edit") {
     $("#" + model + "_print").click(function () { print_item_tab (); });
-    $("#" + model + "_new").click(function () { get_item_tab ("new", model) });
+    $("#" + model + "_new").click(function () { get_item_tab ("new", model_area, model); });
     $("#" + model + "_edit").hide();
   }
 
@@ -332,7 +332,7 @@ function show_modal_choice (show, title = false, choices = {}) {
   // Creiamo il blocco delle scelte sottoforma di pulsanti
   choices_code = $("<div></div>").addClass("modal-choices text-center");
   for (key in choices) {
-    choices_code.append('<button type="button" class="btn btn-sm ' + choices[key]["class"] + '" onclick="' + choices[key]["click"] + '">' + choices[key]["label"] + '</button>');
+    choices_code.append('<button type="button" class="btn btn-sm ' + choices[key]["class"] + '" data-value="' + choices[key]["tag"] + '" onclick="' + choices[key]["click"] + '">' + choices[key]["label"] + '</button>');
   }
 
   // Titolo e scelte in modale

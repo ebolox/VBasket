@@ -9,9 +9,9 @@ var activity_classes = ".activity-event, .activity-game, .activity-training";
 // Modale scelta attività da creare
 var activity_modal_title = "Quale attività vuoi creare?";
 var activity_modal_choices = [
-  { "label": "Allenamento", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'training');" },
-  { "label": "Partita", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'game');" },
-  { "label": "Evento", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'event');" }
+  { "label": "Allenamento", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'activity', 'training');" },
+  { "label": "Partita", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'activity', 'game');" },
+  { "label": "Evento", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'activity', 'event');" }
 ];
 
 $(document).ready( function () {

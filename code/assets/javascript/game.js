@@ -25,7 +25,7 @@ $(document).ready( function () {
   radio_game_field.find(".btn").click(function () { set_radio_value ($(this)); });
 
   // Gestione pulsanti form
-  set_tab_buttons (action, model, item_id);
+  set_tab_buttons (action, "activity", model, item_id);
 
   // Pikaday initialization
   var picker_date_on = new Pikaday({

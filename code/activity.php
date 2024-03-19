@@ -13,7 +13,7 @@
     array("value" => "event", "label" => "Evento")
   );
 
-  $section_tag = ($_SERVER["REQUEST_METHOD"] === "POST") ? $_POST["section_tag"] : "game";
+  $section = ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST["section"])) ? $_POST["section"] : "game";
 
   if ($_SERVER["REQUEST_METHOD"] === "GET") {
 ?>
@@ -26,7 +26,7 @@
   }
 ?>
 
-    <?= get_activity($section_tag); ?>
+    <?= get_activity($section); ?>
 
 <?php
   if ($_SERVER["REQUEST_METHOD"] === "GET") {

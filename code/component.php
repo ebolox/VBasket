@@ -57,9 +57,12 @@
     $code = '<input type="hidden" name="' . $btn_name . '[' . $param . ']" value="' . $value . '" />';
     $code .= '<div class="btn-group btn-radio" id="' . $btn_id . '" role="group" aria-label="' . $label . '">';
     foreach ($options as $opt) {
-      $code .= '<button type="button" class="btn btn-success btn-sm" data-value="' . $opt["value"] . '">';
-      $code .= '<i class="' . $opt["icon_class"] . '"></i><span>' . $opt["label"] . '</span>';
-      $code .= '</button>';
+      $btn = '<span>' . $opt["label"] . '</span>';
+      if (!empty($opt["icon_class"])) {
+        $btn = '<i class="' . $opt["icon_class"] . '"></i><span>' . $btn;
+      }
+
+      $code .= '<button type="button" class="btn btn-success btn-sm" data-value="' . $opt["value"] . '">' . $btn . '</button>';
     }
     $code .= '</div>';
 
@@ -90,20 +93,22 @@
 
     $code = '<div class="row contextual-navbar sticky-top">';
     $code .= '<div class="col ml-4">';
-    $code .= '<h4 class="text-primary text-uppercase">';
-    $code .= '<i class="fa-solid fa-folder mr-2 d-inline"></i>' . $labels[$area];
+    $code .= '<h5 class="text-uppercase">';
+    $code .= '<i class="fa-solid fa-folder mr-2"></i>' . $labels[$area];
     if (!empty($section)) {
-      $code .= '<i class="fa-solid fa-folder-tree mr-2 ml-4 d-inline"></i>' . $labels[$section];
-      $code .= '<button type="button" id="' . $area .'_section" class="btn btn-outline-primary btn-sm btn-circle ml-2 d-inline">';
-      $code .= '<i class="fa-solid fa-sort-down"></i>';
+      $code .= '<i class="fa-solid fa-folder-tree mr-2 ml-4"></i>';
+      $code .= '<span id="section_title">' . $labels[$section] . '</span>';
+      $code .= '<button type="button" id="section_btn" class="btn btn-outline-primary btn-vb btn-icon btn-circle border-0 ml-2" data-value="' . $section . '">';
+      $code .= '<i class="fa-solid fa-caret-down" style="left: -2px;"></i>';
       $code .= '</button>';
     }
-    $code .= '</h4></div>';
+    $code .= '</h5>';
+    $code .= '</div>';
     $code .= '<div class="col text-right mr-2">';
     foreach ($buttons as $btn) {
       $btn_status = $params[$btn]["disabled"] ? " disabled" : "";
 
-      $code .= '<button type="button" id="' . $area .'_' . $btn . '" class="btn btn-outline-' . $params[$btn]["color"] . ' btn-sm btn-circle ml-2"' . $btn_status . '>';
+      $code .= '<button type="button" id="' . $area .'_' . $btn . '" class="btn btn-outline-' . $params[$btn]["color"] . ' btn-icon btn-circle border-0 ml-2"' . $btn_status . '>';
       $code .= '<i class="' . $params[$btn]["icon_class"] . '"></i>';
       $code .= '</button>';
     }
