@@ -33,27 +33,41 @@
 
       <?= form_variables($action, $model, $game["id"]); ?>
       <div class="form-row">
-        <div class="col-md-5 text-center">
+        <div class="col-md-4 text-center">
 
           <div class="vb-image">
             <img id="game_img" class="img-fluid" src="assets/images/logo_big.jpg" />
           </div>
 
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
 
-          <?= button_select ($model, "type", "Tipo", $game["type"], $type_options); ?>
-          <?= field_text ($model, "round", "Turno", $game["round"]); ?>
-          <?= button_select ($model, "field", "Campo", $game["field"], $field_options); ?>
-          <?= button_select ($model, "side", "Casa/Traferta", $game["side"], $side_options); ?>
-          <?= button_dropdown ($model, "team", $team_icon, $game["team"], $team_options, $team_attributes); ?>
-          <?= button_dropdown ($model, "opponent", $team_icon, $game["opponent"], $team_options, $team_attributes); ?>
-
-          <?= button_dropdown ("date", "frequence", "Frequenza", $game["frequence"], $frequence_options, $frequence_attributes); ?>
-          <?= button_dropdown ("date", "week_day", "Giorno", $game["week_day"], $week_day_options, $week_day_attributes); ?>
-          <?= field_date ("date", "date_on", "Data", $game["date_on"], array("icon" => "fas fa-calendar")); ?>
-          <?= field_text ("date", "time_start", "Inizio", $game["time_start"]); ?>
-          <?= field_text ("date", "time_stop", "Fine", $game["time_stop"]); ?>
+          <ul class="form-label">
+            <li>Tipo</li>
+            <li>Turno</li>
+            <li>Sede</li>
+            <li>Campo</li>
+            <li>Squadra</li>
+            <li>Avversario</li>
+            <li>Data</li>
+            <li style="display: none;">Frequenza</li>
+            <li style="display: none;">Giorno</li>
+            <li>H inizio</li>
+            <li>H fine</li>
+          </ul>
+          <ul class="form-data">
+            <li><?= vb_dropdown ($model, "type", $game["type"], $type_options); ?></li>
+            <li><?= vb_text ($model, "round", $game["round"]); ?></li>
+            <li><?= vb_dropdown ($model, "side", $game["side"], $side_options); ?></li>
+            <li><?= vb_dropdown ($model, "field", $game["field"], $field_options); ?></li>
+            <li><?= vb_dropdown ($model, "team", $game["team"], $team_options); ?></li>
+            <li><?= vb_dropdown ($model, "opponent", $game["opponent"], $team_options); ?></li>
+            <li><?= vb_date ($model, "date_on", $game["date_on"]); ?></li>
+            <li style="display: none;"><?= vb_dropdown ($model, "frequence", $game["frequence"], $frequence_options); ?></li>
+            <li style="display: none;"><?= vb_dropdown ($model, "week_day", $game["week_day"], $week_day_options); ?></li>
+            <li><?= vb_text ($model, "time_start", $game["time_start"]); ?></li>
+            <li><?= vb_text ($model, "time_stop", $game["time_stop"]); ?></li>
+          </ul>
 
         </div>
       </div>

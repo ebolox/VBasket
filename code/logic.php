@@ -510,7 +510,7 @@
   function get_item_tab () {
     global $db_conn;
     global $sql_games;
-echo "<pre>" . var_dump($_POST) . "</pre>";
+
     if (isset($_POST) && isset($_POST["action"]) && $_POST["action"] == "new") {
 
       $sql = "SELECT MAX(id) as id FROM " . $_POST["model"] . "s";

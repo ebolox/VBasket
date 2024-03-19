@@ -226,4 +226,58 @@
 
     return $code;
   }
+
+  function vb_date ($model, $param, $value = "", $options = []) {
+
+    $field_id = $model . "_" . $param;
+    $field_name = $model . "[" . $param . "]";
+
+    $code = '<div class="vb-date">';
+    $code .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" class="form-control" placeholder="Scegli la data" />';
+    if (isset($params["icon"])) {
+      $code .= '<i class="' . $params["icon"] . ' input-prefix text-secondary"></i>';
+    }
+    $code .= '</div>';
+
+    return $code;
+  }
+
+  function vb_dropdown ($model, $param, $value = "", $options = []) {
+
+    $field_id = $model . "_" . $param;
+    $field_name = $model . "[" . $param . "]";
+    $field_label = "";
+    foreach ($options as $opt) {
+      if ($opt["value"] === $value) {
+        $field_label = $opt["label"];
+        break;
+      }
+    }
+
+    $code = '<div class="dropdown vb-dropdown">';
+    $code .= '<button class="btn btn-secondary dropdown-toggle form-control" type="button" id="' . $field_id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="' . $param . '">' . $field_label . '</button>';
+    $code .= '<input type="hidden" name="' . $field_name . '" value="' . $value . '" />';
+    $code .= '<div class="dropdown-menu" aria-labelledby="' . $field_id . '">';
+    foreach ($options as $opt) {
+        $active_class = " active";
+        $active_icon = '<i class="fa-solid fa-check"></i>';
+      $code .= '<a class="dropdown-item' . $active_class . '" href="#" data-value="' . $opt["value"] . '">' . $opt["label"] . $active_icon . '</a>';
+    }
+    $code .= '</div>';
+    $code .= '</div>';
+
+    return $code;
+  }
+
+  function vb_text ($model, $param, $value = "", $options = []) {
+
+    $field_id = $model . "_" . $param;
+    $field_name = $model . "[" . $param . "]";
+
+    $code = '<div class="vb-text">';
+    $code .= '<input type="text" class="form-control" id="' . $field_id . '" name="' . $field_name . '" value="' . $value . '" placeholder="' . $param . '" />';
+    $code .= '</div>';
+
+    return $code;
+  }
 ?>
