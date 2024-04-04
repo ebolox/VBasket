@@ -10,8 +10,9 @@ body {
 }
 
 :root {
-  --hazelnut: #e6e4c3;
   --hazelnut-light: rgba(247, 246, 217, 0.5);
+  --hazelnut: #e6e4c3;
+  --hazelnut-dark: #918f75;
   --mint-light: #d0f2e8;
   --smurf: #81c8df;
   --smurf-dark: #0069d9;
@@ -27,7 +28,13 @@ body {
   --bluegrey-light: #4161ac;
   --disabled: #e9ecef;
   --size-24: 24px;
+  --size-28: 28px;
   --size-32: 32px;
+  --size-xs: 10px;
+  --size-s: 12px;
+  --size-m: 14px;
+  --size-l: 16px;
+  --size-xl: 18px;
 }
 
 .form-signin {
@@ -42,6 +49,18 @@ body {
   background-color: #c6c9eb !important;
 }
 
+.btn-vb {
+  color: var(--cacao) !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+}
+
+.btn-vb:hover {
+  color: white !important;
+  background-color: var(--apricot) !important;
+}
+
 .btn {
   cursor: pointer;
 }
@@ -54,28 +73,19 @@ body {
   opacity: .3;
 }
 
-.btn-vb {
-  color: var(--cacao);
-  background-color: transparent;
-  border: 0;
-}
-.btn-vb:hover {
-  color: var(--white);
-  background-color: var(--smurf-dark);
-  border: 0;
-}
-
 .btn-icon {
-  width: var(--size-24);
-  height: var(--size-24);
+  width: var(--size-28);
+  height: var(--size-28);
   font-size: 16px;
-  padding: .25rem .5rem;
   line-height: 1.5;
+  padding: .375rem;
 }
 .btn-icon > i {
   position: relative;
   top: -4px;
-  left: -3px;
+}
+.btn-icon > i.bi-caret-down-fill {
+  top: -3px;
 }
 
 .btn-circle {
@@ -91,10 +101,10 @@ body {
   border-bottom-left-radius: 0;
 }
 
-.btn-group-append > .btn > i.bi {
+/*.btn-group-append > .btn > i.bi {
   color: #fff;
   font-weight: bold;
-}
+}*/
 
 .btn-sm {
   height: var(--size-32);
@@ -112,6 +122,16 @@ body {
 .btn-radio button.btn-success:hover,
 .btn-radio button.btn-success.active:hover {
   background-color: #218838 !important;
+}
+
+.btn-outline-basket {
+  color: var(--cacao);
+  border-color: var(--cacao);
+}
+
+.btn-outline-basket:hover {
+  color: white;
+  background-color: var(--cacao);
 }
 
 .dropdown-toggle::after {
@@ -138,6 +158,12 @@ body {
   margin: 0 10px;
 }
 
+.vb-btn-dropdown > div.btn-group {
+  width: 120px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .vb-btn-dropdown > .btn-secondary:disabled {
   color: #fff;
   background-color: var(--bluegrey);
@@ -145,14 +171,17 @@ body {
   border-radius: 0;
 }
 
-.vb-btn-dropdown.vb-btn-icon > .btn-secondary:disabled {
-  width: 40px !important;
+.vb-btn-dropdown.vb-btn-icon > .btn-group {
+  width: unset !important;
+  border-radius: 50%;
 }
 
-.vb-btn-dropdown > div.btn-group {
-  width: 120px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+.vb-btn-dropdown.vb-btn-icon > .btn-group > .dropdown-toggle::after {
+  display: none;
+}
+
+.vb-btn-dropdown.vb-btn-icon > .btn-secondary:disabled {
+  width: 40px !important;
 }
 
 .vb-field-date > .input-group-prepend,
@@ -238,7 +267,7 @@ body {
   cursor: pointer;
 }
 .vb-content.vb-list .table-striped tbody tr:hover {
-  color: var(--smurf-dark);
+  color: var(--apricot);
 }
 .vb-content.vb-list .table-striped tbody tr td {
   font-weight: 600;
@@ -249,18 +278,18 @@ body {
   background-color: var(--hazelnut-light);
 }
 
-.contextual-navbar {
+.form-navbar {
   padding-top: 6px;
   padding-bottom: 6px;
   background-color: var(--hazelnut);
   margin: 0 0 20px 0;
 }
 
-.contextual-navbar h5 {
+.form-navbar h5 {
   color: var(--bluegrey-light);
 }
 
-.contextual-navbar h5 > i {
+.form-navbar h5 > i {
   font-size: 1rem;
 }
 
@@ -346,13 +375,16 @@ a.btn-link {
   color: var(--cacao);
   text-decoration: none;
 }
+a.btn-link:focus,
 a.btn-link:hover {
   color: var(--apricot-light);
   text-decoration: none;
 }
 a.btn-link.active,
+a.btn-link.active:focus,
 a.btn-link.active:hover {
   color: var(--apricot);
+  background-color: transparent;
   text-decoration: none;
   cursor: default;
 }
@@ -413,7 +445,8 @@ a#navlink_account > i.bi {
   padding-left: 24px;
 }
 .form-label {
-  padding-right: 0;
+  padding-right: 40px;
+  border-right: 1px solid var(--hazelnut);
 }
 
 .form-data > li,
@@ -422,22 +455,53 @@ a#navlink_account > i.bi {
   padding: 0;
   margin-bottom: 16px;
 }
-.form-label > li {
-  padding-right: 24px;
-  border-right: 1px solid var(--smurf);
-}
-.vb-date > button, .vb-date > input,
-.vb-dropdown > button, .vb-dropdown > input,
-.vb-text > button, .vb-text > input {
+
+.vb-date > button.form-control, .vb-date > input.form-control,
+.vb-dropdown > button.form-control, .vb-dropdown > input.form-control,
+.vb-text > button.form-control, .vb-text > input.form-control {
   color: var(--cacao);
   text-align: left;
   background-color: transparent;
   border: 0;
+  cursor: pointer;
+}
+.vb-date > button.form-control:hover, .vb-date > input.form-control:hover,
+.vb-dropdown > button.form-control:hover, .vb-dropdown > input.form-control:hover,
+.vb-text > button.form-control:hover, .vb-text > input.form-control:hover {
+  color: var(--apricot-light);
+  background-color: white;
+}
+.vb-date > button.form-control:focus, .vb-date > input.form-control:focus.
+.vb-dropdown > button.form-control:focus, .vb-dropdown > input.form-control:focus,
+.vb-text > button.form-control:focus, .vb-text > input.form-control:focus {
+  color: var(--cacao);
+  background-color: white;
+}
+
+.vb-date:hover > input.form-control::placeholder {
+  color: var(--apricot-light);
 }
 
 .vb-dropdown > button.dropdown-toggle::after {
   float: right;
-  margin-top: .5rem important!;
-  margin-left: 0;
+  margin-top: .5rem;
+  margin-left: 0 !important;
+}
+
+.vb-dropdown > div.dropdown-menu {
+  width: 100%;
+}
+
+.vb-dropdown a.dropdown-item:hover {
+  background-color: transparent;
+}
+
+.vb-dropdown a.dropdown-item.active > i {
+  float: right;
+  margin-top: 3px;
 }
 /* fine */
+
+tr.game-row.text-success > td.game-toolbar button.btn-icon {
+  visibility: hidden;
+}

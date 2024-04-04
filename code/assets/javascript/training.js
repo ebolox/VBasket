@@ -14,7 +14,7 @@ $(document).ready( function () {
 
   // Gestione campi squadra
   $("#btn_" + model + "_team").find(".dropdown-menu > .dropdown-item").click( function () {
-    team_id = $(this).attr("data-value");
+    team_id = $(this).data("value");
 
     set_value ($(this));
     update_item (model, item_id, param, team_id);
@@ -25,7 +25,7 @@ $(document).ready( function () {
   radio_training_field.find(".btn").click(function () { set_radio_value ($(this)); });
 
   // Gestione pulsanti form
-  set_tab_buttons (action, "activity", model, item_id);
+  set_tab_buttons (action, model, item_id);
 
   // Pikaday initialization
   var picker_date_on = new Pikaday({

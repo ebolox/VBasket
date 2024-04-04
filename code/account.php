@@ -41,7 +41,7 @@
 ?>
   <div id="account_form" class="vb-content vb-form mt-4">
 
-    <?= contextual_navbar($model, array("print", "new", "delete"), false); ?>
+    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 
     <form>
 
@@ -100,7 +100,7 @@
                 <a class="dropdown-item" href="#" data-value="l+f+s">Cognome N.</a>
               </div>
             </div>
-            <button id="account_alias" class="btn btn-secondary text-dark" disabled><?= $named_full; ?></button>
+            <button id="account_alias" class="btn text-dark" disabled><?= $named_full; ?></button>
           </div>
         </div>
         <div class="form-group ml-3">

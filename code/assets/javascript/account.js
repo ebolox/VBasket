@@ -15,12 +15,12 @@ $(document).ready( function () {
   // Gestione dropdown Ruolo
   $("#btn_" + model + "_role").find(".dropdown-menu > .dropdown-item").click(function () {
     set_value ($(this));
-    update_account ("role", $(this).attr("data-value"));
-    teams_by_role ($(this).attr("data-value"));
+    update_account ("role", $(this).data("value"));
+    teams_by_role ($(this).data("value"));
   });
 
   // Gestione pulsanti form
-  set_tab_buttons (action, false, model, item_id);
+  set_tab_buttons (action, model, item_id);
 
   if (action == "edit") {
 
@@ -32,14 +32,14 @@ $(document).ready( function () {
     // Gestione campi con dropdown
     $("#btn_" + model + "_named").find(".dropdown-menu > .dropdown-item").click(function () {
       set_value ($(this));
-      update_account ("named", $(this).attr("data-value"));
+      update_account ("named", $(this).data("value"));
       set_account_name ();
     });
 
     // Gestione campi squadra
     $.each(["team_a", "team_b", "team_c"],  function (i, param) {
       $("#btn_" + model + "_" + param).find(".dropdown-menu > .dropdown-item").click(function () {
-        team_id = $(this).attr("data-value");
+        team_id = $(this).data("value");
 
         set_value ($(this));
         update_account (param, team_id);
@@ -171,15 +171,15 @@ function update_team_list (team, team_id) {
   $("#btn_" + model + "_team_a, #btn_" + model + "_team_b, #btn_" + model + "_team_c").find(".dropdown-menu > .dropdown-item").show();
 
   $("#btn_" + model + "_" + team).find(".dropdown-menu > .dropdown-item").each( function () {
-    if ([team_a_id, team_b_id].indexOf($(this).attr("data-value")) >= 0) { $(this).hide(); }
+    if ([team_a_id, team_b_id].indexOf($(this).data("value")) >= 0) { $(this).hide(); }
   });
 
   $("#btn_" + model + "_" + team_a).find(".dropdown-menu > .dropdown-item").each( function () {
-    if ([team_id, team_b_id].indexOf($(this).attr("data-value")) >= 0) { $(this).hide(); }
+    if ([team_id, team_b_id].indexOf($(this).data("value")) >= 0) { $(this).hide(); }
   });
 
   $("#btn_" + model + "_" + team_b).find(".dropdown-menu > .dropdown-item").each( function () {
-    if ([team_id, team_a_id].indexOf($(this).attr("data-value")) >= 0) { $(this).hide(); }
+    if ([team_id, team_a_id].indexOf($(this).data("value")) >= 0) { $(this).hide(); }
   });
 }
 

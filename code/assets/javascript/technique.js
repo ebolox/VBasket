@@ -73,7 +73,7 @@ $(document).ready( function () {
 // Gestisce i menù contestuali per l'elemento selezionato
 function menu_selected (selected) {
 
-  menu_value = selected.attr("data-value");
+  menu_value = selected.data("value");
   hidden_value = menu_value.replace("_parameters", "");
 
   // Aggiorniamo i parametri del pulsante

@@ -61,7 +61,7 @@
   </div>
   <div id="<?= $model ?>_content" class="vb-content vb-list mt-4">
 
-    <?= contextual_navbar($model, array("print", "new"), false); ?>
+    <?= form_navbar($model, array("print", "new"), false); ?>
     <input type="hidden" name="activity[type]" value />
     <input type="hidden" name="activity[id]" value />
 

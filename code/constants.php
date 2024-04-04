@@ -84,4 +84,18 @@
     array("value" => 6, "label" => $days[6])
   );
 // Fine
+
+  // Parametri dei btn-icon
+  $btn_params = array(
+    "new" => array("color" => "success", "icon_class" => "bi bi-plus-lg", "disabled" => false),
+    "edit" => array("color" => "primary", "icon_class" => "bi bi-pencil", "disabled" => true),
+    "delete" => array("color" => "danger", "icon_class" => "bi bi-trash3", "disabled" => true),
+    "print" => array("color" => "primary", "icon_class" => "bi bi-printer", "disabled" => false)
+  );
+
+  // Aree e Sezioni
+  $vb = array(
+    "activity" => array("event", "game", "training"),
+    "book" => array("club", "field")
+  );
 ?>

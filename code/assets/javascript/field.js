@@ -13,11 +13,11 @@ $(document).ready( function () {
   // Gestione campi con dropdown
   $("#btn_" + model + "_town").find(".dropdown-menu > .dropdown-item").click(function () {
     set_value ($(this));
-    update_item (model, item_id, "town", $(this).attr("data-value"));
+    update_item (model, item_id, "town", $(this).data("value"));
   });
 
   // Gestione pulsanti form
-  set_tab_buttons (action, "book", model, item_id);
+  set_tab_buttons (action, model, item_id);
 
   if (action == "edit") {
 

@@ -74,6 +74,7 @@
       tx.id AS id,
       tx.name AS name,
       tx.name_short AS name_short,
+      tx.type AS type,
       f.id AS field_id,
       f.name AS field,
       tw.name AS town,
@@ -87,6 +88,8 @@
     JOIN dates d ON d.object_type = 'event' AND d.object_id = tx.id
     JOIN " . $fields_table . "
 		JOIN " . $towns_table;
+
+  $sql_event = $sql_events . "where tx.id = ";
 
   $sql_activity_events = "
     SELECT

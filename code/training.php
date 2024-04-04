@@ -18,7 +18,7 @@
 ?>
   <div id="training_form" class="vb-content vb-form mt-4">
 
-    <?= contextual_navbar($model, array("print", "new", "delete"), false); ?>
+    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 
     <form>
 

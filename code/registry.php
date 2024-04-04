@@ -46,7 +46,7 @@
   </div>
   <div id="<?= $model; ?>_content" class="vb-content vb-list mt-4">
 
-    <?= contextual_navbar($model, array("print", "edit", "new", "delete"), false); ?>
+    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 
     <div id="<?= $model; ?>_list">
 <?php
@@ -60,7 +60,7 @@
 ?>
     </div>
   </div>
-  <script src="assets/javascript/registry.js"></script>
 <?php
   }
 ?>
+  <script src="assets/javascript/registry.js"></script>

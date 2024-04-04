@@ -5,12 +5,12 @@ $(document).ready( function () {
   var item_id = $("#form_id").val();
 
   // Gestione campi di testo
-  $.each(["name", "round", "time_start", "time_stop"],  function (i, param) {
+  $.each(["name", "name_short", "place", "time_start", "time_stop"],  function (i, param) {
     $("#" + model + "_" + param).change( function () { update_item (model, item_id, param, $(this).val()); });
   });
 
   // Gestione campi squadra
-  $.each(["type", "field", "team", "opponent"],  function (i, param) {
+  $.each(["type", "field", "town"],  function (i, param) {
     $("#" + model + "_" + param).siblings(".dropdown-menu").first().find(".dropdown-item").click( function () {
       value = $(this).data("value");
 

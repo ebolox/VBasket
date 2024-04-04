@@ -11,7 +11,7 @@ $(document).ready( function () {
 
   // Gestione menù di navigazione
   $.each(["registry", "technique", "book", "calendar", "activity"],  function (i, param) {console.log("#navlink_" + param + ": " + $("#navlink_" + param).length);
-    $("#navlink_" + param).click( function () { open_page (param); });
+    $("#navlink_" + param).click( function () { update_content (param); });
   });
   $("#navlink_account").click(function () { get_account_tab ("edit", $("#account_id").val()); });
 
@@ -54,16 +54,20 @@ function delete_account (account_id) {
 }
 
 // Elimina un elemento permanentemente
-function delete_item (model = null, item_id = null) {
+function delete_item (event, btn, model, item_id = null) {
 
   if (confirm('Sei sicuro di voler eliminare questo elemento?')) {
 
-    if (!model) {
-      model = $("input[name='book[section]']").val();
+    if (!item_id){
+      if (["activity", "book"].indexOf(model) >= 0) {
+        row_id = $("#" + model + "_list > table > tbody > tr.text-success").attr("id");
+        model = $("#section_btn").data("value");
+      } else {
+        row_id = btn.parent().parent().attr("id");
+      }
+      item_id = row_id.replace("item_", "");
     }
-    if (!item_id) {
-      item_id = $("#book_list > table > tbody > tr.text-success").attr("id").replace("item_", "");
-    }
+
     params = {
       action: "delete_item",
       model: model,
@@ -79,6 +83,57 @@ function delete_item (model = null, item_id = null) {
       onLoading: function() { console.log("delete_item loading"); }
     });
   }
+
+  event.stopPropagation();
+}
+
+// Carica la scheda dell'elemento desiderato
+function edit_item (event, btn, model = null) {
+
+  row = btn.parent().parent();
+
+  if (!model) {
+    model = row.data("type");
+  }
+
+  item_id = row.attr("id").replace("item_", "");
+
+  params = {
+    action: "edit_item",
+    model: model,
+    id: item_id
+  };
+
+  update_frontend("ui_content", model + ".php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function() { console.log("edit " + model + " tab complete"); },
+    onLoading: function() { console.log("edit " + model + " tab loading"); }
+  });
+
+  event.stopPropagation();
+}
+
+// Crea la scheda nuova dell'elemento desiderato
+function init_item (model = null) {
+
+  if (!model) { model = $("#section_btn").data("value"); }
+
+  params = {
+    action: "init_item",
+    model: model
+  };
+
+  update_frontend("ui_content", model + ".php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function() { console.log("init " + model + " model complete"); },
+    onLoading: function() { console.log("init " + model + " model loading"); }
+  });
 }
 
 // Carica la pagina dell'account
@@ -106,31 +161,6 @@ function get_account_tab (action, account_id = null) {
   });
 }
 
-// Carica la scheda dell'elemento desiderato
-function get_item_tab (action, model, tab = null, item_id = null) {
-
-  if (!tab) {
-    tab = $("#section_btn").attr("data-value");
-  }
-  if (action == "edit" && !item_id) {
-    item_id = $("#" + model + "_list > table > tbody > tr.text-success").attr("id").replace("item_", "");
-  }
-  params = {
-    action: action,
-    model: tab,
-    id: item_id
-  };
-
-  update_frontend("ui_content", tab + ".php", {
-    parameters: $.param(params),
-    method: "POST",
-    asynchronous: true,
-    evalScripts: true,
-    onComplete: function() { console.log("get " + tab + " tab complete"); },
-    onLoading: function() { console.log("get " + tab + " tab loading"); }
-  });
-}
-
 // Aggiorna la tabella al click su pulsante Sezione
 function get_activity (section) {
 
@@ -149,26 +179,58 @@ function get_activity (section) {
   });
 }
 
+// Inizializza input Date con calendario Pikaday
+function init_pikaday (model, item_id) {
+
+  var calendar_picker = new Pikaday({
+    field: $("#" + model + "_date_on")[0],
+    format: 'D/M/YYYY',
+    i18n: calendar_words,
+    toString(date, format) {
+      // you should do formatting based on the passed format,
+      // but we will just return 'D/M/YYYY' for simplicity
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+  
+      return `${day}/${month}/${year}`;
+    },
+    parse(dateString, format) {
+      // dateString is the result of `toString` method
+      const parts = dateString.split('/');
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      return new Date(year, month, day);
+    },
+    onSelect: function() {
+      value = calendar_picker.toString();
+      $("#" + model + "_date_on").val(value);
+
+      parts = value.split('/');
+      day = parts[0].padStart(2, '0');
+      month = parts[1].padStart(2, '0');
+      year = parts[2];
+
+      formatted_date = `${year}-${month}-${day}`;
+      update_item (model, item_id, "date_on", formatted_date);
+    }
+  });
+
+  return calendar_picker;
+}
+
 // Gestisce il click su riga di tabella
-function item_selected (context, row, buttons) {
+function item_selected (context, row) {
 
   is_selected = !row.attr("class").match("text-success");
   item_id = row.attr("id").replace("item_", "");
   cell_check = row.find("td").first();
   icon_checked = "<i class=\"bi bi-check-circle-fill\"></i>";
-  btn_edit = $("#" + context + "_edit");
-  btn_delete = $("#" + context + "_delete");
-
-  btn_edit.prop("disabled", true);
-  btn_delete.prop("disabled", true);
 
   if (is_selected) {
     row.addClass("text-success");
     cell_check.html(icon_checked);
-    if (buttons) {
-      btn_edit.prop("disabled", false);
-      btn_delete.prop("disabled", false);
-    }
   } else {
     row.removeClass("text-success");
     cell_check.html(item_id);
@@ -190,13 +252,21 @@ function main_menu_selected (selected) {
 }
 
 // Carica la pagina dell'anagrafica
-function open_page (page) {
+function update_content (page, parameters = []) {
+
+  params = [];
+  if (parameters) {
+    params = {
+      last_view: parameters["last_view"]
+    };
+  }
 
   update_frontend("ui_content", page + ".php", {
+    parameters: $.param(params),
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("open_page complete"); },
-    onLoading: function() { console.log("open_page loading"); }
+    onComplete: function() { console.log("update_content complete"); },
+    onLoading: function() { console.log("update_content loading"); }
   });
 }
 
@@ -243,8 +313,9 @@ function preload_picture (e, target_id, object_type, object_id) {
   reader.readAsDataURL(file);
 }
 
-// Stampa scheda
-function print_item_tab () {
+// Stampa lo schermo usando btn
+// come riferimento per il soggetto della stampa
+function print_screen (btn) {
   window.print();
 }
 
@@ -269,7 +340,7 @@ function set_dropdown (model, item_id, opt, opt_items) {
   name = opt.text();
   $("#" + model + "_" + item_id).text(name);
 
-  tag = opt.attr("data-value");
+  tag = opt.data("value");
   $("input[name='" + model + "[" + item_id + "]']").val(tag);
 
   return tag;
@@ -280,7 +351,7 @@ function set_radio_value (btn_radio) {
   btn_id = btn.attr("id").split("_");
   btn_hidden = $("input[name='" + btn_id[0] + "[" + btn_id[1] + "]']");
 
-  btn_value = btn_radio.attr("data-value");
+  btn_value = btn_radio.data("value");
   hidden_value = btn_value.replace("_parameters", "");
   
 
@@ -290,7 +361,7 @@ function set_radio_value (btn_radio) {
 }
 
 // Gestione dei pulsanti Scheda (tab)
-function set_tab_buttons (action, model_area, model, item_id) {
+function set_tab_buttons (action, model, item_id) {
 
   if (action == "new") {
     $.each(["new", "edit", "print"],  function (i, param) {
@@ -299,19 +370,21 @@ function set_tab_buttons (action, model_area, model, item_id) {
   }
 
   if (action == "edit") {
-    $("#" + model + "_print").click(function () { print_item_tab (); });
-    $("#" + model + "_new").click(function () { get_item_tab ("new", model_area, model); });
+    $("#" + model + "_print").click(function () { print_screen ($(this)); });
+    $("#" + model + "_new").click(function () { init_item (model); });
     $("#" + model + "_edit").hide();
   }
 
-  $("#" + model + "_delete").click(function () { delete_item (model, item_id); });
+  $("#" + model + "_delete").click(function () { delete_item (event, $(this), model, item_id); });
   $("#" + model + "_delete").removeAttr('disabled');
+
+  $("#section_area").click( function () { update_content ($(this).data("value"), { last_view: model }); });
 }
 
 function set_value ( elem ) {
   input_name = elem.parent().attr("aria-labelledby");
   input_id = input_name.replace("]", "").replace("[", "_");
-  input_value = elem.attr("data-value");
+  input_value = elem.data("value");
 
   $("input[name='" + input_name + "']").val( input_value );
   $("#" + input_id).text( elem.text() );
@@ -346,6 +419,15 @@ function show_modal_choice (show, title = false, choices = {}) {
   // Modale e layer mostrati
   modal_cover.addClass("show");
   $("#modal_choice").fadeIn().addClass("show");
+}
+
+// Mostra/nasconde i pulsanti edita/elimina riga
+function show_toolbar (row, show) {
+
+  context = row.data("type");
+  toolbar = row.find("td." + context + "-toolbar button.btn-icon");
+
+  show ? toolbar.removeClass("invisible").addClass("visible") : toolbar.removeClass("visible").addClass("invisible");
 }
 
 // Aggiorna il db
@@ -422,7 +504,7 @@ function update_item (model, item_id, param, value) {
     parameters: $.param(params),
     method: "POST",
     asynchronous: true,
-    evalScripts: true,
+    evalScripts: false,
     onComplete: function() { console.log("update_" + model + " complete"); },
     onLoading: function() { console.log("update_" + model + " loading"); }
   });

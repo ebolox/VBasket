@@ -19,13 +19,26 @@ $(document).ready( function () {
     ];
   }
 
-  // Gestione modale Sezione
-  $("#section_btn").click( function () { show_modal_choice (true, section_title, section_choices); });
+  // Gestione dropdown Cambio sezione
+  $("#section_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_section (model, $(this)); });
 
   // Pulsanti contestuali alla Sezione
-  $("#" + model + "_new").click( function () { get_item_tab ("new", model); });
-  $("#" + model + "_edit").click( function () { get_item_tab ("edit", model); });
-  $("#" + model + "_delete").click( function () { delete_item (model); });
+  $("#" + model + "_new").click( function () { init_item (); });
+  $("#" + model + "_print").click( function () { print_screen ($(this)); });
+
+  // Gestione righe della tabella
+  rows = $("#" + model + "_list > table > tbody > tr");
+
+  // Click sulla riga: de/seleziona
+  rows.click( function () { item_selected (model, $(this)); });
+
+  // Mouseover sulla riga: mostra/nasconde i pulsanti contestuali
+  rows.mouseenter( function () { show_toolbar ($(this), true); });
+  rows.mouseleave( function () { show_toolbar ($(this), false); });
+
+  // Click su pulsanti contestuali
+  rows.find("button.btn-edit").click( function () { edit_item (event, $(this)); });
+  rows.find("button.btn-delete").click( function () { delete_item (event, $(this)); });
 });
 
 // Aggiorna la lista
@@ -47,10 +60,28 @@ function get_section (model, section) {
   });
 }
 
+// Assegna gli eventi a righe e pulsanti
+function set_table_events (model) {
+
+  // Gestione righe della tabella
+  rows = $("#" + model + "_list > table > tbody > tr");
+
+  // Click sulla riga: de/seleziona
+  rows.click( function () { item_selected (model, $(this)); });
+
+  // Mouseover sulla riga: mostra/nasconde i pulsanti contestuali
+  rows.mouseenter( function () { show_toolbar ($(this), true); });
+  rows.mouseleave( function () { show_toolbar ($(this), false); });
+
+  // Click su pulsanti contestuali
+  rows.find("button.btn-edit").click( function () { edit_item (event, $(this)); });
+  rows.find("button.btn-delete").click( function () { delete_item (event, $(this)); });
+}
+
 // Aggiorna titolo e lista della Sezione
 function update_section (model, btn) {
 
-  section_tag = btn.attr("data-value");
+  section_tag = btn.data("value");
   section_title = btn.text();
 
   // Aggiorna il titolo della Sezione

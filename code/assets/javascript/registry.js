@@ -19,6 +19,8 @@ $(document).ready( function () {
   });
 
   // Gestione seleziona tutti i tesserati
+  $("#registry_select_all").val("all");
+  $("#registry_select_all").text("Seleziona tutti");
   $("#registry_select_all").click( function () { registry_select_all () });
 
   // Pulsante Edita account
@@ -82,7 +84,7 @@ function update_teams (e, btn) {
   team_checked = btn.text();
   $("#registry_teams").text(team_checked);
 
-  team_id = btn.attr("data-value");
+  team_id = btn.data("value");
   $("input[name='registry[teams]']").val(team_id);
 
   return team_id;
@@ -112,14 +114,12 @@ function registry_select_all () {
   if ($("#registry_select_all").val() == "all") {
     val = "none";
     txt = "Deseleziona tutti";
-    selected = true;
   } else {
     val = "all";
     txt = "Seleziona tutti";
-    selected = false;
   }
 
   $("#registry_select_all").val(val);
   $("#registry_select_all").text(txt);
-  $("#registry_list > table > tbody > tr").each( function () { item_selected ("registry", $(this), selected); });
+  $("#registry_list > table > tbody > tr").each( function () { item_selected ("registry", $(this)); });
 }

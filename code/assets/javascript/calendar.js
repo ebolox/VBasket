@@ -9,9 +9,9 @@ var activity_classes = ".activity-event, .activity-game, .activity-training";
 // Modale scelta attività da creare
 var activity_modal_title = "Quale attività vuoi creare?";
 var activity_modal_choices = [
-  { "label": "Allenamento", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'activity', 'training');" },
-  { "label": "Partita", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'activity', 'game');" },
-  { "label": "Evento", "class": "btn-primary", "click": "show_modal_choice(false); get_item_tab('new', 'activity', 'event');" }
+  { "label": "Allenamento", "class": "btn-primary", "click": "show_modal_choice(false); init_item('training');" },
+  { "label": "Partita", "class": "btn-primary", "click": "show_modal_choice(false); init_item('game');" },
+  { "label": "Evento", "class": "btn-primary", "click": "show_modal_choice(false); init_item('event');" }
 ];
 
 $(document).ready( function () {
@@ -51,7 +51,7 @@ $(document).ready( function () {
   $("#calendar_new").data("toggle", "modal");
   $("#calendar_new").data("target", "#modal_choice");
   $("#calendar_new").click( function () { show_modal_choice (true, activity_modal_title, activity_modal_choices); });
-  $("#calendar_print").click( function () { print_item_tab (); });
+  $("#calendar_print").click( function () { print_screen ($(this)); });
 
   // Modale #modal_choice
   $("#modal_choice button.close").click( function () { show_modal_choice (false); });

@@ -1,15 +1,16 @@
 <?php
   include('logic.php');
 
-  $model = "game";
+  $model = "book";
 
-  $section = ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST["section"])) ? $_POST["section"] : "club";
+  // Sezione da mostrare
+  $section = get_section_to_view("club");
 
   if ($_SERVER["REQUEST_METHOD"] === "GET") {
 ?>
   <div id="<?= $model; ?>_content" class="vb-content vb-list mt-4">
 
-    <?= contextual_navbar($model, array("print", "edit", "new", "delete"), "club"); ?>
+    <?= form_navbar($model, array("print", "new", "delete"), "club"); ?>
 
     <div id="<?= $model; ?>_list">
 <?php
@@ -23,8 +24,8 @@
 ?>
     </div>
   </div>
-  <script>var model = "book";</script>
-  <script src="assets/javascript/section.js"></script>
 <?php
   }
 ?>
+  <script>var model = "book";</script>
+  <script src="assets/javascript/section.js"></script>

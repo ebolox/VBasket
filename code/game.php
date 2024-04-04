@@ -27,7 +27,7 @@
 ?>
   <div id="game_form" class="vb-content vb-form mt-4">
 
-    <?= contextual_navbar($model, array("print", "new", "delete"), false); ?>
+    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 
     <form>
 
@@ -52,21 +52,23 @@
             <li>Data</li>
             <li style="display: none;">Frequenza</li>
             <li style="display: none;">Giorno</li>
-            <li>H inizio</li>
-            <li>H fine</li>
+            <li>Ora inizio</li>
+            <li>Ora fine</li>
+            <li>Nome</li>
           </ul>
           <ul class="form-data">
             <li><?= vb_dropdown ($model, "type", $game["type"], $type_options); ?></li>
             <li><?= vb_text ($model, "round", $game["round"]); ?></li>
             <li><?= vb_dropdown ($model, "side", $game["side"], $side_options); ?></li>
-            <li><?= vb_dropdown ($model, "field", $game["field"], $field_options); ?></li>
-            <li><?= vb_dropdown ($model, "team", $game["team"], $team_options); ?></li>
-            <li><?= vb_dropdown ($model, "opponent", $game["opponent"], $team_options); ?></li>
-            <li><?= vb_date ($model, "date_on", $game["date_on"]); ?></li>
+            <li><?= vb_dropdown ($model, "field", $game["field_id"], $field_options); ?></li>
+            <li><?= vb_dropdown ($model, "team", $game["team_id"], $team_options); ?></li>
+            <li><?= vb_dropdown ($model, "opponent", $game["opponent_id"], $team_options); ?></li>
+            <li><?= vb_date ($model, "date_on", format_to_ddmmyyyy($game["date_on"])); ?></li>
             <li style="display: none;"><?= vb_dropdown ($model, "frequence", $game["frequence"], $frequence_options); ?></li>
             <li style="display: none;"><?= vb_dropdown ($model, "week_day", $game["week_day"], $week_day_options); ?></li>
             <li><?= vb_text ($model, "time_start", $game["time_start"]); ?></li>
             <li><?= vb_text ($model, "time_stop", $game["time_stop"]); ?></li>
+            <li><?= vb_text ($model, "name", $game["name"]); ?></li>
           </ul>
 
         </div>
