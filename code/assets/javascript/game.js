@@ -4,9 +4,11 @@ $(document).ready( function () {
   var model = $("#form_model").val();
   var item_id = $("#form_id").val();
 
+  var init_item = action == "init_item" ? true : false;
+
   // Gestione campi di testo
   $.each(["name", "round", "time_start", "time_stop"],  function (i, param) {
-    $("#" + model + "_" + param).change( function () { update_item (model, item_id, param, $(this).val()); });
+    $("#" + model + "_" + param).change( function () { update_item (model, item_id, param, $(this).val(), init_item); });
   });
 
   // Gestione campi squadra
@@ -15,9 +17,12 @@ $(document).ready( function () {
       value = $(this).data("value");
 
       set_value ($(this));
-      update_item (model, item_id, param, value);
+      update_item (model, item_id, param, value, init_item);
     });
   });
+
+  $(".btn-edit").click( function () { switch_to_edit(event, $(this).next()); });
+  $(".btn-edit + input[type='text']").change( function () { switch_to_edit(event, $(this)); });
 
   // Gestione pulsanti form
   set_tab_buttons (action, model, item_id);

@@ -39,7 +39,7 @@
   $team_icon = "<i class=\"bi bi-microsoft-teams text-dark\"></i>";
   $team_attributes = array("label_icon" => true);
 ?>
-  <div id="account_form" class="vb-content vb-form mt-4">
+  <div id="account_form" class="vb-content vb-tab mt-4">
 
     <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 

@@ -90,7 +90,8 @@
     "new" => array("color" => "success", "icon_class" => "bi bi-plus-lg", "disabled" => false),
     "edit" => array("color" => "primary", "icon_class" => "bi bi-pencil", "disabled" => true),
     "delete" => array("color" => "danger", "icon_class" => "bi bi-trash3", "disabled" => true),
-    "print" => array("color" => "primary", "icon_class" => "bi bi-printer", "disabled" => false)
+    "print" => array("color" => "primary", "icon_class" => "bi bi-printer", "disabled" => false),
+    "save" => array("color" => "success", "icon_class" => "bi bi-floppy", "disabled" => true)
   );
 
   // Aree e Sezioni

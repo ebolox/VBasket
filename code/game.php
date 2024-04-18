@@ -24,14 +24,15 @@
     array("value" => "home", "label" => "Casa"),
     array("value" => "guest", "label" => "Trasferta")
   );
+
+  // Pulsanti scheda
+  $navbar_btn = $action == "init_item" ? array("print", "save", "delete") : array("print", "delete");
 ?>
-  <div id="game_form" class="vb-content vb-form mt-4">
+  <div class="vb-content vb-tab mt-4">
 
-    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
+    <div class="vb-tab-left">
 
-    <form>
-
-      <?= form_variables($action, $model, $game["id"]); ?>
+      <?= tab_title ($model, false); ?>
       <div class="form-row">
         <div class="col-md-4 text-center">
 
@@ -43,7 +44,7 @@
         <div class="col-md-8">
 
           <ul class="form-label">
-            <li>Tipo</li>
+            <li>Competizione</li>
             <li>Turno</li>
             <li>Sede</li>
             <li>Campo</li>
@@ -56,6 +57,18 @@
             <li>Ora fine</li>
             <li>Nome</li>
           </ul>
+
+        </div>
+      </div>
+
+    </div>
+    <form class="vb-tab-right">
+
+      <?= form_variables($action, $model, $game["id"]); ?>
+      <div class="form-row">
+
+        <div class="col-md-12">
+
           <ul class="form-data">
             <li><?= vb_dropdown ($model, "type", $game["type"], $type_options); ?></li>
             <li><?= vb_text ($model, "round", $game["round"]); ?></li>

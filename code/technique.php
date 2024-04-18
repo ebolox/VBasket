@@ -127,7 +127,7 @@
     <div class="col"></div>
 
   </div>
-  <div id="technique_board" class="vb-content vb-form bg-basket mt-4">
+  <div id="technique_board" class="vb-content vb-tab bg-basket mt-4">
 
     <svg id="action_board" width="900" height="675" xmlns="http://www.w3.org/2000/svg"></svg>
 

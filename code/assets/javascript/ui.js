@@ -119,7 +119,7 @@ function edit_item (event, btn, model = null) {
 // Crea la scheda nuova dell'elemento desiderato
 function init_item (model = null) {
 
-  if (!model) { model = $("#section_btn").data("value"); }
+  if (!model) { model = $("#section_selector").data("value"); }
 
   params = {
     action: "init_item",
@@ -430,6 +430,25 @@ function show_toolbar (row, show) {
   show ? toolbar.removeClass("invisible").addClass("visible") : toolbar.removeClass("visible").addClass("invisible");
 }
 
+// Passa da pulsante Edit a field e viceversa
+function switch_to_edit (event, field) {
+
+  event.stopPropagation();
+
+  btn = field.prev();
+
+  if (field.val() == "" && btn.is(":hidden")) {
+
+    btn.show();
+    field.hide();
+  } else {
+console.log("val: " + field.val());
+    btn.hide();
+    field.show();
+    field.focus();
+  }
+}
+
 // Aggiorna il db
 function update_backend (url, options) {
 
@@ -489,23 +508,31 @@ function update_frontend (container, url, options) {
   });
 }
 
-// Aggiorna i dati dell'item passato
-function update_item (model, item_id, param, value) {
+// Se init == true: gestisce pulsante Salva
+// Se init == false: aggiorna i dati dell'item passato
+function update_item (model, item_id, param, value, init = false) {
 
-  params = {
-    action: "update_item",
-    model: model,
-    id: item_id,
-    param: param,
-    value: value
-  };
+  if (init) {
 
-  update_backend("logic.php", {
-    parameters: $.param(params),
-    method: "POST",
-    asynchronous: true,
-    evalScripts: false,
-    onComplete: function() { console.log("update_" + model + " complete"); },
-    onLoading: function() { console.log("update_" + model + " loading"); }
-  });
+    btn_save = $("#" + model + "_save");
+    value == "" ? btn_save.attr("disabled", "disabled") : btn_save.removeAttr("disabled");
+  } else {
+
+    params = {
+      action: "update_item",
+      model: model,
+      id: item_id,
+      param: param,
+      value: value
+    };
+
+    update_backend("logic.php", {
+      parameters: $.param(params),
+      method: "POST",
+      asynchronous: true,
+      evalScripts: false,
+      onComplete: function() { console.log("update_" + model + " complete"); },
+      onLoading: function() { console.log("update_" + model + " loading"); }
+    });
+  }
 }

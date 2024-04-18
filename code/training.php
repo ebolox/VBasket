@@ -16,7 +16,7 @@
     array("value" => "athletic", "label" => "Atletico", "icon_class" => "stopwatch")
   );
 ?>
-  <div id="training_form" class="vb-content vb-form mt-4">
+  <div id="training_form" class="vb-content vb-tab mt-4">
 
     <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 

@@ -102,6 +102,7 @@
   // Elimina l'item desirato
   function delete_item () {
     global $db_conn;
+    global $vb;
     $rachid = init_pluralizer();
 
     $sql = "DELETE FROM " . $rachid->pluralize($_POST["model"]) . " where id=" . $_POST["id"];
@@ -273,23 +274,23 @@
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
     $results .= '<tr>';
-    $results .= '<th scope="col" class="' . $section_tag . '-id">#</th>';
+    $results .= '<th scope="col" class="cell-nr">#</th>';
     if (in_array($section_tag, array("event", "game"))) {
-      $results .= '<th scope="col" class="' . $section_tag . '-type">Tipo</th>';
+      $results .= '<th scope="col" class="cell-type">Tipo</th>';
     }
-    $results .= '<th scope="col" class="' . $section_tag . '-date">Nome</th>';
+    $results .= '<th scope="col" class="cell-name">Nome</th>';
     if ($section_tag == "training") {
-      $results .= '<th scope="col" class="' . $section_tag . '-type">Tipo</th>';
+      $results .= '<th scope="col" class="cell-type">Tipo</th>';
     }
     if (in_array($section_tag, array("game", "training"))) {
-      $results .= '<th scope="col" class="' . $section_tag . '-team">Squadra VDCB</th>';
+      $results .= '<th scope="col" class="cell-team">Squadra VDCB</th>';
     }
     if ($section_tag == "game") {
-      $results .= '<th scope="col" class="' . $section_tag . '-opponent">Squadra rivale</th>';
+      $results .= '<th scope="col" class="cell-opponent">Squadra rivale</th>';
     }
-    $results .= '<th scope="col" class="' . $section_tag . '-name">Data</th>';
-    $results .= '<th scope="col" class="' . $section_tag . '-field">Campo</th>';
-    $results .= '<th scope="col" class="' . $section_tag . '-toolbar"></th>';
+    $results .= '<th scope="col" class="cell-date">Data</th>';
+    $results .= '<th scope="col" class="cell-field cell-optional">Campo</th>';
+    $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
     $results .= '<tbody>';
@@ -322,22 +323,22 @@
       $buttons = array("edit", "delete");
 
       $results .= '<tr id="item_' . ($key + 1) . '" class data-type="' . $section_tag . '">';
-      $results .= '<td scope="col" class="text-center">' . ($key + 1) . '</td>';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</td>';
       if (in_array($section_tag, array("event", "game"))) {
-        $results .= '<td scope="col" class="' . $section_tag . '-type">' . $type . '</td>';
+        $results .= '<td scope="col" class="cell-type">' . $type . '</td>';
       }
-      $results .= '<td scope="col" class="' . $section_tag . '-name">' . $name . '</td>';
+      $results .= '<td scope="col" class="cell-name">' . $name . '</td>';
       if ($section_tag == "training") {
-        $results .= '<td scope="col" class="' . $section_tag . '-type">' . $type . '</td>';
+        $results .= '<td scope="col" class="cell-type">' . $type . '</td>';
       }
       if (in_array($section_tag, array("game", "training"))) {
-        $results .= '<td scope="col" class="' . $section_tag . '-team">' . $record["team"] . '</td>';
+        $results .= '<td scope="col" class="cell-team">' . $record["team"] . '</td>';
       }
       if ($section_tag == "game") {
-        $results .= '<td scope="col" class="' . $section_tag . '-opponent">' . $record["opponent"] . '</td>';
+        $results .= '<td scope="col" class="cell-opponent">' . $record["opponent"] . '</td>';
       }
-      $results .= '<td scope="col" class="' . $section_tag . '-date">' . $date . '</td>';
-      $results .= '<td scope="col" class="' . $section_tag . '-field">' . $field . '</td>';
+      $results .= '<td scope="col" class="cell-date">' . $date . '</td>';
+      $results .= '<td scope="col" class="cell-field cell-optional">' . $field . '</td>';
       $results .= item_contextual_toolbar ($section_tag, $key + 1);
       $results .= '</tr>';
     }
@@ -400,18 +401,18 @@
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
     $results .= '<tr>';
-    $results .= '<th scope="col" class="' . $section_tag . '-id">#</th>';
-    $results .= '<th scope="col" class="' . $section_tag . '-name">Nome</th>';
-    $results .= '<th scope="col" class="' . $section_tag . '-town">Comune</th>';
-    $results .= '<th scope="col" class="' . $section_tag . '-toolbar"></th>';
+    $results .= '<th scope="col" class="cell-nr">#</th>';
+    $results .= '<th scope="col" class="cell-name">Nome</th>';
+    $results .= '<th scope="col" class="cell-town">Comune</th>';
+    $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
     $results .= '<tbody>';
     foreach ($records as $key => $record) {
       $results .= '<tr id="item_' . ($key + 1) . '" class data-type="' . $section_tag . '">';
-      $results .= '<td scope="col" class="text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="' . $section_tag . '-name">' . $record["name"] . '</th>';
-      $results .= '<td scope="col" class="' . $section_tag . '-town">' . $record["town"] . '</th>';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
+      $results .= '<td scope="col" class="cell-name">' . $record["name"] . '</th>';
+      $results .= '<td scope="col" class="cell-town">' . $record["town"] . '</th>';
       $results .= item_contextual_toolbar ($section_tag, $key + 1);
       $results .= '</tr>';
     }
@@ -601,35 +602,35 @@
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
     $results .= '<tr>';
-    $results .= '<th scope="col">#</th>';
-    $results .= '<th scope="col" class="registry-role">Ruolo</th>';
-    $results .= '<th scope="col">Cognome</th>';
-    $results .= '<th scope="col">Nome</th>';
+    $results .= '<th scope="col" class="cell-nr">#</th>';
+    $results .= '<th scope="col" class="cell-role">Ruolo</th>';
+    $results .= '<th scope="col" class="cell-name-last">Cognome</th>';
+    $results .= '<th scope="col" class="cell-name-first">Nome</th>';
     foreach ($registry_column_opts as $opt) {
       $colspan = $opt["value"] == "team" ? " colspan=3" : "";
       if ($opt["value"] != "role") {
-        $results .= '<th class="registry-' . $opt["value"] . '" scope="col"' . $colspan . '>' . $opt["label"] . '</th>';
+        $results .= '<th class="cell-' . $opt["value"] . ' cell-optional" scope="col"' . $colspan . '>' . $opt["label"] . '</th>';
       }
     }
-    $results .= '<th scope="col" class="registry-toolbar"></th>';
+    $results .= '<th scope="col" class="data-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
     $results .= '<tbody>';
     foreach ($members as $key => $member) {
 
-      $results .= '<tr id="item_' . $member["id"] . '" class="registry-role-' . $member["role"] . '">';
-      $results .= '<td scope="col" class="text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="registry-role">' . $lang_it[$member["role"]] . '</th>';
-      $results .= '<td scope="col">' . $member["name_last"] . '</th>';
-      $results .= '<td scope="col">' . $member["name_first"] . '</th>';
-      $results .= '<td scope="col" class="registry-birth">' . format_to_ddmmyyyy($member["birth_date"]) . '</th>';
-      $results .= '<td scope="col" class="registry-phone">' . $member["phone"] . '</th>';
-      $results .= '<td scope="col" class="registry-email">' . $member["email"] . '</th>';
-      $results .= '<td scope="col" class="registry-document">' . $member["document_id"] . '</th>';
-      $results .= '<td scope="col" class="registry-fitness">' . format_to_ddmmyyyy($member["sport_fitness"]) . '</th>';
-      $results .= '<td scope="col" class="registry-team">' . $member["team_a"] . '</th>';
-      $results .= '<td scope="col" class="registry-team">' . $member["team_b"] . '</th>';
-      $results .= '<td scope="col" class="registry-team">' . $member["team_c"] . '</th>';
+      $results .= '<tr id="item_' . $member["id"] . '" class data-role="' . $member["role"] . '">';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
+      $results .= '<td scope="col" class="cell-role">' . $lang_it[$member["role"]] . '</th>';
+      $results .= '<td scope="col" class="cell-name-last">' . $member["name_last"] . '</th>';
+      $results .= '<td scope="col" class="cell-name-first">' . $member["name_first"] . '</th>';
+      $results .= '<td scope="col" class="cell-birth cell-optional">' . format_to_ddmmyyyy($member["birth_date"]) . '</th>';
+      $results .= '<td scope="col" class="cell-phone cell-optional">' . $member["phone"] . '</th>';
+      $results .= '<td scope="col" class="cell-email cell-optional">' . $member["email"] . '</th>';
+      $results .= '<td scope="col" class="cell-document cell-optional">' . $member["document_id"] . '</th>';
+      $results .= '<td scope="col" class="cell-fitness cell-optional">' . format_to_ddmmyyyy($member["sport_fitness"]) . '</th>';
+      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_a"] . '</th>';
+      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_b"] . '</th>';
+      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_c"] . '</th>';
       $results .= item_contextual_toolbar ("registry", $key + 1);
       $results .= '</tr>';
     }
@@ -752,26 +753,22 @@
   // Genera i dati per un nuovo item
   function init_item () {
     global $db_conn;
-    $rachid = init_pluralizer();
-
-    $sql = "SELECT MAX(id) as id FROM " . $rachid->pluralize($_POST["model"]);
-    $result = $db_conn->query($sql);
-    $item_new = $result->fetch_array();
+    global $vb;
 
     $response = array(
-      "id" => $item_new["id"],
+      "id" => "",
       "name" => ""
     );
 
-    if (in_array($_POST["model"], array("club", "field"))) {
+    if (in_array($_POST["model"], $vb["book"])) {
       $response["town"] = "";
     }
 
-    if (in_array($_POST["model"], array("event", "game", "training"))) {
+    if (in_array($_POST["model"], $vb["activity"])) {
       $response["type"] = "";
       $response["field_id"] = "";
       $response["field"] = "";
-      $response["frequence"] = "once";
+      $response["frequence"] = "";
       $response["week_day"] = "";
       $response["date_on"] = "";
       $response["time_start"] = "";
@@ -784,7 +781,7 @@
           $response["place"] = ""; break;
         case "game":
           $response["round"] = "";
-          $response["side"] = "home";
+          $response["side"] = "";
           $response["team_id"] = "";
           $response["team"] = "";
           $response["opponent_id"] = "";

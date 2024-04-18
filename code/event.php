@@ -27,7 +27,7 @@
 
   $town_options = get_towns();
 ?>
-  <div id="event_form" class="vb-content vb-form mt-4">
+  <div id="event_form" class="vb-content vb-tab mt-4">
 
     <?= form_navbar($model, array("print", "new", "delete"), false); ?>
 

@@ -240,7 +240,7 @@
     $section_tags = array_merge($vb["activity"], $vb["book"]);
     if (in_array($area, $section_tags)) {
       $value = in_array($area, $vb["activity"]) ? "activity" : "book";
-      $code .= button_icon ("fa-solid fa-folder-tree mr-4", "basket", array("btn_id" => "section_area", "btn_value" => $value, "btn_margin" => "mr-4"));
+      $code .= button_icon ("bi bi-caret-down-fill", "basket", array("btn_id" => "section_area", "btn_value" => $value, "btn_margin" => "mr-2"));
     }
 
     $code .= $labels[$area];
@@ -251,7 +251,7 @@
       $menu_attributes = array("btn_color" => "btn-vb", "label_icon" => true, "all" => "Tutto");
       $menu_options = array();
       foreach ($vb[$area] as $sect) {
-        array_push($menu_options, array("value" => $sect, "label" => $labels[$sect]));
+        if ($sect != $section) { array_push($menu_options, array("value" => $sect, "label" => $labels[$sect])); }
       }
 
       $code .= '<i class="bi bi-chevron-double-right mr-4 ml-4"></i>';
@@ -306,6 +306,80 @@
     return $code;
   }
 
+  // Crea un titolo. Eventualmente con etichetta dropdown se il modello ha aree
+  function tab_title ($area, $section = false) {
+
+    global $btn_params;
+    global $vb;
+
+    $labels = array(
+      "account" => "Profilo",
+      "activity" => "Attività",
+      "book" => "Rubrica",
+      "calendar" => "Calendario",
+      "club" => "Società",
+      "event" => "Evento",
+      "field" => "Campi di gioco",
+      "game" => "Partita",
+      "registry" => "Anagrafica",
+      "training" => "Allenamento",
+      "all" => "Tutto"
+    );
+
+    $code = '<div class="row form-navbar sticky-top">';
+    $code .= '<h5 class="text-uppercase mb-0">';
+
+    $code .= '<i class="bi bi-file-text mr-4 ml-4"></i>';
+    $code .= $labels[$area];
+
+    // Switcher area
+    $section_tags = array_merge($vb["activity"], $vb["book"]);
+    if (in_array($area, $section_tags)) {
+      $value = in_array($area, $vb["activity"]) ? "activity" : "book";
+      $code .= button_icon ("bi bi-caret-up-fill", "basket", array("btn_id" => "section_area", "btn_value" => $value, "btn_margin" => "mr-2"));
+    }
+
+    // Switcher sezione
+    if (!empty($section)) {
+
+      $menu_attributes = array("btn_color" => "btn-vb", "label_icon" => true, "all" => "Tutto");
+      $menu_options = array();
+      foreach ($vb[$area] as $sect) {
+        if ($sect != $section) { array_push($menu_options, array("value" => $sect, "label" => $labels[$sect])); }
+      }
+
+      $code .= '<i class="bi bi-chevron-double-right mr-4 ml-4"></i>';
+      $code .= '<span id="section_title" class="mr-2">' . $labels[$section] . '</span>';
+      $code .= button_icon_dropdown ("section", "selector", "bi bi-caret-down-fill", $section, $menu_options, $menu_attributes);
+    }
+
+    $code .= '</h5></div>';
+
+    return $code;
+  }
+
+  // Crea un titolo. Eventualmente con etichetta dropdown se il modello ha aree
+  function tab_toolbar ($area, $buttons = []) {
+
+    global $btn_params;
+    global $vb;
+
+    $code = '<div class="row form-navbar sticky-top">';
+    $code .= '<div class="col text-right mr-2">';
+    foreach ($buttons as $btn) {
+      $btn_status = !empty($btn_params[$btn]["disabled"]) ? " disabled" : "";
+
+      $code .= button_icon ($btn_params[$btn]["icon_class"], $btn_params[$btn]["color"], array("btn_id" => $area .'_' . $btn, "btn_margin" => "ml-2", "disabled" => $btn_status));
+    }
+    $code .= '</div></div>';
+    $code .= '<script>';
+    $code .= '// Gestione righe e pulsanti della lista';
+    $code .= 'set_table_events(model)';
+    $code .= '</script>';
+
+    return $code;
+  }
+
   function vb_date ($model, $param, $value = "", $options = []) {
 
     $field_id = $model . "_" . $param;
@@ -325,7 +399,7 @@
 
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
-    $field_label = "";
+    $field_label = '<i class="bi bi-pencil"></i>';
     foreach ($options as $opt) {
       if ($opt["value"] === $value) {
         $field_label = $opt["label"];
@@ -352,9 +426,11 @@
 
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
+    
 
     $code = '<div class="vb-text">';
-    $code .= '<input type="text" class="form-control" id="' . $field_id . '" name="' . $field_name . '" value="' . $value . '" placeholder="' . $param . '" />';
+    $code .= '<button class="btn form-control btn-edit" style="' . (empty($value) ? '' : ' display: none;') . '"><i class="bi bi-pencil"></i></button>';
+    $code .= '<input type="text" class="form-control" id="' . $field_id . '" name="' . $field_name . '" value="' . $value . '" placeholder="' . $param . '" style="' . (empty($value) ? ' display: none;' : '') . '" />';
     $code .= '</div>';
 
     return $code;

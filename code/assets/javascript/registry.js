@@ -67,8 +67,8 @@ function update_table_columns (btn, btn_hidden) {
   cols.each( function () {
     col_class = $(this).val();
     btn_hidden ?
-      $(".registry-" + col_class).show() :
-      $(".registry-" + col_class).hide();
+      $(".data-" + col_class).removeClass("cell-optional") :
+      $(".data-" + col_class).addClass("cell-optional");
   });
 }
 
