@@ -1,0 +1,96 @@
+.font-digital-7 {
+  font-family: "Digital-7", Arial, sans-serif;
+}
+.font-led-dot-matrix {
+  font-family: "Led dot-matrix", Arial, sans-serif;
+}
+.font-scoreboard {
+  font-family: "Scoreboard", Arial, sans-serif;
+}
+
+h1 {
+  font-size: 10rem;
+}
+
+h2 {
+  font-size: 3rem;
+}
+
+#eboard_content {
+  color: white;
+  background-color: black;
+  overflow-x: hidden;
+}
+
+#arrow {
+  position: relative;
+  top: 0;
+  font-size: 6rem;
+}
+
+#quarter {
+  font-size: 8rem;
+}
+
+#ta_name, #tb_name,
+#ta_points, #tb_points,
+#ta_fouls, #tb_fouls,
+#ta_timeout, #tb_timeout,
+#ta_service, #tb_service,
+#timer, #arrow, #quarter {
+  cursor: pointer;
+}
+
+#eboard_config,
+#eboard_effects {
+  display: none;
+}
+
+#eboard_effects > div {
+  padding-top: 5px;
+  border-top: 1px solid var(--air-dark);
+}
+
+.input-group > .input-group-append > .btn.btn-primary {
+  border-color: #ced4da;
+  border-top-right-radius: .2rem;
+  border-bottom-right-radius: .2rem;
+}
+.input-group > .input-group-prepend > .input-group-text {
+  background-color: var(--bluegrey);
+  border: 0;
+  border-radius: 0;
+  opacity: .65;
+}
+
+.roster ul {
+  list-style: none;
+}
+
+.roster .staff {
+  width: var(--size-24);
+  height: var(--size-24);
+  font-size: var(--size-m);
+  text-align: center;
+  color: var(--smurf-dark);
+  background-color: white;
+  border: 1px solid var(--smurf-light);
+  display: inline-block;
+}
+
+.roster .jersey,
+.roster .staff {
+  width: var(--size-24);
+  height: var(--size-24);
+  font-size: var(--size-s);
+  text-align: center;
+  color: var(--smurf-dark);
+  background-color: white;
+  border: 1px solid var(--smurf-light);
+  display: inline-block;
+}
+
+.roster .jersey {
+  font-size: var(--size-m);
+  border-radius: 50%;
+}
