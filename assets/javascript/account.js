@@ -37,18 +37,18 @@ $(document).ready( function () {
     });
 
     // Gestione campi squadra
-    $.each(["team_a", "team_b", "team_c"],  function (i, param) {
-      $("#btn_" + model + "_" + param).find(".dropdown-menu > .dropdown-item").click(function () {
-        team_id = $(this).data("value");
-
-        set_value ($(this));
-        update_account (param, team_id);
-        update_team_list (param, team_id);
-      });
-    });
+    //$.each(["team_a", "team_b", "team_c"],  function (i, param) {
+    //  $("#btn_" + model + "_" + param).find(".dropdown-menu > .dropdown-item").click(function () {
+    //    team_id = $(this).data("value");
+    //
+    //    set_value ($(this));
+    //    update_account (param, team_id);
+    //    //update_team_list (param, team_id);
+    //  });
+    //});
 
     // Inizializziamo le dropdown squadra
-    update_team_list ("team_a", $("input[name='account[team_a]']").val());
+    //update_team_list ("team_a", $("input[name='account[team_a]']").val());
 
     // Mostriamo o nascondiamo le select squadra
     teams_by_role ($("input[name='account[role]']").val());
@@ -186,7 +186,7 @@ function update_team_list (team, team_id) {
 // Nelle dropdown Squadre, le liste sono composte
 // dalle sole squadre non ancora assegnate
 function teams_by_role (role) {
-  btn_teams = $("#btn_" + model + "_team_a, #btn_" + model + "_team_b, #btn_" + model + "_team_c").parent();
+  btn_teams = $("#btn_" + model + "_team_ids").parent();
 
   ["coach", "athlete"].indexOf(role) >= 0 ?
     btn_teams.show() :

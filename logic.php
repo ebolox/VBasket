@@ -750,9 +750,7 @@ var_dump($_POST);
       $results .= '<td scope="col" class="cell-email cell-optional">' . $member["email"] . '</th>';
       $results .= '<td scope="col" class="cell-document cell-optional">' . $member["document_id"] . '</th>';
       $results .= '<td scope="col" class="cell-fitness cell-optional">' . format_to_ddmmyyyy($member["sport_fitness"]) . '</th>';
-      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_a"] . '</th>';
-      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_b"] . '</th>';
-      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_c"] . '</th>';
+      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_ids"] . '</th>';
       $results .= object_contextual_toolbar ("registry", $key + 1);
       $results .= '</tr>';
     }
@@ -786,9 +784,9 @@ var_dump($_POST);
     global $db_conn;
     global $sql_registry;
 
-    $conditions = (!empty($team_id) && $team_id != "all") ?
-      " WHERE (a.team_a='" . $team_id . "' OR a.team_b='" . $team_id . "' OR a.team_c='" . $team_id . "')" :
-      "";
+    $conditions = "";
+    if (!empty($team_id) && $team_id != "all") { $conditions = " WHERE (r.team_id='" . $team_id . "')"; }
+
     $sql = $sql_registry . $conditions;
     $result = $db_conn->query($sql);
 

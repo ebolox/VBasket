@@ -428,6 +428,12 @@
     return $code;
   }
 
+  function team_box ($team_ids, $team_options, $team_attributes) {
+
+    
+
+  }
+
   function vb_date ($model, $param, $value = "", $options = []) {
 
     $field_id = $model . "_" . $param;

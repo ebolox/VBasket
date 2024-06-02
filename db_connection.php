@@ -25,19 +25,12 @@
       a.birth_date,
       a.email,
       a.phone,
-      a.role,
+      a.account_type,
       a.document_id,
-      a.sport_fitness,
-      t1.name as team_a,
-      t2.name as team_b,
-      t3.name as team_c
+      a.sport_fitness
     FROM accounts a
-    LEFT JOIN teams AS t1
-    ON a.team_a = t1.id
-    LEFT JOIN teams AS t2
-    ON a.team_b = t2.id
-    LEFT JOIN teams AS t3
-    ON a.team_c = t3.id";
+    LEFT JOIN rosters AS r
+    ON r.account_id = a.id";
 
   $sql_book_clubs = "
     SELECT

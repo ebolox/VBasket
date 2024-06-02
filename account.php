@@ -40,8 +40,8 @@
 
   // Lista id, nome delle squadre
   $team_options = get_teams();
-  $team_icon = "<i class=\"bi bi-microsoft-teams text-dark\"></i>";
   $team_attributes = array("label_icon" => true);
+  $team_icon = "<i class=\"bi bi-microsoft-teams text-dark\"></i>";
 ?>
   <div id="account_form" class="vb-content vb-tab mt-4">
 
@@ -108,13 +108,7 @@
           </div>
         </div>
         <div class="form-group ml-3">
-          <?= button_dropdown ($model, "team_a", $team_icon, $account["team_a"], $team_options, $team_attributes); ?>
-        </div>
-        <div class="form-group ml-3">
-          <?= button_dropdown ($model, "team_b", $team_icon, $account["team_b"], $team_options, $team_attributes); ?>
-        </div>
-        <div class="form-group ml-3">
-          <?= button_dropdown($model, "team_c", $team_icon, $account["team_c"], $team_options, $team_attributes); ?>
+          <?= team_box ($account["team_ids"], $team_options, $team_attributes); ?>
         </div>
   
       </div>
