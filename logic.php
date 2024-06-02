@@ -14,17 +14,6 @@
   // Imposta il timezone in modo da ottenere la data corrente correttamente
   date_default_timezone_set('Europe/Rome');
 
-  // Liste valore, nome delle colonne Anagrafica
-  $registry_column_opts = array(
-    array("value" => "role", "label" => "Ruolo"),
-    array("value" => "birth", "label" => "Millesimo"),
-    array("value" => "phone", "label" => "Telefono"),
-    array("value" => "email", "label" => "Email"),
-    array("value" => "document", "label" => "Documento"),
-    array("value" => "fitness", "label" => "Idoneità"),
-    array("value" => "team", "label" => "Squadre")
-  );
-
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['action'])) {

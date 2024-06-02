@@ -99,4 +99,15 @@
     "activity" => array("event", "game", "training"),
     "book" => array("club", "field")
   );
+
+  // Liste valore, nome delle colonne Anagrafica
+  $registry_column_opts = array(
+    array("value" => "role", "label" => "Ruolo"),
+    array("value" => "birth", "label" => "Millesimo"),
+    array("value" => "phone", "label" => "Telefono"),
+    array("value" => "email", "label" => "Email"),
+    array("value" => "document", "label" => "Documento"),
+    array("value" => "fitness", "label" => "Idoneità"),
+    array("value" => "team", "label" => "Squadre")
+  );
 ?>
