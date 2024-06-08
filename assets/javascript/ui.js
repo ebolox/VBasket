@@ -7,13 +7,19 @@ var calendar_words = {
   weekdaysShort : ['Dom','Lun','Mar','Mer','Gio','Ven','Sab']
 };
 
+// Aree e Sezioni
+var vb = {
+  activity : ["event", "game", "training"],
+  book     : ["club", "field", "team"]
+};
+
 $(document).ready( function () {
 
   // Gestione menù di navigazione
   $.each(["registry", "technique", "book", "calendar", "activity"],  function (i, param) {
     $("#navlink_" + param).click( function () { update_content (param); });
   });
-  $("#navlink_account").click(function () { get_account_tab ("edit", true, $("#account_id").val()); });
+  $("#navlink_account").click(function () { edit_object ("account", $("#account_id").val()); });
 
   // Gestisce il menù principale per l'elemento selezionato
   $("#ui_navbar nav a").not("#navlink_account, #navlink_home").click( function () { main_menu_selected ($(this)); });
@@ -23,6 +29,26 @@ $(document).ready( function () {
 function change_picture (model) {
   $("#" + model + "_img").click( function(){ $("#" + model + "_img_file").trigger("click"); });
   $("#" + model + "_img_file").on("change", function (e) { preload_image(e, model + "_img", model, $("#" + model + "_id").val()); });
+}
+
+// Crea l'oggetto di cui si salva il nome
+function create_object () {
+
+  model = $("#form_model").val();
+  params = {
+    action: "create_object",
+    model: model,
+    name: $("#" + model + "_name").val()
+  }
+
+  update_frontend("ui_content", "logic.php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function() { console.log("create " + model + " tab complete"); },
+    onLoading: function() { console.log("create " + model + " tab loading"); }
+  });
 }
 
 // Elimina la scheda Account
@@ -360,25 +386,6 @@ function sidebar_collapse (id, context) {
   }
 }
 
-// Carica la pagina dell'anagrafica
-function update_content (page, parameters = []) {
-
-  params = [];
-  if (parameters) {
-    params = {
-      last_view: parameters["last_view"]
-    };
-  }
-
-  update_frontend("ui_content", page + ".php", {
-    parameters: $.param(params),
-    asynchronous: true,
-    evalScripts: true,
-    onComplete: function() { console.log("update_content complete"); },
-    onLoading: function() { console.log("update_content loading"); }
-  });
-}
-
 // Precarica un'immagine e aggiorna il db
 function preload_picture (e, target_id, object_type, object_id) {
   var file = e.target.files[0];
@@ -455,6 +462,27 @@ function set_dropdown (model, object_id, opt, opt_objects) {
   return tag;
 }
 
+// Assegna gli eventi a righe e pulsanti
+function set_list_events (model, section_tag) {
+
+  // Si aggiorna il selettore alla sezione attuale
+  $("#section_selector").data("value", section_tag);
+
+  // Gestione righe della tabella
+  rows = $("#" + model + "_list > table > tbody > tr");
+
+  // Click sulla riga: de/seleziona
+  rows.click( function () { object_selected (model, $(this)); });
+
+  // Mouseover sulla riga: mostra/nasconde i pulsanti contestuali
+  rows.mouseenter( function () { show_toolbar ($(this), true); });
+  rows.mouseleave( function () { show_toolbar ($(this), false); });
+
+  // Click su pulsanti contestuali
+  rows.find("button.btn-edit").click( function () { edit_object_from_list (event, $(this)); });
+  rows.find("button.btn-delete").click( function () { delete_object (event, $(this)); });
+}
+
 function set_radio_value (btn_radio) {
   btn = btn_radio.parent();
   btn_id = btn.attr("id").split("_");
@@ -472,40 +500,19 @@ function set_radio_value (btn_radio) {
 // Gestione dei pulsanti Scheda (tab)
 function set_tab_buttons (action, model, object_id) {
 
-  if (action == "new") {
-    $.each(["new", "edit", "print"],  function (i, param) {
-      $("#" + model + "_" + param).hide();
-    });
+  if (action == "init_object") {
+    $("#tab_create").click(function () { create_object (); });
   }
 
-  if (action == "edit") {
-    $("#" + model + "_print").click(function () { print_screen ($(this)); });
-    $("#" + model + "_new").click(function () { init_object (model); });
-    $("#" + model + "_edit").hide();
+  if (action == "edit_object") {
+    //$("#tab_print").click(function () { print_screen ($(this)); });
+    $("#tab_new").click(function () { init_object (model); });
+    $("#tab_delete").click(function () { delete_object (event, $(this), model, object_id); });
+    $("#tab_delete").removeAttr('disabled');
   }
 
-  $("#" + model + "_delete").click(function () { delete_object (event, $(this), model, object_id); });
-  $("#" + model + "_delete").removeAttr('disabled');
-
-  $("#section_area").click( function () { update_content ($(this).data("value"), { last_view: model }); });
-}
-
-// Assegna gli eventi a righe e pulsanti
-function set_table_events (model) {
-
-  // Gestione righe della tabella
-  rows = $("#" + model + "_list > table > tbody > tr");
-
-  // Click sulla riga: de/seleziona
-  rows.click( function () { object_selected (model, $(this)); });
-
-  // Mouseover sulla riga: mostra/nasconde i pulsanti contestuali
-  rows.mouseenter( function () { show_toolbar ($(this), true); });
-  rows.mouseleave( function () { show_toolbar ($(this), false); });
-
-  // Click su pulsanti contestuali
-  rows.find("button.btn-edit").click( function () { edit_object_from_list (event, $(this)); });
-  rows.find("button.btn-delete").click( function () { delete_object (event, $(this)); });
+  parent_area = vb["activity"].indexOf() >= 0 ? "activity" : "book";
+  $("#tab_close").click( function () { update_content (parent_area); });
 }
 
 function set_value ( elem ) {
@@ -533,7 +540,7 @@ function show_toolbar (row, show) {
 // Passa da pulsante Edit a field e viceversa
 function switch_to_edit (event, field) {
 
-  event.stopPropagation();
+  event.preventDefault();
 
   btn = field.prev();
 
@@ -577,11 +584,31 @@ function update_backend (url, options) {
   });
 }
 
+// Carica la pagina dell'anagrafica
+function update_content (page, parameters = []) {
+
+  params = [];
+  if (parameters) {
+    params = {
+      last_view: parameters["last_view"]
+    };
+  }
+
+  update_frontend("ui_content", page + ".php", {
+    parameters: $.param(parameters),
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function() { console.log("update_content complete"); },
+    onLoading: function() { console.log("update_content loading"); }
+  });
+}
+
 // Aggiorna la pagina con dati da server
 function update_frontend (container, url, options) {
 
   options = options || {};
 console.log("updating: " + container + " #\n\n" +  url + " #\n\n" + options.parameters);
+
   $.ajax({
     url: url,
 		method: options.method ? options.method : "GET",

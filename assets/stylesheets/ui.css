@@ -313,6 +313,7 @@ body {
 }
 .vb-content.vb-tab > .vb-tab-left,
 .vb-content.vb-tab > .vb-tab-right {
+  min-height: 340px;
   vertical-align: top;
   padding: 10px;
   display: inline-block;
@@ -326,8 +327,21 @@ body {
   background-color: var(--air-light);
 }
 
-.vb-content.vb-tab > .vb-tab-right .form-navbar {
+.vb-content.vb-tab > .vb-tab-left .vb-tab-title,
+.vb-content.vb-tab > .vb-tab-right .vb-tab-toolbar {
+  height: 36px;
   background-color: transparent;
+  text-align: right;
+  border-bottom: 1px solid var(--bluegrey-light);
+}
+.vb-content.vb-tab > .vb-tab-left .vb-tab-title {
+  font-size: 20px;
+  color: var(--bluegrey-light);
+}
+
+.vb-content.vb-tab > .vb-tab-left .vb-tab-title i.bi,
+.vb-content.vb-tab > .vb-tab-right .vb-tab-toolbar i.bi {
+  font-size: 16px;
 }
 
 .vb-content.vb-list {
@@ -526,6 +540,7 @@ a#navlink_account > i.bi {
   display: inline-block;
 }
 .form-data {
+  min-width: 300px;
   padding-left: 20px;
 }
 .form-label {
@@ -594,6 +609,8 @@ tr.game-row.text-success > td.game-toolbar button.btn-icon {
   visibility: hidden;
 }
 
+/* SIDEBAR */
+/* inizio */
 .sidebar {
   width: 300px !important;
   position: absolute;
@@ -645,3 +662,5 @@ tr.game-row.text-success > td.game-toolbar button.btn-icon {
   font-size: 16px;
   margin-right: 5px;
 }
+/* fine */
+/* SIDEBAR */

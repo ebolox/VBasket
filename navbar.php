@@ -24,7 +24,7 @@
           <a id="navlink_activity" class="col navlink btn-link" href="#"><i class="bi bi-activity mr-2"></i>Attività</a>
           <a id="navlink_registry" class="col navlink btn-link" href="#"><i class="bi bi-person-lines-fill mr-2"></i>Anagrafica</a>
           <a id="navlink_book" class="col navlink btn-link" href="#"><i class="bi bi-journal-richtext mr-2"></i>Rubrica</a>
-          <a id="navlink_technique" class="col navlink btn-link" href="#"><i class="bi bi-clipboard2-heart mr-2"></i>Area tecnica</a>
+          <a id="navlink_technique" class="col navlink btn-link" href="#"><i class="bi bi-easel mr-2"></i>Area tecnica</a>
         </div>
       </nav>
       <input type="hidden" id="account_id" name="account[id]" value="<?= $account_id; ?>" />

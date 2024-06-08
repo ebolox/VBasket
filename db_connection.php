@@ -90,6 +90,38 @@
     FROM fields tx
     LEFT JOIN " . $towns_to_tx;
 
+  $sql_book_teams = "
+    SELECT
+      t.id,
+      t.name,
+      t.name_short,
+      c.id AS club_id,
+      c.name AS club,
+      t.jersey_first,
+      t.jersey_second,
+      t.season,
+      t.year_start,
+      t.year_stop
+    FROM teams t
+    LEFT JOIN clubs AS c
+    ON c.id = t.club_id";
+
+  $sql_teams = "
+    SELECT
+      tx.id,
+      tx.name,
+      tx.name_short,
+      c.id AS club_id,
+      c.name AS club,
+      tx.jersey_first,
+      tx.jersey_second,
+      tx.season,
+      tx.year_start,
+      tx.year_stop
+    FROM teams tx
+    LEFT JOIN clubs AS c
+    ON c.id = tx.club_id";
+
   $sql_events = "
     SELECT
       tx.id AS id,

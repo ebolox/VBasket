@@ -25,15 +25,12 @@
     array("value" => "home", "label" => "Casa"),
     array("value" => "guest", "label" => "Trasferta")
   );
-
-  // Pulsanti scheda
-  $navbar_btn = $action == "init_object" ? array("print", "save", "delete") : array("print", "delete");
 ?>
   <div class="vb-content vb-tab mt-4">
 
     <div class="vb-tab-left">
 
-      <?= tab_title ($model, false); ?>
+      <?= tab_title ($model); ?>
       <div class="form-row">
         <div class="col-md-8 text-center">
 
@@ -66,7 +63,7 @@
     <form class="vb-tab-right">
 
       <?= form_variables ($action, $model, $object["id"]); ?>
-      <?= tab_title_ghost (); ?>
+      <?= tab_toolbar ($action); ?>
       <div class="form-row">
 
         <div class="col-md-12">

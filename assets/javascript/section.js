@@ -18,6 +18,7 @@ $(document).ready( function () {
   } else if (model == "book") {
     section_choices = [
       { "tag": "club", "label": "Società", "class": "btn-primary", "click": "modal_choice(false); update_section($(this));" },
+      { "tag": "team", "label": "Squadre", "class": "btn-primary", "click": "modal_choice(false); update_section($(this));" },
       { "tag": "field", "label": "Campi di gioco", "class": "btn-primary", "click": "modal_choice(false); update_section($(this));" }
     ];
   }

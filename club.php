@@ -2,7 +2,7 @@
   include('logic.php');
 
   $model = "club";
-  $club = get_object_tab();
+  $object = get_object_tab();
   $action = $_POST["action"];
 
   $filename = "logo_big.jpg";
@@ -10,41 +10,64 @@
 
   $town_options = get_towns();
 ?>
-  <div id="club_form" class="vb-content vb-tab mt-4">
+  <div class="vb-content vb-tab mt-4">
 
-    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
+    <div class="vb-tab-left">
 
-    <form>
-
-      <?= form_variables($action, $model, $club["id"]); ?>
+      <?= tab_title ($model); ?>
       <div class="form-row">
-        <div class="col-md-5 text-center">
+        <div class="col-md-8 text-center">
 
           <div class="vb-image">
-            <img id="club_img" class="img-fluid" src="<?= $file_url ?>" />
+            <img id="game_img" class="img-fluid" src="assets/images/logo_big.jpg" />
           </div>
 
         </div>
-        <div class="col-md-7">
+        <div class="col-md-4 text-right">
 
-          <?= field_text ($model, "name", "Nome", $club["name"]); ?>
-          <?= field_dropdown ($model, "town", "Comune", $club["town"], $town_options); ?>
-<?php
-  if ($_POST["action"] == "edit") {
-?>
-          <?= field_text ($model, "place", "Luogo", $club["place"]); ?>
-          <?= field_text ($model, "address", "Indirizzo", $club["address"]); ?>
-          <?= field_text ($model, "email", "Email", $club["email"]); ?>
-          <?= field_text ($model, "phone", "Telefono", $club["phone"]); ?>
-          <?= field_text ($model, "phone_alt", "Tel. alternativo", $club["phone_alt"]); ?>
-          <?= field_text ($model, "website", "Sito web", $club["website"]); ?>
-          <?= field_text ($model, "facebook", "Facebook", $club["facebook"]); ?>
-<?php
-  }
-?>
+          <ul class="form-label">
+            <li>Nome</li>
+            <li>Comune</li>
+            <li>Luogo</li>
+            <li>Indirizzo</li>
+            <li>Telefono</li>
+            <li>Tel. alternativo</li>
+            <li>Email</li>
+            <li>Sito web</li>
+            <li>Facebook</li>
+            <li>Instagram</li>
+            <li>YouTube</li>
+          </ul>
+
+        </div>
+      </div>
+
+    </div>
+    <form class="vb-tab-right">
+
+      <?= form_variables ($action, $model, $object["id"]); ?>
+      <?= tab_toolbar ($action); ?>
+      <div class="form-row">
+
+        <div class="col-md-12">
+
+          <ul class="form-data">
+            <li><?= vb_text ($model, "name", $object["name"]); ?></li>
+            <li><?= vb_dropdown ($model, "town", $object["town"], $town_options); ?></li>
+            <li><?= vb_text ($model, "place", $object["place"]); ?></li>
+            <li><?= vb_text ($model, "address", $object["address"]); ?></li>
+            <li><?= vb_text ($model, "phone", $object["phone"]); ?></li>
+            <li><?= vb_text ($model, "phone_alt", $object["phone_alt"]); ?></li>
+            <li><?= vb_text ($model, "email", $object["email"]); ?></li>
+            <li><?= vb_text ($model, "website", $object["website"]); ?></li>
+            <li><?= vb_text ($model, "facebook", $object["facebook"]); ?></li>
+            <li><?= vb_text ($model, "instagram", $object["instagram"]); ?></li>
+            <li><?= vb_text ($model, "youtube", $object["youtube"]); ?></li>
+          </ul>
+
         </div>
       </div>
 
     </form>
   </div>
-  <script src="assets/javascript/book.js"></script>
+  <script src="assets/javascript/club.js"></script>

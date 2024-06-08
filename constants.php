@@ -17,21 +17,34 @@
 
   // Generale
   $lang_it = array(
+    "account" => "Profilo",
+    "activity" => "Attività",
     "admin" => "Amministratore",
-    "manager" => "Dirigente",
-    "coach" => "Coach",
+    "all" => "Tutto",
     "athlete" => "Atleta",
-    "staff" => "Staff",
+    "athletic" => "Atletico",
+    "book" => "Rubrica",
     "brainstorming" => "Riunione societaria",
+    "calendar" => "Calendario",
+    "championship" => "Campionato",
+    "club" => "Società",
+    "coach" => "Coach",
+    "cup" => "Coppa",
+    "event" => "Evento",
+    "field" => "Campi di gioco",
+    "friendly" => "Amichevole",
+    "game" => "Partita",
+    "manager" => "Dirigente",
     "meeting" => "Meeting",
     "party" => "Festa",
     "other" => "Altro",
-    "championship" => "Campionato",
-    "cup" => "Coppa",
-    "trophy" => "Torneo",
-    "friendly" => "Amichevole",
+    "registry" => "Anagrafica",
+    "staff" => "Staff",
+    "team" => "Squadra",
     "technique" => "Tecnico",
-    "athletic" => "Atletico"
+    "town" => "Città",
+    "training" => "Allenamento",
+    "trophy" => "Torneo"
   );
 
   // Mesi
@@ -97,7 +110,7 @@
   // Aree e Sezioni
   $vb = array(
     "activity" => array("event", "game", "training"),
-    "book" => array("club", "field")
+    "book" => array("club", "field", "team")
   );
 
   // Liste valore, nome delle colonne Anagrafica

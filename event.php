@@ -31,7 +31,7 @@
 
     <div class="vb-tab-left">
 
-      <?= tab_title ($model, false); ?>
+      <?= tab_title ($model); ?>
       <div class="form-row">
         <div class="col-md-8 text-center">
 
@@ -63,7 +63,7 @@
     <form class="vb-tab-right">
 
       <?= form_variables ($action, $model, $object["id"]); ?>
-      <?= tab_title_ghost (); ?>
+      <?= tab_toolbar ($action); ?>
       <div class="form-row">
 
         <div class="col-md-12">

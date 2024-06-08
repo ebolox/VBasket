@@ -2,11 +2,8 @@
   // Se arriviamo alla pagina dall'eboard
   if (!(isset($_GET) && !empty($_GET["watch"]))) { include('logic.php'); }
 
-  // Controlliamo se l'utente è loggato
-  account_logged();
-
   $model = "account";
-  $account = get_account();
+  $object = get_object_tab();
   $action = $_POST["action"];
   $filename = "logo_big.jpg";
 
@@ -43,78 +40,61 @@
   $team_attributes = array("label_icon" => true);
   $team_icon = "<i class=\"bi bi-microsoft-teams text-dark\"></i>";
 ?>
-  <div id="account_form" class="vb-content vb-tab mt-4">
+  <div class="vb-content vb-tab mt-4">
 
-    <?= form_navbar($model, array("print", "new", "delete"), false); ?>
+    <div class="vb-tab-left">
 
-    <form>
-
-      <?= form_variables($action, $model, $account["id"]); ?>
+      <?= tab_title ($model); ?>
       <div class="form-row">
-        <div class="col-md-5 text-center">
+        <div class="col-md-8 text-center">
 
           <div class="vb-image">
-            <img id="account_img" class="img-fluid" src="<?= $file_url ?>" />
-            <input type="file" id="account_img_file" class="d-none">
+            <img id="<?= $model; ?>_img" class="img-fluid" src="<?= $file_url; ?>" />
           </div>
 
         </div>
-        <div class="col-md-7">
+        <div class="col-md-4 text-right">
 
-          <?= field_text ($model, "name_last", "Cognome", $account["name_last"]); ?>
-          <?= field_text ($model, "name_first", "Nome", $account["name_first"]); ?>
-<?php
-  if ($action == "edit") {
-?>
-          <?= field_text ($model, "nickname", "Soprannome", $account["nickname"]); ?>
-          <?= field_date ($model, "birth_date", "Data di nascita", $account["birth_date"], array("icon" => "fas fa-calendar")); ?>
-          <?= field_text ($model, "email", "Email", $account["email"]); ?>
-          <?= field_text ($model, "phone", "Telefono", $account["phone"]); ?>
-<?php
-  }
-?>
-          <?= field_dropdown ($model, "role", "Ruolo", $account["role"], $role_options); ?>
-<?php
-  if ($_POST["action"] == "edit") {
-?>
-          <?= field_text ($model, "document_id", "Documento", $account["document_id"]); ?>
-          <?= field_date ($model, "sport_fitness", "Visita di idoneità", $account["sport_fitness"], array("icon" => "fas fa-calendar")); ?>
-<?php
-  }
-?>
+          <ul class="form-label">
+            <li>Cognome</li>
+            <li>Nome</li>
+            <li>Soprannome</li>
+            <li>Data di nascita</li>
+            <li>Documento d'identità</li>
+            <li>Visita di idoneità</li>
+            <li>Indirizzo</li>
+            <li>Email</li>
+            <li>Telefono</li>
+          </ul>
+
         </div>
       </div>
-<?php
-  if ($action == "edit") {
-?>
-      <div class="form-row mt-3 ml-3">
 
-        <div class="form-group">
-          <div id="btn_account_named" class="btn-group vb-btn-dropdown" role="group" aria-label="Nome da usare">
-            <input type="hidden" name="account[named]" value="<?= $named_code; ?>" />
-            <div class="btn-group btn-group-prepend" role="group">
-              <button id="account_named" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <?= $named_format; ?>
-              </button>
-              <div class="dropdown-menu" aria-labelledby="account[named]">
-                <a class="dropdown-item" href="#" data-value="n">Soprannome</a>
-                <a class="dropdown-item" href="#" data-value="f+l">Nome Cognome</a>
-                <a class="dropdown-item" href="#" data-value="f+l+s">Nome C.</a>
-                <a class="dropdown-item" href="#" data-value="l+f">Cognome Nome</a>
-                <a class="dropdown-item" href="#" data-value="l+f+s">Cognome N.</a>
-              </div>
-            </div>
-            <button id="account_alias" class="btn text-dark" disabled><?= $named_full; ?></button>
-          </div>
+    </div>
+    <form class="vb-tab-right">
+
+      <?= form_variables ($action, $model, $object["id"]); ?>
+      <?= tab_toolbar ($action); ?>
+      <div class="form-row">
+
+        <div class="col-md-12">
+
+          <ul class="form-data">
+            <li><?= vb_text ($model, "name_last", $object["name_last"]); ?></li>
+            <li><?= vb_text ($model, "name_first", $object["name_first"]); ?></li>
+            <li><?= vb_text ($model, "nickname", $object["nickname"]); ?></li>
+            <li><?= vb_dropdown ($model, "named", $object["named"], $side_options); ?></li>
+            <li><?= vb_date ($model, "birth_date", format_to_ddmmyyyy($object["birth_date"])); ?></li>
+            <li><?= vb_text ($model, "document_id", $object["document_id"]); ?></li>
+            <li><?= vb_date ($model, "sport_fitness", format_to_ddmmyyyy($object["sport_fitness"])); ?></li>
+            <li><?= vb_text ($model, "address", $object["address"]); ?></li>
+            <li><?= vb_text ($model, "email", $object["email"]); ?></li>
+            <li><?= vb_text ($model, "phone", $object["phone"]); ?></li>
+          </ul>
+
         </div>
-        <div class="form-group ml-3">
-          <?= team_box ($account["team_ids"], $team_options, $team_attributes); ?>
-        </div>
-  
       </div>
-<?php
-  }
-?>
+
     </form>
   </div>
   <script src="assets/javascript/account.js"></script>

@@ -19,10 +19,10 @@ $(document).ready( function () {
   // Gestione pulsanti form
   set_tab_buttons (action, model, object_id);
 
-  if (action == "edit") {
+  if (action == "edit_object") {
 
     // Gestione campi di testo
-    $.each([" place", "address", "website", "email", "phone", "phone_alt", "facebook"],  function (i, param) {
+    $.each(["place", "address", "phone", "email", "phone_alt", "website", "facebook", "instagram", "youtube"],  function (i, param) {
       $("#" + model + "_" + param).change( function () { update_object (model, object_id, param, $(this).val()); });
     });
   }

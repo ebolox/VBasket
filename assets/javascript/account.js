@@ -22,7 +22,7 @@ $(document).ready( function () {
   // Gestione pulsanti form
   set_tab_buttons (action, model, object_id);
 
-  if (action == "edit") {
+  if (action == "edit_object") {
 
     // Gestione campi di testo
     $.each(["nickname", "email", "phone", "document_id"],  function (i, param) {

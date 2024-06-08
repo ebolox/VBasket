@@ -32,6 +32,9 @@
       } elseif ($_POST['action'] === 'init_object') {
         init_object();
 
+      } elseif ($_POST['action'] === 'create_object') {
+        create_object();
+
       } elseif ($_POST['action'] === 'edit_object') {
         edit_object();
 
@@ -58,6 +61,9 @@
 
       } elseif ($_POST['action'] === 'get_calendar_by') {
         get_calendar_by($_POST['activity_tag'], $_POST['team_tag'], $_POST['account_id']);
+      } else {
+
+        unknown_action();
       }
     }
 
@@ -99,6 +105,7 @@
   // Crea un'account
   function create_account () {
     global $db_conn;
+
     $sql = "INSERT INTO accounts ('id', '" . $_POST["param"] . "') VALUES (" . $_POST["id"] . ", '" . $_POST["name_last"] . "')";
     $result = $db_conn->query($sql);
   }
@@ -108,6 +115,28 @@
   function create_activity ($act_type, $act_label, $act_data) {
 
     return '<div class="activity-' . $act_type . '" id="act_' . $act_data["cell_id"] . '" data-time-start="' . $act_data["time_start"] . '" data-time-last="' . $act_data["time_last"] . '">' . $act_label . '</div>';
+  }
+
+  // Crea un nuovo oggetto e
+  // ritorna la scheda completa
+  function create_object () {
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    $model = $_POST["model"];
+    $value = $_POST["name"];
+
+    $sql = "INSERT INTO " . $rachid->pluralize($model) . " (name) VALUES ('" . $value . "');";
+    $result = $db_conn->query($sql);
+
+    $sql_new = "SELECT * FROM " . $rachid->pluralize($model) . " ORDER BY id desc LIMIT 1;";
+    $result_new = do_ask_easy($sql_new);
+
+    $_POST["id"] = $result_new["id"];
+
+    $content = include($model . ".php");
+
+    return $content;
   }
 
   // Elimina l'object desirato
@@ -190,7 +219,7 @@
     global $db_conn;
     global $vb;
     $rachid = init_pluralizer();
-var_dump($_POST);
+
     if (in_array($_POST["model"], array_merge($vb["activity"], $vb["book"]))) {
 
       // Object che richiedono più tabelle
@@ -330,7 +359,9 @@ var_dump($_POST);
     }
     $results .= '<th scope="col" class="cell-date">Data</th>';
     $results .= '<th scope="col" class="cell-field cell-optional">Campo</th>';
-    $results .= '<th scope="col" class="cell-eboard">Tabellone</th>';
+    if ($section_tag == "game") {
+      $results .= '<th scope="col" class="cell-eboard">Tabellone</th>';
+    }
     $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
@@ -384,13 +415,15 @@ var_dump($_POST);
       }
       $results .= '<td scope="col" class="cell-date">' . $date . '</td>';
       $results .= '<td scope="col" class="cell-field cell-optional">' . $field . '</td>';
-      $results .= '<td scope="col" class="cell-eboard text-center"><i class="' . $eboard_icon . '" data-id="' . $eboard["id"] . '"></i></td>';
+      if ($section_tag == "game") {
+        $results .= '<td scope="col" class="cell-eboard text-center"><i class="' . $eboard_icon . '" data-id="' . $eboard["id"] . '"></i></td>';
+      }
       $results .= object_contextual_toolbar ($section_tag, $key + 1);
       $results .= '</tr>';
     }
     $results .= '</tbody>';
     $results .= '</table>';
-    $results .= '<script>set_table_events ("activity");</script>';
+    $results .= '<script>set_list_events ("activity", "' . $section_tag . '");</script>';
 
     return $results;
   }
@@ -444,27 +477,31 @@ var_dump($_POST);
     global $lang_it;
 
     $records = get_book_section($section_tag);
+    $col_param = $section_tag == "team" ? "club" : "town";
 
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
     $results .= '<tr>';
     $results .= '<th scope="col" class="cell-nr">#</th>';
     $results .= '<th scope="col" class="cell-name">Nome</th>';
-    $results .= '<th scope="col" class="cell-town">Comune</th>';
+    $results .= '<th scope="col" class="cell-' . $col_param . '">' . $lang_it[$col_param] . '</th>';
     $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
     $results .= '<tbody>';
     foreach ($records as $key => $record) {
+      $name_short = !empty($record["name_short"]) ? ' <span style="font-weight: 400;">(' . $record["name_short"] . ')</span>' : "";
+
       $results .= '<tr id="object_' . ($key + 1) . '" class data-type="' . $section_tag . '">';
       $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="cell-name">' . $record["name"] . '</th>';
-      $results .= '<td scope="col" class="cell-town">' . $record["town"] . '</th>';
+      $results .= '<td scope="col" class="cell-name">' . $record["name"] . $name_short . '</th>';
+      $results .= '<td scope="col" class="cell-' . $col_param . '">' . $record[$col_param] . '</th>';
       $results .= object_contextual_toolbar ($section_tag, $key + 1);
       $results .= '</tr>';
     }
     $results .= '</tbody>';
     $results .= '</table>';
+    $results .= '<script>set_list_events ("book", "' . $section_tag . '");</script>';
 
     return $results;
   }
@@ -480,6 +517,9 @@ var_dump($_POST);
       case "field":
         global $sql_book_fields;
         $sql = $sql_book_fields; break;
+      case "team":
+        global $sql_book_teams;
+        $sql = $sql_book_teams; break;
       default: break;
     }
 
@@ -571,6 +611,21 @@ var_dump($_POST);
 		$results .= "<script>apply_activities();</script>";
 
     echo $results;
+  }
+
+  // Recupera i dati delle club
+  function get_clubs () {
+    global $db_conn;
+
+    $sql = "SELECT id AS value, name AS label FROM clubs ORDER BY name ASC";
+    $result = $db_conn->query($sql);
+
+    $clubs = array();
+    while ($row = $result->fetch_assoc()) {
+      $clubs[] = $row;
+    }
+
+    return $clubs;
   }
 
   // Recupera i dati del tabellone elettronico desiderato
@@ -756,10 +811,7 @@ var_dump($_POST);
     }
     $results .= '</tbody>';
     $results .= '</table>';
-    $results .= '<script>';
-    $results .= '$("#registry_list > table > tbody > tr").click( function () {';
-    $results .= 'object_selected ("registry", $(this)); });';
-    $results .= '</script>';
+    $results .= '<script>set_list_events ("registry", "account");</script>';
 
     return $results;
   }
@@ -862,9 +914,9 @@ var_dump($_POST);
   function handled_teams ($account_id) {
     global $db_conn;
 
-    $id = get_account_id();
+    if (!isset($account_id)) { $account_id = get_account_id(); }
 
-    $sql = "SELECT team_a, team_b, team_c FROM accounts WHERE id=" . $id;
+    $sql = "SELECT team_id FROM rosters WHERE account_id=" . $account_id;
     $result = $db_conn->query($sql);
     return $result->fetch_array();
   }
@@ -935,6 +987,12 @@ var_dump($_POST);
     $name = compose_account_name($_POST["id"]);
     return $name == null ? "" : trim(htmlspecialchars_decode($name, ENT_QUOTES));
   }
+
+  function unknown_action () {
+
+    return '<script>alert("Azione sconosciuta");</script>';
+  }
+
 
   // Aggiorna i dati dell'account
   function update_account () {

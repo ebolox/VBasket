@@ -223,20 +223,7 @@
 
     global $btn_params;
     global $vb;
-
-    $labels = array(
-      "account" => "Profilo",
-      "activity" => "Attività",
-      "book" => "Rubrica",
-      "calendar" => "Calendario",
-      "club" => "Società",
-      "event" => "Evento",
-      "field" => "Campi di gioco",
-      "game" => "Partita",
-      "registry" => "Anagrafica",
-      "training" => "Allenamento",
-      "all" => "Tutto"
-    );
+    global $lang_it;
 
     $code = '<div class="row form-navbar sticky-top">';
     $code .= '<div class="col">';
@@ -249,19 +236,19 @@
       $code .= button_icon ("bi bi-caret-down-fill", "vb", array("id" => "section_area", "value" => $value, "shape" => "circle", "margin" => "ml-4"));
     }
 
-    $code .= $labels[$area];
+    $code .= $lang_it[$area];
 
     // Switcher sezione
     if (!empty($section)) {
 
-      $menu_attributes = array("btn_color" => "btn-vb", "label_icon" => true, "all" => "Tutto");
+      $menu_attributes = array("btn_color" => "btn-vb", "label_icon" => true);
       $menu_options = array();
       foreach ($vb[$area] as $sect) {
-        array_push($menu_options, array("value" => $sect, "label" => $labels[$sect]));
+        array_push($menu_options, array("value" => $sect, "label" => $lang_it[$sect]));
       }
 
       $code .= '<i class="bi bi-chevron-double-right mr-3 ml-3"></i>';
-      $code .= '<span id="section_title" class="mr-2">' . $labels[$section] . '</span>';
+      $code .= '<span id="section_title" class="mr-2">' . $lang_it[$section] . '</span>';
       $code .= button_icon_dropdown ("section", "selector", "bi bi-caret-down-fill", $section, $menu_options, $menu_attributes);
     }
 
@@ -293,7 +280,7 @@
 
     $code = '<td scope="col" class="' . $section_tag . '-toolbar">';
     $code .= button_icon ($btn_params["edit"]["icon_class"], $btn_params["edit"]["color"], array("id" => $section_tag .'_edit_' . $object_id, "class" => "btn-edit", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
-    $code .= button_icon ($params["delete"]["icon_class"], $params["delete"]["color"], array("id" => $section_tag .'_delete_' . $object_id, "class" => "btn-delete", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
+    $code .= button_icon ($btn_params["delete"]["icon_class"], $btn_params["delete"]["color"], array("id" => $section_tag .'_delete_' . $object_id, "class" => "btn-delete", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
     $code .= '</td>';
 
     return $code;
@@ -350,68 +337,33 @@
   // Crea un titolo. Eventualmente con etichetta dropdown se il modello ha aree
   function tab_title ($area, $section = false) {
 
-    global $btn_params;
-    global $vb;
+    global $lang_it;
 
-    $labels = array(
-      "account" => "Profilo",
-      "activity" => "Attività",
-      "book" => "Rubrica",
-      "calendar" => "Calendario",
-      "club" => "Società",
-      "event" => "Evento",
-      "field" => "Campi di gioco",
-      "game" => "Partita",
-      "registry" => "Anagrafica",
-      "training" => "Allenamento",
-      "all" => "Tutto"
-    );
-
-    $code = '<div class="row form-navbar sticky-top">';
-    $code .= '<h5 class="text-uppercase mb-0">';
-
-    $code .= '<i class="bi bi-file-earmark-richtext mr-2 ml-4"></i>';
-    $code .= $labels[$area];
-
-    // Switcher area
-    $section_tags = array_merge($vb["activity"], $vb["book"]);
-    if (in_array($area, $section_tags)) {
-      $value = in_array($area, $vb["activity"]) ? "activity" : "book";
-      $code .= button_icon ("bi bi-caret-up-fill", "vb", array("id" => "section_area", "value" => $value, "shape" => "circle", "margin" => "ml-3"));
-    }
-
-    // Switcher sezione
-    if (!empty($section)) {
-
-      $menu_attributes = array("btn_color" => "btn-vb", "label_icon" => true, "all" => "Tutto");
-      $menu_options = array();
-      foreach ($vb[$area] as $sect) {
-        if ($sect != $section) { array_push($menu_options, array("value" => $sect, "label" => $labels[$sect])); }
-      }
-
-      $code .= '<i class="bi bi-chevron-double-right mr-4 ml-4"></i>';
-      $code .= '<span id="section_title" class="mr-2">' . $labels[$section] . '</span>';
-      $code .= button_icon_dropdown ("section", "selector", "bi bi-caret-down-fill", $section, $menu_options, $menu_attributes);
-    }
-
-    $code .= '</h5></div>';
+    $code = '<div class="vb-tab-title text-uppercase pr-3 pb-1 mb-3">';
+    $code .= '<i class="bi bi-file-earmark-richtext mr-2 ml-4"></i>' . $lang_it[$area];
+    $code .= '</div>';
 
     return $code;
   }
 
-  // Crea un blocco vuoto alto quanto il titolo.
-  function tab_title_ghost () {
+  // Crea la toolbar della scheda
+  function tab_toolbar ($action) {
 
-    $code = '<div class="row form-navbar sticky-top">';
-    $code .= '<div class="col">';
-    $code .= '<h5 class="text-uppercase mb-0">&nbsp;</h5>';
-    $code .= '</div></div>';
+    $code = '<div class="vb-tab-toolbar pb-1 mb-3">';
+    if ($action == "init_object") {
+			$code .= button_icon ("bi bi-floppy", "success", array("id" => "tab_create", "shape" => "circle"));
+    } else {
+			$code .= button_icon ("bi bi-plus-lg", "success", array("id" => "tab_new", "shape" => "circle"));
+      $code .= button_icon ("bi bi-trash3", "danger", array("id" => "tab_delete", "shape" => "circle", "margin" => "ml-3"));
+    }
+    $code .= button_icon ("bi bi-x-lg", "danger", array("id" => "tab_close", "shape" => "circle", "margin" => "ml-3"));
+    $code .= '</div>';
 
     return $code;
   }
 
   // Crea un titolo. Eventualmente con etichetta dropdown se il modello ha aree
-  function tab_toolbar ($area, $buttons = []) {
+  function tab_toolbar_never_used ($area, $buttons = []) {
 
     global $btn_params;
     global $vb;
