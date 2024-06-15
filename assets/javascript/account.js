@@ -4,7 +4,7 @@ $(document).ready( function () {
   model = $("#form_model").val();
   object_id = $("#form_id").val();
 
-  // Precarica l'immagine account
+  // Gestione upload immagine
   change_picture (model);
 
   // Gestione pulsanti form

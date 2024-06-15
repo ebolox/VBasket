@@ -38,7 +38,7 @@ $(document).ready( function () {
 // Cambia l'immagine aggiornando il db
 function change_picture (model) {
   $("#" + model + "_img").click( function(){ $("#" + model + "_img_file").trigger("click"); });
-  $("#" + model + "_img_file").on("change", function (e) { preload_image(e, model + "_img", model, $("#" + model + "_id").val()); });
+  $("#" + model + "_img_file").on("change", function (e) { preload_image(e, model + "_img", model, $("#form_id").val()); });
 }
 
 // Converte la stringa serializzata in un hash (oggetto JavaScript)
@@ -440,7 +440,7 @@ function sidebar_collapse (id, context) {
 }
 
 // Precarica un'immagine e aggiorna il db
-function preload_picture (e, target_id, object_type, object_id) {
+function preload_image (e, target_id, object_type, object_id) {
   var file = e.target.files[0];
   var reader = new FileReader();
 
@@ -458,6 +458,7 @@ function preload_picture (e, target_id, object_type, object_id) {
 
     var formData = new FormData();
     formData.append("file", file);
+    formData.append("action", "upload_image");
     formData.append("object_type", object_type);
     formData.append("object_id", object_id);
 

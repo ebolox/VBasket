@@ -61,6 +61,10 @@
 
       } elseif ($_POST['action'] === 'get_calendar_by') {
         get_calendar_by($_POST['activity_tag'], $_POST['team_tag'], $_POST['account_id']);
+
+      } elseif ($_POST['action'] === 'upload_image') {
+        upload_image ();
+
       } else {
 
         unknown_action();
@@ -1053,17 +1057,20 @@
 
       // Controlliamo la presenza dell'immagine main
       // per l'elemento in editing
-      $sql_main = "SELECT * FROM images WHERE object_type = '" . $_POST["object_type"] . "' AND object_id = " . $_POST["object_id"] . " AND main = 1";
+      $sql_main = "SELECT id FROM images WHERE object_type = '" . $_POST["object_type"] . "' AND object_id = " . $_POST["object_id"] . " AND main = 1";
       $result_main = $db_conn->query($sql_main);
       $main = $result_main->fetch_array();
 
-      $sql = empty($main) ?
-        "INSERT INTO images (filename, object_type, object_id, main) VALUES ('" . $filename . "', '" . $_POST["object_type"] . "', " . $_POST["object_id"] . ", 1)" :
-        "UPDATE images SET filename = '" . $filename . "' WHERE id=" . $main["id"];
+      $sql_insert = "INSERT INTO images (filename, object_type, object_id, main) VALUES ('" . $filename . "', '" . $_POST["object_type"] . "', " . $_POST["object_id"] . ", 1)";
 
       if(move_uploaded_file($temp_file, $upload_path)) {
-        $result = $db_conn->query($sql);
+        $result = $db_conn->query($sql_insert);
   
+        if (!empty($main)) {
+          $sql_update = "UPDATE images SET main = 0 WHERE id=" . $main["id"];
+          $result = $db_conn->query($sql_update);
+        }
+
         return "File caricato con successo!";
       } else {
         return "Errore durante il caricamento del file.";
