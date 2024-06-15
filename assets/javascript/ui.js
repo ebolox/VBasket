@@ -7,6 +7,16 @@ var calendar_words = {
   weekdaysShort : ['Dom','Lun','Mar','Mer','Gio','Ven','Sab']
 };
 
+var mandatory_params = {
+  account  : ["name_last", "name_first"],
+  club     : ["name"],
+  event    : ["name", "type", "town"],
+  field    : ["name", "town"],
+  game     : ["type", "team", "opponent"],
+  team     : ["name"],
+  training : ["type", "team", "field"]
+};
+
 // Aree e Sezioni
 var vb = {
   activity : ["event", "game", "training"],
@@ -31,24 +41,68 @@ function change_picture (model) {
   $("#" + model + "_img_file").on("change", function (e) { preload_image(e, model + "_img", model, $("#" + model + "_id").val()); });
 }
 
+// Converte la stringa serializzata in un hash (oggetto JavaScript)
+function convert_to_hash (encode_string) {
+
+  var hash = {};
+  var parts = encode_string.split("&");
+  for (var i = 0; i < parts.length; i++) {
+    var keyValue = parts[i].split("=");
+    var key = decodeURIComponent(keyValue[0]);
+    var value = decodeURIComponent(keyValue[1]);
+
+    // Gestione delle chiavi annidate
+    var keys = key.split(/\[|\]/).filter(function(k) { return k; });
+    var lastKey = keys.pop();
+    var current = hash;
+
+    keys.forEach(function(k) {
+      if (!current[k]) {
+        current[k] = {};
+      }
+      current = current[k];
+    });
+
+    current[lastKey] = value;
+  }
+
+  return hash;
+}
+
 // Crea l'oggetto di cui si salva il nome
 function create_object () {
 
   model = $("#form_model").val();
-  params = {
-    action: "create_object",
-    model: model,
-    name: $("#" + model + "_name").val()
+  parameters = convert_to_hash ($("form.vb-tab-right").serialize());
+
+  validation = true;
+  for (c in parameters[model]) {
+    if (parameters[model][c] == "") { validation = false; }
   }
 
-  update_frontend("ui_content", "logic.php", {
-    parameters: $.param(params),
-    method: "POST",
-    asynchronous: true,
-    evalScripts: true,
-    onComplete: function() { console.log("create " + model + " tab complete"); },
-    onLoading: function() { console.log("create " + model + " tab loading"); }
-  });
+  if (validation) {
+
+    params = {
+      action: "create_object",
+      model: model
+    }
+    for (c in mandatory_params[model]) {
+      param = mandatory_params[model][c];
+      params[param] = parameters[model][param];
+    }
+
+    update_frontend("ui_content", "logic.php", {
+      parameters: $.param(params),
+      method: "POST",
+      asynchronous: true,
+      evalScripts: true,
+      onComplete: function() { console.log("create " + model + " tab complete"); },
+      onLoading: function() { console.log("create " + model + " tab loading"); }
+    });
+
+  } else {
+    alert("Dati obbligatori mancanti");
+  }
 }
 
 // Elimina la scheda Account
@@ -85,12 +139,10 @@ function delete_object (event, btn, model, object_id = null) {
   if (confirm('Sei sicuro di voler eliminare questo elemento?')) {
 
     if (!object_id){
-      if (["activity", "book"].indexOf(model) >= 0) {
-        row_id = $("#" + model + "_list > table > tbody > tr.text-success").attr("id");
-        model = $("#section_btn").data("value");
-      } else {
-        row_id = btn.parent().parent().attr("id");
-      }
+      row_id = (["activity", "book"].indexOf(model) >= 0) ?
+        $("#" + model + "_list > table > tbody > tr.text-success").attr("id") :
+        btn.parent().parent().attr("id");
+
       object_id = row_id.replace("object_", "");
     }
 
@@ -106,6 +158,7 @@ function delete_object (event, btn, model, object_id = null) {
       asynchronous: true,
       evalScripts: true,
       onComplete: function() { console.log("delete_object complete"); },
+      onSuccess: function() { if ($("#" + model + "_list > table > tbody > tr.text-success").length > 0) { $("#" + row_id).remove(); }},
       onLoading: function() { console.log("delete_object loading"); }
     });
   }
@@ -189,7 +242,7 @@ function get_account_tab (action, update_navbar = true, account_id = null) {
     main_menu_selected ($("#navlink_account"));
   }
 
-  if (action == "edit" && !account_id) {
+  if (action == "edit_object" && !account_id) {
     account_id = $("#registry_list > table > tbody > tr.text-success").attr("id").replace("object_", "");
   }
   params = {
@@ -479,8 +532,8 @@ function set_list_events (model, section_tag) {
   rows.mouseleave( function () { show_toolbar ($(this), false); });
 
   // Click su pulsanti contestuali
-  rows.find("button.btn-edit").click( function () { edit_object_from_list (event, $(this)); });
-  rows.find("button.btn-delete").click( function () { delete_object (event, $(this)); });
+  rows.find("button.btn-edit").click( function () { edit_object_from_list (event, $(this), section_tag); });
+  rows.find("button.btn-delete").click( function () { delete_object (event, $(this), section_tag); });
 }
 
 function set_radio_value (btn_radio) {
@@ -511,7 +564,7 @@ function set_tab_buttons (action, model, object_id) {
     $("#tab_delete").removeAttr('disabled');
   }
 
-  parent_area = vb["activity"].indexOf() >= 0 ? "activity" : "book";
+  parent_area = vb["activity"].indexOf(model) >= 0 ? "activity" : "book";
   $("#tab_close").click( function () { update_content (parent_area); });
 }
 

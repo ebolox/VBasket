@@ -22,6 +22,7 @@
     "admin" => "Amministratore",
     "all" => "Tutto",
     "athlete" => "Atleta",
+    "assistant" => "Assistente",
     "athletic" => "Atletico",
     "book" => "Rubrica",
     "brainstorming" => "Riunione societaria",
@@ -37,6 +38,7 @@
     "manager" => "Dirigente",
     "meeting" => "Meeting",
     "party" => "Festa",
+    "player" => "Giocatore",
     "other" => "Altro",
     "registry" => "Anagrafica",
     "staff" => "Staff",
@@ -115,12 +117,13 @@
 
   // Liste valore, nome delle colonne Anagrafica
   $registry_column_opts = array(
-    array("value" => "role", "label" => "Ruolo"),
-    array("value" => "birth", "label" => "Millesimo"),
+    array("value" => "account-type", "label" => "Account"),
+    array("value" => "name-last", "label" => "Cognome"),
+    array("value" => "name-first", "label" => "Nome"),
+    array("value" => "birth-date", "label" => "Millesimo"),
     array("value" => "phone", "label" => "Telefono"),
     array("value" => "email", "label" => "Email"),
-    array("value" => "document", "label" => "Documento"),
-    array("value" => "fitness", "label" => "Idoneità"),
-    array("value" => "team", "label" => "Squadre")
+    array("value" => "document-id", "label" => "Documento"),
+    array("value" => "sport-fitness", "label" => "Idoneità")
   );
 ?>

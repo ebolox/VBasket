@@ -61,6 +61,10 @@ body {
   --size-xl: 18px;
 }
 
+ul {
+  list-style: none;
+}
+
 .green { color: #3dca5e; }
 .orange { color: #ffc107; }
 .red { color: #f9051c; }
@@ -221,12 +225,12 @@ body {
 }
 
 .vb-btn-dropdown .dropdown-menu {
-  background-color: var(--air-dark);
+  background-color: var(--cacao);
   padding: .5rem;
 }
 
 .vb-btn-dropdown .dropdown-menu > .dropdown-item {
-  color: var(--cacao);
+  color: white;
   background-color: transparent;
 }
 .vb-btn-dropdown .dropdown-menu > .dropdown-item:hover {
@@ -319,11 +323,11 @@ body {
   display: inline-block;
 }
 .vb-content.vb-tab > .vb-tab-left {
-  width: 60%;
+  width: 55%;
   background-color: var(--air);
 }
 .vb-content.vb-tab > .vb-tab-right {
-  width: 39%;
+  width: 44%;
   background-color: var(--air-light);
 }
 
@@ -541,6 +545,7 @@ a#navlink_account > i.bi {
 }
 .form-data {
   min-width: 300px;
+  width: calc(100% - 10px);
   padding-left: 20px;
 }
 .form-label {
@@ -556,7 +561,7 @@ a#navlink_account > i.bi {
   margin-bottom: 16px;
 }
 
-.sidebar .form-data li.btn-boolean,
+.form-data li.btn-boolean,
 .vb-date > button.form-control, .vb-date > input.form-control,
 .vb-dropdown > button.form-control, .vb-dropdown > input.form-control,
 .vb-text > button.form-control, .vb-text > input.form-control {
@@ -566,14 +571,14 @@ a#navlink_account > i.bi {
   border: 0;
   cursor: pointer;
 }
-.sidebar .form-data li.btn-boolean:hover,
+.form-data li.btn-boolean:hover,
 .vb-date > button.form-control:hover, .vb-date > input.form-control:hover,
 .vb-dropdown > button.form-control:hover, .vb-dropdown > input.form-control:hover,
 .vb-text > button.form-control:hover, .vb-text > input.form-control:hover {
   color: var(--apricot-light);
   background-color: white;
 }
-.sidebar .form-data li.btn-boolean:focus,
+.form-data li.btn-boolean:focus,
 .vb-date > button.form-control:focus, .vb-date > input.form-control:focus.
 .vb-dropdown > button.form-control:focus, .vb-dropdown > input.form-control:focus,
 .vb-text > button.form-control:focus, .vb-text > input.form-control:focus {
@@ -602,6 +607,14 @@ a#navlink_account > i.bi {
 .vb-dropdown a.dropdown-item.active > i {
   float: right;
   margin-top: 3px;
+}
+
+.vb-color {
+  background-color: transparent;
+  cursor: pointer;
+}
+.vb-color:hover {
+  background-color: white;
 }
 /* fine */
 
@@ -664,3 +677,26 @@ tr.game-row.text-success > td.game-toolbar button.btn-icon {
 }
 /* fine */
 /* SIDEBAR */
+
+/* MARKER ACCOUNT */
+/* inizio */
+.role-assistant,
+.role-coach,
+.role-player,
+.role-staff {
+  width: var(--size-24);
+  height: var(--size-24);
+  font-size: var(--size-s);
+  text-align: center;
+  color: var(--smurf-dark);
+  background-color: white;
+  border: 2px solid var(--smurf-light);
+  display: inline-block;
+}
+
+.role-player {
+  font-size: var(--size-m);
+  border-radius: 50%;
+}
+/* fine */
+/* MARKER ACCOUNT */

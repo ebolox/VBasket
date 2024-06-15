@@ -42,9 +42,10 @@
   <link rel="stylesheet" href="ext/fontawesome-free-6.5.1-web/css/fontawesome.css">
   <link rel="stylesheet" href="assets/stylesheets/ui.css">
   <link rel="stylesheet" href="assets/stylesheets/account.css">
-  <link rel="stylesheet" href="assets/stylesheets/registry.css">
   <link rel="stylesheet" href="assets/stylesheets/book.css">
   <link rel="stylesheet" href="assets/stylesheets/calendar.css">
+  <link rel="stylesheet" href="assets/stylesheets/registry.css">
+  <link rel="stylesheet" href="assets/stylesheets/team.css">
   <link rel="stylesheet" href="assets/stylesheets/technique.css">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -32,14 +32,14 @@
 
       <?= tab_title ($model); ?>
       <div class="form-row">
-        <div class="col-md-8 text-center">
+        <div class="col-md-7 text-center">
 
           <div class="vb-image">
             <img id="game_img" class="img-fluid" src="assets/images/logo_big.jpg" />
           </div>
 
         </div>
-        <div class="col-md-4 text-right">
+        <div class="col-md-5 text-right">
 
           <ul class="form-label">
             <li>Competizione</li>

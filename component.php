@@ -202,6 +202,17 @@
     return $code;
   }
 
+  // Crea il box Immagine
+  function field_image ($model, $filename) {
+
+    $code = '<div class="vb-image">';
+    $code .= '<img id="' . $model . '_img" class="img-fluid" src="' . $filename . '" />';
+    $code .= '<input type="file" id="' . $model . '_img_file" class="d-none">';
+    $code .= '</div>';
+
+    return $code;
+  }
+
   // Crea un campo con etichetta e input text
   function field_text ($model, $param, $label, $value) {
 
@@ -286,6 +297,11 @@
     return $code;
   }
 
+  function account_marker ($role, $text) {
+
+    return '<span class="role-' . $role . ' mr-2"">' . $text . '</span>';
+  }
+
   // Funzione per rendere maiuscola la prima lettera di una stringa multibyte
   function mb_ucfirst($string, $encoding = 'UTF-8') {
     $firstChar = mb_substr($string, 0, 1, $encoding);
@@ -330,6 +346,28 @@
     include $filename; // Include il file contenente il codice PHP
     $code .= ob_get_clean(); // Ottiene l'output del buffer e lo pulisce
     $code .= modal_base_footer ();
+
+    return $code;
+  }
+
+  function roster_details ($members, $coach_ids, $assistant_ids, $staff_ids, $player_ids) {
+
+    $code = '<div id="roster_details">';
+
+    if ((count($coach_ids) + count($assistant_ids) + count($staff_ids)) > 0) {
+      $code = '<div>';
+      $code = roster_group($members, $coach_ids, "COACH");
+      $code = roster_group($members, $assistant_ids, "ASSISTENTI");
+      $code = roster_group($members, $staff_ids, "STAFF");
+      $code = '</div>';
+    }
+    if (count($player_ids) > 0) {
+      $code = '<div>';
+      $code = roster_group($members, $player_ids, "GIOCATORI");
+      $code = '</div>';
+    }
+
+    $code = '</div>';
 
     return $code;
   }
@@ -384,6 +422,12 @@
 
     
 
+  }
+
+  function vb_color ($model, $param, $value) {
+    $code = '<input type="color" class="form-control form-control-color vb-color" id="' . $model . '_' . $param . '" name="' . $model . '[' . $param . ']" value="' . $value . '">';
+
+    return $code;
   }
 
   function vb_date ($model, $param, $value = "", $options = []) {

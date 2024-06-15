@@ -46,19 +46,30 @@ h2 {
   display: none;
 }
 
-#eboard_effects > div {
-  padding-top: 5px;
-  border-top: 1px solid var(--air-dark);
+#roster_details {
+  font-size: var(--size-s) !important;
+  display: none;
 }
 
-.input-group > .input-group-append > .btn.btn-primary {
-  border-color: #ced4da;
-  border-top-right-radius: .2rem;
-  border-bottom-right-radius: .2rem;
+#roster_details ul {
+  color: var(--cacao) !important;
+  padding-left: 10px;
 }
-.input-group > .input-group-prepend > .input-group-text {
-  background-color: var(--bluegrey);
-  border: 0;
-  border-radius: 0;
-  opacity: .65;
+
+#roster_details > div {
+  width: 49%;
+  vertical-align: top;
+  display: inline-block;
+}
+
+#roster_details > div label {
+  color: var(--cacao) !important;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--bluegrey-light);
+  margin-bottom: 4px;
+}
+
+.player-nr {
+  width: 30px;
+  display: inline-block;
 }

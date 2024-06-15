@@ -275,7 +275,7 @@ function set_modal_team_events (team_id) {
 
   // Pulsanti Squadra
   $("#team_change").click( function () { go_to("ui", "watch=game&id=" + game_id); });
-  $("#team_edit").click( function () { edit_object("team", team_id); });
+  $("#team_edit").click( function () { go_to("ui", "watch=team&id=" + team_id); });
 
   // Gestione righe della tabella
   accounts = $(".roster ul > li");

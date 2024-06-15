@@ -31,7 +31,7 @@
     $result = $db_conn->query($sql);
   }
 
-  if (!isset($result) || $result->num_rows < 1) {
+  if (!isset($result) || $result === false) {
     $login_failed = true;
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $account = false;

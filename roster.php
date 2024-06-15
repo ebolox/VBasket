@@ -23,13 +23,13 @@
     <ul>
 <?php
     foreach ($members as $mmb) {
-      $role = $mmb["role"] == "player" ?
-                '<span class="jersey mr-2">' . (!empty($mmb["jersey_nr"]) ? $mmb["jersey_nr"] : "-") . '</span>' :
-                '<span class="staff mr-2" style="font-size: var(--size-s);">' . mb_ucfirst(mb_substr($mmb["role"], 0, 2)) . '</span>';
       $name = mb_strtoupper($mmb["name_last"]) . " " . $mmb["name_first"];
+      $marker_label = $mmb["role"] == "player" ?
+                        jersey_number($mmb["jersey_nr"]) :
+                        role_short($mmb["role"]);
       $btn_edit = button_icon ("bi bi-pencil", "primary", array("value" => $mmb["id"], "shape" => "circle", "margin" => "ml-4", "invisible" => true));
 ?>
-      <li data-id="<?= $mmb["id"] ?>"><?= $role ?><?= $name ?><?= $btn_edit ?></li>
+      <li data-id="<?= $mmb["id"] ?>"><?= account_marker($mmb["role"], $marker_label) ?><?= $name ?><?= $btn_edit ?></li>
 <?php
     }
 ?>

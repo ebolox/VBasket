@@ -24,8 +24,8 @@ $(document).ready( function () {
   $("#registry_select_all").click( function () { registry_select_all () });
 
   // Pulsante Edita account
-  $("#registry_new").click( function () { get_account_tab ("new", true) });
-  $("#registry_edit").click( function () { get_account_tab ("edit", true) });
+  $("#registry_new").click( function () { get_account_tab ("init_object", true) });
+  $("#registry_edit").click( function () { get_account_tab ("edit_object", true) });
   $("#registry_delete").click( function () { delete_account () });
 });
 

@@ -31,6 +31,8 @@ $(document).ready( function () {
   $(".btn-edit").click( function () { switch_to_edit(event, $(this).next()); });
   $(".btn-edit + input[type='text']").change( function () { switch_to_edit(event, $(this)); });
 
+  $("#roster_btn").click( function () { modal_team ($(this), true); });
+
   // Gestione pulsanti form
   set_tab_buttons (action, model, object_id);
 });

@@ -124,9 +124,19 @@
     $rachid = init_pluralizer();
 
     $model = $_POST["model"];
-    $value = $_POST["name"];
+    $action = $_POST["action"];
 
-    $sql = "INSERT INTO " . $rachid->pluralize($model) . " (name) VALUES ('" . $value . "');";
+    $cols = "";
+    $values = "";
+    foreach ($_POST as $key => $val) {
+      if (!in_array($key, ["model", "action"])) {
+        $cols .= $key . ",";
+        $values .= "'" . $val . "',";
+      }
+    }
+
+    $sql = "INSERT INTO " . $rachid->pluralize($model) . " (" . trim($cols, ",") . ") VALUES (" . trim($values, ",") . ");";
+    echo $sql;
     $result = $db_conn->query($sql);
 
     $sql_new = "SELECT * FROM " . $rachid->pluralize($model) . " ORDER BY id desc LIMIT 1;";
@@ -300,7 +310,7 @@
   function get_account () {
     global $db_conn;
 
-    if (isset($_POST) && isset($_POST["action"]) && $_POST["action"] == "new") {
+    if (isset($_POST) && isset($_POST["action"]) && $_POST["action"] == "init") {
 
       $sql = "SELECT MAX(id) as id FROM accounts";
       $result = $db_conn->query($sql);
@@ -780,14 +790,10 @@
     $results .= '<thead>';
     $results .= '<tr>';
     $results .= '<th scope="col" class="cell-nr">#</th>';
-    $results .= '<th scope="col" class="cell-role">Ruolo</th>';
-    $results .= '<th scope="col" class="cell-name-last">Cognome</th>';
-    $results .= '<th scope="col" class="cell-name-first">Nome</th>';
     foreach ($registry_column_opts as $opt) {
-      $colspan = $opt["value"] == "team" ? " colspan=3" : "";
-      if ($opt["value"] != "role") {
-        $results .= '<th class="cell-' . $opt["value"] . ' cell-optional" scope="col"' . $colspan . '>' . $opt["label"] . '</th>';
-      }
+      $opt_class = in_array($opt["value"], ["account-type", "name-last", "name-first"]) ? "" : " cell-optional";
+
+      $results .= '<th class="cell-' . $opt["value"] . $opt_class . '" scope="col">' . $opt["label"] . '</th>';
     }
     $results .= '<th scope="col" class="data-toolbar"></th>';
     $results .= '</tr>';
@@ -795,17 +801,16 @@
     $results .= '<tbody>';
     foreach ($members as $key => $member) {
 
-      $results .= '<tr id="object_' . $member["id"] . '" class data-role="' . $member["role"] . '">';
-      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="cell-role">' . $lang_it[$member["role"]] . '</th>';
-      $results .= '<td scope="col" class="cell-name-last">' . $member["name_last"] . '</th>';
-      $results .= '<td scope="col" class="cell-name-first">' . $member["name_first"] . '</th>';
-      $results .= '<td scope="col" class="cell-birth cell-optional">' . format_to_ddmmyyyy($member["birth_date"]) . '</th>';
-      $results .= '<td scope="col" class="cell-phone cell-optional">' . $member["phone"] . '</th>';
-      $results .= '<td scope="col" class="cell-email cell-optional">' . $member["email"] . '</th>';
-      $results .= '<td scope="col" class="cell-document cell-optional">' . $member["document_id"] . '</th>';
-      $results .= '<td scope="col" class="cell-fitness cell-optional">' . format_to_ddmmyyyy($member["sport_fitness"]) . '</th>';
-      $results .= '<td scope="col" class="cell-team cell-optional">' . $member["team_ids"] . '</th>';
+      $results .= '<tr id="object_' . $member["id"] . '" data-type="registry">';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</td>';
+      $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$member["account_type"]] . '</td>';
+      $results .= '<td scope="col" class="cell-name-last">' . $member["name_last"] . '</td>';
+      $results .= '<td scope="col" class="cell-name-first">' . $member["name_first"] . '</td>';
+      $results .= '<td scope="col" class="cell-birth-date cell-optional">' . (empty($member["birth_date"]) ? "n.d." : substr($member["birth_date"], 0, 4)) . '</td>';
+      $results .= '<td scope="col" class="cell-phone cell-optional">' . (empty($member["phone"]) ? "n.d." : $member["phone"]) . '</td>';
+      $results .= '<td scope="col" class="cell-email cell-optional">' . (empty($member["email"]) ? "n.d." : $member["email"]) . '</td>';
+      $results .= '<td scope="col" class="cell-document-id cell-optional">' . (empty($member["document_id"]) ? "n.d." : $member["document_id"]) . '</td>';
+      $results .= '<td scope="col" class="cell-sport-fitness cell-optional">' . (empty($member["sport_fitness"]) ? "n.d." : format_to_ddmmyyyy($member["sport_fitness"])) . '</td>';
       $results .= object_contextual_toolbar ("registry", $key + 1);
       $results .= '</tr>';
     }
@@ -976,6 +981,41 @@
   function init_pluralizer () {
     return new rachid\pluralizer\Pluralizer();
   }
+
+  // Ritora il numero di maglia
+  function jersey_number ($nr) {
+    return !empty($nr) ? $nr : "-";
+  }
+
+  // Ritorna il ruolo abbreviato
+  function role_short ($role) {
+    return mb_ucfirst(mb_substr($role, 0, 2));
+  }
+
+  // 
+  function roster_group ($items, $ids, $label) {
+
+    $code = "";
+
+    if (count($ids) > 0) {
+      $code .= '<label>' . $label . '</label>';
+      $code .= '<ul>';
+
+      foreach ($ids as $key => $id) {
+        $member = $items[$id];
+        $member_name = $member["name_last"] . " " . substr($member["name_first"], 0, 1);
+        $member_jersey = $label == "GIOCATORI" ?
+                          '<span class="player-nr">#' . jersey_number($member["jersey_nr"]) . '</span>' :
+                          "";
+
+        $code .= '<li>' . $member_jersey . $member_name . '</li>';
+      }
+      $code .= '</ul>';
+    }
+
+    return $code;
+  }
+
 
   // Imposta il formato del nome account e lo restituisce
   function set_account_name () {
