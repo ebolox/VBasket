@@ -1041,7 +1041,7 @@
   // Aggiorna i dati dell'account
   function update_account () {
     global $db_conn;
-    $sql = "UPDATE accounts set " . $_POST["param"] . "='" . $_POST["value"] . "' WHERE id=" . $_POST["id"];
+    $sql = "UPDATE accounts set " . $_POST["param"] . "='" . $_POST["value"] . "' WHERE id=" . $_POST["account_id"];
     $result = $db_conn->query($sql);
   }
 

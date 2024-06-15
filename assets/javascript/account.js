@@ -92,7 +92,7 @@ function pikaday_to_string (calendar_date) {
 function update_account (param, value) {
 
   params = {
-    account_id: object_id,
+    account_id: $("#form_id").val(),
     action: "update_account",
     param: param,
     value: value
