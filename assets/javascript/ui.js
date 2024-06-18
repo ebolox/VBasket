@@ -20,16 +20,23 @@ var mandatory_params = {
 // Aree e Sezioni
 var vb = {
   activity : ["event", "game", "training"],
-  book     : ["club", "field", "team"]
+  book     : ["account", "club", "field", "team"]
 };
 
 $(document).ready( function () {
 
   // Gestione menù di navigazione
-  $.each(["registry", "technique", "book", "calendar", "activity"],  function (i, param) {
+  // $.each(["registry", "technique", "book", "calendar", "activity"],  function (i, param) {
+  $.each(["registry", "technique", "calendar"],  function (i, param) {
     $("#navlink_" + param).click( function () { update_content (param); });
   });
   $("#navlink_account").click(function () { edit_object ("account", $("#account_id").val()); });
+  $.each(["activity", "book"],  function (i, param) {
+    $("#navlink_" + param).parent().mouseenter( function () { show_btn_dropdown ($(this)); });
+    $("#navlink_" + param).parent().mouseleave( function () { show_btn_dropdown ($(this), false); });
+    $("#navlink_" + param).parent().click( function () { show_menu_dropdown ($(this)); });
+    $("#" + param + "_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_content (param, $(this)); });
+  });
 
   // Gestisce il menù principale per l'elemento selezionato
   $("#ui_navbar nav a").not("#navlink_account, #navlink_home").click( function () { main_menu_selected ($(this)); });
@@ -576,6 +583,26 @@ function set_value ( elem ) {
 
   $("input[name='" + input_name + "']").val( input_value );
   $("#" + input_id).text( elem.text() );
+}
+
+// Mostra/nasconde la freccia dropdown
+function show_btn_dropdown (navlink, visible = true) {
+
+  btn_dropdown = navlink.find(".vb-btn-dropdown");
+
+  visible ?
+    btn_dropdown.removeClass("invisible") :
+    btn_dropdown.addClass("invisible");
+}
+
+// Mostra/nasconde il menù dropdown
+function show_menu_dropdown (navlink) {
+
+  menu_dropdown = navlink.find(".vb-btn-dropdown .dropdown-menu");
+
+  menu_dropdown.is(":visible") ?
+    menu_dropdown.removeClass("show") :
+    menu_dropdown.addClass("show");
 }
 
 // Mostra/nasconde i pulsanti edita/elimina riga

@@ -112,7 +112,7 @@
   // Aree e Sezioni
   $vb = array(
     "activity" => array("event", "game", "training"),
-    "book" => array("club", "field", "team")
+    "book" => array("account", "club", "field", "team")
   );
 
   // Liste valore, nome delle colonne Anagrafica
