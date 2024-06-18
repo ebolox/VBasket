@@ -78,6 +78,14 @@
     $label_class = "";
     if (!empty($attributes["label_icon"])) { $label_class = " vb-btn-icon"; }
 
+    // Pulsante gruppo di elementi (input-group)
+    $btn_group = " input-group ";
+    if (isset($attributes["btn_group"]) && $attributes["btn_group"] === false) { $btn_group = ""; }
+
+    // Colore nascosto
+    $btn_hidden = "";
+    if (isset($attributes["btn_hidden"]) && $attributes["btn_hidden"] === true) { $btn_hidden = " invisible"; }
+
     // Colore pulsante
     $btn_color = "btn-success";
     if (!empty($attributes["btn_color"])) { $btn_color = $attributes["btn_color"]; }
@@ -86,7 +94,7 @@
     $btn_size = "";
     if (!empty($attributes["btn_size"])) { $btn_size = $attributes["btn_size"] == "large" ? "btn-lg " : "btn-sm "; }
 
-    $code = '<div id="btn_' . $field_id . '" class="input-group vb-btn-dropdown' . $label_class . ' d-inline">';
+    $code = '<div id="btn_' . $field_id . '" class="vb-btn-dropdown' . $label_class . $btn_group . $btn_hidden . ' d-inline">';
     $code .= '<div class="btn-group ' . str_replace("btn", "btn-group", $btn_size) . 'btn-group-append">';
     $code .= '<button id="' . $field_id . '" class="btn ' . $btn_size . " btn-icon " . $btn_color . ' text-left dropdown-toggle" data-value="' . $value . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
     $code .= '<i class="' . $icon_class . '"></i>';
