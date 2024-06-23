@@ -26,7 +26,6 @@ var vb = {
 $(document).ready( function () {
 
   // Gestione menù di navigazione
-  // $.each(["registry", "technique", "book", "calendar", "activity"],  function (i, param) {
   $.each(["registry", "technique", "calendar"],  function (i, param) {
     $("#navlink_" + param).click( function () { update_content (param); });
   });
@@ -35,11 +34,8 @@ $(document).ready( function () {
     $("#navlink_" + param).parent().mouseenter( function () { show_btn_dropdown ($(this)); });
     $("#navlink_" + param).parent().mouseleave( function () { show_btn_dropdown ($(this), false); });
     $("#navlink_" + param).parent().click( function () { show_menu_dropdown ($(this)); });
-    $("#" + param + "_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_content (param, $(this)); });
+    $("#" + param + "_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_content (param, { section: $(this).data("value") }); main_menu_selected ($(this)); });
   });
-
-  // Gestisce il menù principale per l'elemento selezionato
-  $("#ui_navbar nav a").not("#navlink_account, #navlink_home").click( function () { main_menu_selected ($(this)); });
 });
 
 // Cambia l'immagine aggiornando il db
@@ -354,35 +350,36 @@ function init_pikaday (model, object_id) {
   return calendar_picker;
 }
 
-// Gestisce il click su riga di tabella
-function object_selected (context, row) {
-
-  is_selected = !row.attr("class").match("text-success");
-  object_id = row.attr("id").replace("object_", "");
-  cell_check = row.find("td").first();
-  icon_checked = "<i class=\"bi bi-check-circle-fill\"></i>";
-
-  if (is_selected) {
-    row.addClass("text-success");
-    cell_check.html(icon_checked);
-  } else {
-    row.removeClass("text-success");
-    cell_check.html(object_id);
-  }
-}
-
 // Mostra il menù principale per l'elemento selezionato
 function main_menu_selected (selected) {
 
-  tag = selected.attr("id").replace("navlink_", "");
+  if (selected.attr("class").match("dropdown-item")) {
+    tag = selected.data("value");
+    area_tag = "activity";
+
+    $.each(vb, function(key, values) {
+      if (values.includes(tag)) {
+        area_tag = key;
+        return false;
+      }
+    });
+
+    navlink = $("#navlink_" + area_tag);
+  } else {
+    tag = selected.attr("id").replace("navlink_", "");
+    navlink = selected;
+  }
 
   $(".vb-navbar").hide();
   $(".navlink.active, .btn-link.active").removeClass("active");
 
-  selected.addClass("active");
+  navlink.addClass("active");
   if (tag != "account") {
     $("#" + tag + "_button_bar").show();
   }
+
+  // Nasconde il menu dropdown
+  $(".dropdown-menu.show").removeClass("show");
 }
 
 // Compone e mostra/nasconde la modale di scelte
@@ -437,6 +434,23 @@ function modal_show (id) {
   modal_cover.addClass("show");
   modal = $("#" + id);
   modal.fadeIn().addClass("show");
+}
+
+// Gestisce il click su riga di tabella
+function object_selected (context, row) {
+
+  is_selected = !row.attr("class").match("text-success");
+  object_id = row.attr("id").replace("object_", "");
+  cell_check = row.find("td").first();
+  icon_checked = "<i class=\"bi bi-check-circle-fill\"></i>";
+
+  if (is_selected) {
+    row.addClass("text-success");
+    cell_check.html(icon_checked);
+  } else {
+    row.removeClass("text-success");
+    cell_check.html(object_id);
+  }
 }
 
 // Mostra/nasconde la barra laterale
