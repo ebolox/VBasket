@@ -286,6 +286,25 @@ function get_activity (section) {
   });
 }
 
+// Aggiorna la lista
+// al click su opzione dropdown Sezione
+function get_section (model, section) {
+
+  params = {
+    action: "get_section_list",
+    section: section
+  };
+
+  update_frontend(model + "_list", model + ".php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function () { console.log("update_" + section + "_results complete"); },
+    onLoading: function () { console.log("update_" + section + "_results loading"); }
+  });
+}
+
 // Apre una pagina in una nuova scheda
 function go_to (filename, params = false) {
   page = (filename == "login") ? "/" : filename + ".php";
@@ -743,4 +762,26 @@ function update_object (model, object_id, param, value, init = false) {
       onLoading: function() { console.log("update_" + model + " loading"); }
     });
   }
+}
+
+// Aggiorna la pagina alla Sezione cliccata
+function update_section (model, btn) {
+
+  section_tag = btn.data("value");
+  section_title = btn.text();
+  section_switcher = $("#" + model + "_selector + .dropdown-menu");
+
+  // Aggiorna la variabile globale
+  section = section_tag;
+
+  // Aggiorna icona dropdown
+  section_switcher.find(".dropdown-item").show();
+  section_switcher.find(".dropdown-item[data-value='" + section_tag + "']").hide();
+
+  // Aggiorna il titolo della Sezione
+  $("#section_btn").attr("data-value", section_tag);
+  $("#section_title").text(section_title);
+
+  // Aggiorna la lista della Sezione
+  get_section (model, section_tag);
 }
