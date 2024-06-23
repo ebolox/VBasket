@@ -10,7 +10,7 @@
   $dev_username = "root";
   $dev_password = "";
   $dev_db_name = "basket";
-  
+
   // Determinare se la richiesta proviene da localhost o produzione
   if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
       // Ambiente di sviluppo
@@ -37,6 +37,32 @@
 	$fields_to_tx = "fields f ON f.id = tx.field";
 	$teams_to_tx = "teams t_team ON t_team.id = tx.team";
 	$towns_to_tx = "towns tw ON tw.id = tx.town";
+
+  $sql_accounts = "
+    SELECT
+      tx.id,
+      tx.name_first,
+      tx.name_last,
+      tx.nickname,
+      tx.named,
+      tx.birth_date,
+      tx.sex,
+      tx.address,
+      tx.email,
+      tx.phone,
+      tx.password,
+      tx.account_type,
+      tx.document_id,
+      tx.sport_fitness,
+      COALESCE(r.rosters_count, 0) AS rosters_count
+    FROM accounts tx
+    LEFT JOIN (
+      SELECT
+        account_id,
+        COUNT(*) AS rosters_count
+      FROM rosters
+      GROUP BY account_id
+    ) r ON tx.id = r.account_id";
 
   $sql_activity_events = "
     SELECT
@@ -97,6 +123,32 @@
     JOIN dates d ON d.object_type = 'training' AND d.object_id = t.id
     JOIN fields f ON f.id = t.field
     JOIN teams t_team ON t_team.id = t.team";
+
+  $sql_book_accounts = "
+    SELECT
+      a.id,
+      a.name_first,
+      a.name_last,
+      a.nickname,
+      a.named,
+      a.birth_date,
+      a.sex,
+      a.address,
+      a.email,
+      a.phone,
+      a.password,
+      a.account_type,
+      a.document_id,
+      a.sport_fitness,
+      COALESCE(r.rosters_count, 0) AS rosters_count
+    FROM accounts a
+    LEFT JOIN (
+      SELECT
+        account_id,
+        COUNT(*) AS rosters_count
+      FROM rosters
+      GROUP BY account_id
+    ) r ON a.id = r.account_id";
 
   $sql_book_clubs = "
     SELECT

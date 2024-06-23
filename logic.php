@@ -492,24 +492,44 @@
 
     $records = get_book_section($section_tag);
     $col_param = $section_tag == "team" ? "club" : "town";
+    switch ($section_tag) {
+      case "account": $col1_param = "name-last";
+                      $col2_param = "name-first";
+                      break;
+      case "team": $col1_param = "name";
+                    $col2_param = "club";
+                    break;
+      default: $col1_param = "name";
+                $col2_param = "town";
+                break;
+    }
 
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
     $results .= '<tr>';
     $results .= '<th scope="col" class="cell-nr">#</th>';
-    $results .= '<th scope="col" class="cell-name">Nome</th>';
-    $results .= '<th scope="col" class="cell-' . $col_param . '">' . $lang_it[$col_param] . '</th>';
+    $results .= '<th scope="col" class="cell-' . $col1_param . '">' . $lang_it[$col1_param] . '</th>';
+    $results .= '<th scope="col" class="cell-' . $col2_param . '">' . $lang_it[$col2_param] . '</th>';
+      if ($section_tag == "account") {
+        $results .= '<td scope="col" class="cell-account-type">Profilo</th>';
+        $results .= '<td scope="col" class="cell-roster">Squadre</th>';
+      }
     $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
     $results .= '<tbody>';
     foreach ($records as $key => $record) {
-      $name_short = !empty($record["name_short"]) ? ' <span style="font-weight: 400;">(' . $record["name_short"] . ')</span>' : "";
+      $short_id = $section_tag == "account" ? "nickname" : "name_short";
+      $name_short = !empty($record[$short_id]) ? ' <span style="font-weight: 400;">(' . $record[$short_id] . ')</span>' : "";
 
       $results .= '<tr id="object_' . ($key + 1) . '" class data-type="' . $section_tag . '">';
       $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="cell-name">' . $record["name"] . $name_short . '</th>';
-      $results .= '<td scope="col" class="cell-' . $col_param . '">' . $record[$col_param] . '</th>';
+      $results .= '<td scope="col" class="cell-' . $col1_param . '">' . $record[str_replace("-", "_", $col1_param)] . $name_short . '</th>';
+      $results .= '<td scope="col" class="cell-' . $col2_param . '">' . $record[str_replace("-", "_", $col2_param)] . '</th>';
+      if ($section_tag == "account") {
+        $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$record["account_type"]] . '</th>';
+        $results .= '<td scope="col" class="cell-roster">' . $record["rosters_count"] . '</th>';
+      }
       $results .= object_contextual_toolbar ($section_tag, $key + 1);
       $results .= '</tr>';
     }
@@ -525,6 +545,9 @@
     global $db_conn;
 
     switch ($tag) {
+      case "account":
+        global $sql_book_accounts;
+        $sql = $sql_book_accounts; break;
       case "club":
         global $sql_book_clubs;
         $sql = $sql_book_clubs; break;
