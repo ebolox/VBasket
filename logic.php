@@ -963,9 +963,17 @@
     global $vb;
 
     $response = array(
-      "id" => "",
-      "name" => ""
+      "id" => ""
     );
+
+    if ($_POST["model"] == "account") {
+      $response["name_last"] = "";
+      $response["name_first"] = "";
+      $response["named"] = "";
+      $response["account_type"] = "";
+    } else {
+      $response["name"] = "";
+    }
 
     if (in_array($_POST["model"], $vb["book"])) {
       $response["town"] = "";

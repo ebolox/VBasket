@@ -67,7 +67,11 @@
             <li>Cognome</li>
             <li>Nome</li>
 <?php
-  if ($action != "init_object") {
+  if ($action == "init_object") {
+?>
+            <li class="d-none">Compare come</li>
+<?php
+  } else {
 ?>
             <li>Soprannome</li>
             <li>Sesso</li>
@@ -100,7 +104,11 @@
             <li><?= vb_text ($model, "name_last", $object["name_last"]); ?></li>
             <li><?= vb_text ($model, "name_first", $object["name_first"]); ?></li>
 <?php
-  if ($action != "init_object") {
+  if ($action == "init_object") {
+?>
+            <li class="d-none"><input type="hidden" id="<?= $model ?>_named", name="<?= $model ?>[named]" value="l+f" /></li>
+<?php
+  } else {
 ?>
             <li><?= vb_text ($model, "nickname", $object["nickname"]); ?></li>
             <li><?= vb_dropdown ($model, "sex", $object["sex"], $sex_options); ?></li>

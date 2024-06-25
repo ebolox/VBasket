@@ -606,7 +606,7 @@ function set_tab_buttons (action, model, object_id) {
   }
 
   parent_area = vb["activity"].indexOf(model) >= 0 ? "activity" : "book";
-  $("#tab_close").click( function () { update_content (parent_area); });
+  $("#tab_close").click( function () { update_content (parent_area, { last_view: model }); });
 }
 
 function set_value ( elem ) {
@@ -704,7 +704,9 @@ function update_content (page, parameters = []) {
   params = [];
   if (parameters) {
     params = {
-      last_view: parameters["last_view"]
+      last_view: parameters["last_view"] ?
+                  parameters["last_view"] :
+                  (parameters["section"] ? parameters["section"] : parameters["section"])
     };
   }
 
