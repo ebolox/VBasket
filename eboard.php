@@ -275,9 +275,13 @@
             <button class="btn btn-sm btn-primary btn-sound" value="audio_1">Gingle NBA</button>
             <audio id="player_audio_1" class="vb-player" src="audio/nba_sound.ogg"></audio>
           </div>
-          <div>
+          <div class="mb-2">
             <button class="btn btn-sm btn-primary btn-sound" value="audio_2">Coro Defense</button>
             <audio id="player_audio_2" class="vb-player" src="audio/miami_defense.ogg"></audio>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-primary btn-sound" value="audio_3">Sirena</button>
+            <audio id="player_audio_3" class="vb-player" src="audio/long_buzzer.ogg"></audio>
           </div>
       </div>
     </div>
