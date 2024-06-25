@@ -35,9 +35,6 @@
       } elseif ($_POST['action'] === 'create_object') {
         create_object();
 
-      } elseif ($_POST['action'] === 'edit_object') {
-        edit_object();
-
       } elseif ($_POST['action'] === 'delete_object') {
         delete_object();
 
@@ -140,7 +137,6 @@
     }
 
     $sql = "INSERT INTO " . $rachid->pluralize($model) . " (" . trim($cols, ",") . ") VALUES (" . trim($values, ",") . ");";
-    echo $sql;
     $result = $db_conn->query($sql);
 
     $sql_new = "SELECT * FROM " . $rachid->pluralize($model) . " ORDER BY id desc LIMIT 1;";
@@ -522,7 +518,7 @@
       $short_id = $section_tag == "account" ? "nickname" : "name_short";
       $name_short = !empty($record[$short_id]) ? ' <span style="font-weight: 400;">(' . $record[$short_id] . ')</span>' : "";
 
-      $results .= '<tr id="object_' . ($key + 1) . '" class data-type="' . $section_tag . '">';
+      $results .= '<tr id="object_' . $record["id"] . '" class data-type="' . $section_tag . '">';
       $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
       $results .= '<td scope="col" class="cell-' . $col1_param . '">' . $record[str_replace("-", "_", $col1_param)] . $name_short . '</th>';
       $results .= '<td scope="col" class="cell-' . $col2_param . '">' . $record[str_replace("-", "_", $col2_param)] . '</th>';
@@ -530,7 +526,7 @@
         $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$record["account_type"]] . '</th>';
         $results .= '<td scope="col" class="cell-roster">' . $record["rosters_count"] . '</th>';
       }
-      $results .= object_contextual_toolbar ($section_tag, $key + 1);
+      $results .= object_contextual_toolbar ($section_tag, $record["id"]);
       $results .= '</tr>';
     }
     $results .= '</tbody>';
@@ -920,7 +916,7 @@
     $sql = $sql_trainings . $conditions;
     $objects = do_ask($sql);
 
-	return $objects;
+    return $objects;
   }
 
   function get_week () {
