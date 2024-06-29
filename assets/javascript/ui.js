@@ -730,7 +730,7 @@ function update_backend (url, options) {
   });
 }
 
-// Carica la pagina dell'anagrafica
+// Aggiorna il content con la lista o la scheda desiderata
 function update_content (page, parameters = []) {
 
   params = [];
@@ -761,7 +761,6 @@ function update_content (page, parameters = []) {
 function update_frontend (container, url, options) {
 
   options = options || {};
-console.log("updating: " + container + " #\n\n" +  url + " #\n\n" + options.parameters);
 
   $.ajax({
     url: url,
