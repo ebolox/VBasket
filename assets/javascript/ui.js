@@ -775,6 +775,9 @@ function update_frontend (container, url, options) {
       var container_obj = container.success ? container.success : $("#" + container);
       container_obj.html(response);
 
+      if (options.onComplete) {
+        options.onComplete();
+      }
     },
     error: function(xhr, status, error) {
       console.log("update_frontend error:", error);
