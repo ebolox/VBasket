@@ -42,7 +42,7 @@
   <div id="<?= $model ?>_button_bar" class="row vb-navbar btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
 
     <div class="col"></div>
-    <div class="col-6 text-left">
+    <div class="col-10 text-left">
       <div class="form-group mb-0 ml-3">
         <?= button_dropdown($model, "fields", "Campo", "all", $field_options, $field_attributes); ?>
       </div>

@@ -2,7 +2,7 @@
 
     <input type="hidden" name="menu[selector]" value="player" />
     <div class="col"></div>
-    <div class="col-6 text-left">
+    <div class="10 text-left">
       <div class="btn-group btn-radio mr-5" id="menu_selector" role="group" aria-label="Menù selettore">
         <button type="button" class="btn btn-success btn-sm" data-value="player_parameters">
           <i class="bi bi-person-standing"></i><span>Giocatore</span>
