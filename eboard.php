@@ -159,6 +159,9 @@
       
           </div>
         </div>
+        <div id="<?= $model ?>_secondary">
+          <h1 class="box-timer">24</h1>
+        </div>
 <?php
   /* Schermo eboard : fine */
 

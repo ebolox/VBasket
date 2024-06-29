@@ -48,6 +48,7 @@ body {
   --apricot: #e36903;
   --apricot-dark: #cc5f03;
   --apricot-light: #f0af7a;
+  --peach: #ffc107;
   --bluegrey: #0a2d7e;
   --bluegrey-light: #4161ac;
   --disabled: #e9ecef;
@@ -66,7 +67,7 @@ ul {
 }
 
 .green { color: #3dca5e; }
-.orange { color: #ffc107; }
+.orange { color: var(--peach); }
 .red { color: #f9051c; }
 
 .h-32 {
