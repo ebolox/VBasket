@@ -1,0 +1,6 @@
+.drag-in {
+  background-color: white;
+  padding: 10px;
+  border: 4px solid var(--bluegrey-light);
+  margin: 10px;
+}

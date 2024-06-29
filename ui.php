@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="assets/stylesheets/book.css">
   <link rel="stylesheet" href="assets/stylesheets/calendar.css">
   <link rel="stylesheet" href="assets/stylesheets/registry.css">
+  <link rel="stylesheet" href="assets/stylesheets/screen.css">
   <link rel="stylesheet" href="assets/stylesheets/team.css">
   <link rel="stylesheet" href="assets/stylesheets/technique.css">
 

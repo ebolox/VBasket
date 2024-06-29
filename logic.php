@@ -62,6 +62,9 @@
       } elseif ($_POST['action'] === 'upload_image') {
         upload_image ();
 
+      } elseif ($_POST['action'] === 'upload_screen_items') {
+        upload_screen_items ();
+
       } else {
 
         unknown_action();
@@ -1047,7 +1050,6 @@
     return $code;
   }
 
-
   // Imposta il formato del nome account e lo restituisce
   function set_account_name () {
     global $db_conn;
@@ -1122,5 +1124,39 @@
     }
 
     $result = $db_conn->query($sql);
+  }
+
+  function upload_screen_items () {
+
+    $target_dir = "images/screen/";
+    if (!file_exists($target_dir)) {
+      mkdir($target_dir, 0777, true);
+    }
+
+    $response = ['status' => 'error', 'message' => 'File upload failed'];
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
+      $file = $_FILES['file'];
+      $target_file_path = $target_dir . basename($file['name']);
+      $file_type = strtolower(pathinfo($target_file_path, PATHINFO_EXTENSION));
+
+      // Check if file type is allowed
+      $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'webm', 'ogg'];
+      if (in_array($file_type, $allowed_types)) {
+        if (move_uploaded_file($file['tmp_name'], $target_file_path)) {
+          $response['status'] = 'success';
+          $response['message'] = 'File uploaded successfully';
+
+          $sql_uploaded = "UPDATE images (filename, object_id) VALUES ('" . basename($file['name']) . "', 'screen');";
+          $result = $db_conn->query($sql_uploaded);
+        } else {
+          $response['message'] = 'There was an error uploading your file';
+        }
+      } else {
+        $response['message'] = 'File type not allowed';
+      }
+    }
+
+    echo json_encode($response);
   }
 ?>
