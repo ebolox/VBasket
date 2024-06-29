@@ -23,18 +23,38 @@ var vb = {
   book     : ["account", "club", "field", "team"]
 };
 
+var lang_it = {
+  account: "Profilo",
+  accounts: "Profili",
+  club: "Società",
+  clubs: "Società",
+  event: "Evento",
+  events: "Eventi",
+  field: "Campo di gioco",
+  fields: "Campi di gioco",
+  game: "Partita",
+  games: "Partite",
+  team: "Squadra",
+  teams: "Squadre",
+  training: "Allenamento",
+  trainings: "Allenamenti"
+}
+
 $(document).ready( function () {
 
   // Gestione menù di navigazione
   $.each(["registry", "technique", "calendar"],  function (i, param) {
-    $("#navlink_" + param).click( function () { update_content (param); });
+    $("#navlink_" + param).click( function () {
+      update_content (param);
+      main_menu_selected ($(this));
+    });
   });
-  $("#navlink_account").click(function () { edit_object ("account", $("#account_id").val()); });
+  $("#navlink_account").click( function () { edit_object ("account", $("#account_id").val()); });
   $.each(["activity", "book"],  function (i, param) {
-    $("#navlink_" + param).parent().mouseenter( function () { show_btn_dropdown ($(this)); });
-    $("#navlink_" + param).parent().mouseleave( function () { show_btn_dropdown ($(this), false); });
-    $("#navlink_" + param).parent().click( function () { show_menu_dropdown ($(this)); });
-    $("#" + param + "_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_content (param, { section: $(this).data("value") }); main_menu_selected ($(this)); });
+    $("#navlink_" + param).parent().mouseenter( function () { show_dropdown_btn ($(this)); });
+    $("#navlink_" + param).parent().mouseleave( function () { show_dropdown_btn ($(this), false); });
+    $("#navlink_" + param).parent().click( function () { show_dropdown_menu ($(this)); });
+    $("#" + param + "_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_section_by_navbar ($(this), param); });
   });
 });
 
@@ -371,9 +391,9 @@ function main_menu_selected (selected) {
   }
 
   $(".vb-navbar").hide();
-  $(".navlink.active, .btn-link.active").removeClass("active");
-
+  $(".navlink.active").removeClass("active");
   navlink.addClass("active");
+
   if (tag != "account") {
     $("#" + tag + "_button_bar").show();
   }
@@ -556,6 +576,17 @@ function set_dropdown (model, object_id, opt, opt_objects) {
   return tag;
 }
 
+// Aggiorna il menu dropdown al click su un'opzione
+function set_dropdown_menu (opt) {
+
+  dd_menu = opt.parent();
+  menu_options = dd_menu.find(".dropdown-item");
+
+  menu_options.show();
+  opt.hide();
+  dd_menu.removeClass("show");
+}
+
 // Assegna gli eventi a righe e pulsanti
 function set_list_events (model, section_tag) {
 
@@ -619,7 +650,8 @@ function set_value ( elem ) {
 }
 
 // Mostra/nasconde la freccia dropdown
-function show_btn_dropdown (navlink, visible = true) {
+// e aggiorna le opzioni disponibili
+function show_dropdown_btn (navlink, visible = true) {
 
   btn_dropdown = navlink.find(".vb-btn-dropdown");
 
@@ -629,7 +661,7 @@ function show_btn_dropdown (navlink, visible = true) {
 }
 
 // Mostra/nasconde il menù dropdown
-function show_menu_dropdown (navlink) {
+function show_dropdown_menu (navlink) {
 
   menu_dropdown = navlink.find(".vb-btn-dropdown .dropdown-menu");
 
@@ -714,8 +746,14 @@ function update_content (page, parameters = []) {
     parameters: $.param(parameters),
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("update_content complete"); },
-    onLoading: function() { console.log("update_content loading"); }
+    onLoading: function() { console.log("update_content loading"); },
+    onComplete: function() {
+      if (params && params.hasOwnProperty("last_view")) {
+        $("#section_title").text(lang_it[params["last_view"] + "s"]);
+      }
+
+      console.log("update_content complete");
+    },
   });
 }
 
@@ -781,11 +819,11 @@ function update_object (model, object_id, param, value, init = false) {
 }
 
 // Aggiorna la pagina alla Sezione cliccata
-function update_section (model, btn) {
+function update_section_by_list_toolbar (model, btn) {
 
   section_tag = btn.data("value");
   section_title = btn.text();
-  section_switcher = $("#" + model + "_selector + .dropdown-menu");
+  section_switcher = $("#section_selector + .dropdown-menu");
 
   // Aggiorna la variabile globale
   section = section_tag;
@@ -800,4 +838,12 @@ function update_section (model, btn) {
 
   // Aggiorna la lista della Sezione
   get_section (model, section_tag);
+}
+
+// Aggiorna la pagina alla Sezione cliccata
+function update_section_by_navbar (btn, param) {
+
+  update_content (param, { section: btn.data("value") });
+  main_menu_selected (btn);
+  set_dropdown_menu (btn);
 }

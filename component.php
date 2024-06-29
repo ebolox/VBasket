@@ -243,6 +243,7 @@
     global $btn_params;
     global $vb;
     global $lang_it;
+    $rachid = init_pluralizer();
 
     $code = '<div class="row form-navbar sticky-top">';
     $code .= '<div class="col">';
@@ -263,7 +264,7 @@
       $menu_attributes = array("btn_color" => "btn-vb", "label_icon" => true);
       $menu_options = array();
       foreach ($vb[$area] as $sect) {
-        array_push($menu_options, array("value" => $sect, "label" => $lang_it[$sect]));
+        array_push($menu_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
       }
 
       $code .= '<i class="bi bi-chevron-double-right mr-3 ml-3"></i>';

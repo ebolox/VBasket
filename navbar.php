@@ -1,5 +1,9 @@
 <?php
+  // Includiamo la classe Pluralizer
+  require_once("ext/rachid/pluralizer.php");
+
   global $vb;
+  $rachid = init_pluralizer();
 
   $account_id = get_account_id();
   $account_image = get_image("account", $account_id, array("main" => false));
@@ -8,7 +12,7 @@
   $account_btn = '<a id="navlink_account" class="navlink btn-link" href="#"><i class="bi bi-person-lines-fill"></i></a>';
   $account_script = '<script>';
   if (isset($account_image)) {
-    $account_btn = '<div id="navlink_account" class="btn-link" title="' . $account_name . '" /></div>';
+    $account_btn = '<div id="navlink_account" class="navlink btn-link" title="' . $account_name . '" /></div>';
     $account_script .= '$("#navlink_account").css("background-image", "url(\'assets/images/' . $account_image .'\')");';
   }
   $account_script .= '</script>';
@@ -16,13 +20,13 @@
   $activity_attributes = array("btn_color" => "btn-vb", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
   $activity_options = array();
   foreach ($vb["activity"] as $sect) {
-    array_push($activity_options, array("value" => $sect, "label" => $lang_it[$sect]));
+    array_push($activity_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
 
   $book_attributes = array("btn_color" => "btn-vb", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
   $book_options = array();
   foreach ($vb["book"] as $sect) {
-    array_push($book_options, array("value" => $sect, "label" => $lang_it[$sect]));
+    array_push($book_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
 ?>  
   <div id="ui_navbar">

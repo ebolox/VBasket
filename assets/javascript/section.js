@@ -6,26 +6,9 @@ $(document).ready( function () {
   // Si imposta l'altezza della lista
   $("#" + model + "_list").css("max-height", parseInt($(window).innerHeight() - 200) + "px");
 
-  // Modale: parametri per i pulsanti di scelta Sezione
-  var section_title = "Cosa vuoi vedere?";
-  var section_choices = [];
-  if (model == "activity") {
-    section_choices = [
-      { "tag": "training", "label": "Allenamento", "class": "btn-primary", "click": "modal_choice(false); update_section('" + model + "', $(this));" },
-      { "tag": "game", "label": "Partita", "class": "btn-primary", "click": "modal_choice(false); update_section('" + model + "', $(this));" },
-      { "tag": "event", "label": "Evento", "class": "btn-primary", "click": "modal_choice(false); update_section('" + model + "', $(this));" }
-    ];
-  } else if (model == "book") {
-    section_choices = [
-      { "tag": "club", "label": "Società", "class": "btn-primary", "click": "modal_choice(false); update_section($(this));" },
-      { "tag": "team", "label": "Squadre", "class": "btn-primary", "click": "modal_choice(false); update_section($(this));" },
-      { "tag": "field", "label": "Campi di gioco", "class": "btn-primary", "click": "modal_choice(false); update_section($(this));" }
-    ];
-  }
-
   // Gestione icona dropdown Cambio sezione
   section_selector.find(".dropdown-item[data-value='" + section + "']").hide();
-  section_selector.find(".dropdown-item").click( function () { update_section (model, $(this)); });
+  section_selector.find(".dropdown-item").click( function () { update_section_by_list_toolbar (model, $(this)); });
 
   // Pulsanti contestuali alla Sezione
   $("#" + model + "_new").click( function () { init_object (); });
