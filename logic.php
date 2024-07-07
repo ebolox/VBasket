@@ -56,6 +56,9 @@
       } elseif ($_POST['action'] === 'get_book') {
         get_book($_POST['section']);
 
+      } elseif ($_POST['action'] === 'get_media') {
+        get_media($_POST['section']);
+
       } elseif ($_POST['action'] === 'get_calendar_by') {
         get_calendar_by($_POST['activity_tag'], $_POST['team_tag'], $_POST['account_id']);
 
@@ -774,6 +777,76 @@
     $image = $result->fetch_array();
 
 	return $image["filename"];
+  }
+
+  // Ritorna la schermata Media della sezione desiderata
+  function get_media ($section_tag) {
+
+    switch ($section_tag) {
+      case "image":
+        get_media_images ();
+        break;
+      case "screen":
+        get_media_screens ();
+        break;
+      default:
+        get_media_files ($section_tag);
+        break;
+    }
+  }
+
+  // Ritorna la tabella dei file media desiderati
+  function get_media_files ($file_type) {
+    global $lang_it;
+
+    $records = get_media_section($file_type);
+    $col_param = $section_tag == "team" ? "club" : "town";
+    switch ($section_tag) {
+      case "account": $col1_param = "name-last";
+                      $col2_param = "name-first";
+                      break;
+      case "team": $col1_param = "name";
+                    $col2_param = "club";
+                    break;
+      default: $col1_param = "name";
+                $col2_param = "town";
+                break;
+    }
+
+    $results = '<table class="table table-striped">';
+    $results .= '<thead>';
+    $results .= '<tr>';
+    $results .= '<th scope="col" class="cell-nr">#</th>';
+    $results .= '<th scope="col" class="cell-' . $col1_param . '">' . $lang_it[$col1_param] . '</th>';
+    $results .= '<th scope="col" class="cell-' . $col2_param . '">' . $lang_it[$col2_param] . '</th>';
+      if ($section_tag == "account") {
+        $results .= '<td scope="col" class="cell-account-type">Profilo</th>';
+        $results .= '<td scope="col" class="cell-roster">Squadre</th>';
+      }
+    $results .= '<th scope="col" class="cell-toolbar"></th>';
+    $results .= '</tr>';
+    $results .= '</thead>';
+    $results .= '<tbody>';
+    foreach ($records as $key => $record) {
+      $short_id = $section_tag == "account" ? "nickname" : "name_short";
+      $name_short = !empty($record[$short_id]) ? ' <span style="font-weight: 400;">(' . $record[$short_id] . ')</span>' : "";
+
+      $results .= '<tr id="object_' . $record["id"] . '" class data-type="' . $section_tag . '">';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
+      $results .= '<td scope="col" class="cell-' . $col1_param . '">' . $record[str_replace("-", "_", $col1_param)] . $name_short . '</th>';
+      $results .= '<td scope="col" class="cell-' . $col2_param . '">' . $record[str_replace("-", "_", $col2_param)] . '</th>';
+      if ($section_tag == "account") {
+        $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$record["account_type"]] . '</th>';
+        $results .= '<td scope="col" class="cell-roster">' . $record["rosters_count"] . '</th>';
+      }
+      $results .= object_contextual_toolbar ($section_tag, $record["id"]);
+      $results .= '</tr>';
+    }
+    $results .= '</tbody>';
+    $results .= '</table>';
+    $results .= '<script>set_list_events ("book", "' . $section_tag . '");</script>';
+
+    return $results;
   }
 
   // Recupera i dati dell'object

@@ -20,7 +20,8 @@ var mandatory_params = {
 // Aree e Sezioni
 var vb = {
   activity : ["event", "game", "training"],
-  book     : ["account", "club", "field", "team"]
+  book     : ["account", "club", "field", "team"],
+  media    : ["document", "image", "screen", "video"]
 };
 
 var lang_it = {
@@ -50,11 +51,19 @@ $(document).ready( function () {
     });
   });
   $("#navlink_account").click( function () { edit_object ("account", $("#account_id").val()); });
-  $.each(["activity", "book"],  function (i, param) {
-    $("#navlink_" + param).parent().mouseenter( function () { show_dropdown_btn ($(this)); });
-    $("#navlink_" + param).parent().mouseleave( function () { show_dropdown_btn ($(this), false); });
-    $("#navlink_" + param).parent().click( function () { show_dropdown_menu ($(this)); });
-    $("#" + param + "_selector + .dropdown-menu").find(".dropdown-item").click( function () { update_section_by_navbar ($(this), param); });
+
+  // Link con opzioni a dropdown nascosto
+  $.each(["activity", "book", "media"],  function (i, param) {
+    btn_link = $("#navlink_" + param)
+    dropdown_menu = $("#navlink_" + param + " + .dropdown-menu");
+
+    btn_link.click( function () { show_dropdown_menu (event, $(this), true); });
+    btn_link.mouseenter( function () { show_dropdown_menu (event, $(this), true); });
+    btn_link.parent().mouseleave( function () { show_dropdown_menu (event, $(this)); });
+
+    dropdown_menu.find(".dropdown-item").click( function () { update_section_by_navbar ($(this), param); });
+    dropdown_menu.mouseenter( function () { show_dropdown_btn ($(this), true); });
+    dropdown_menu.mouseleave( function () { show_dropdown_btn ($(this)); });
   });
 });
 
@@ -390,16 +399,18 @@ function main_menu_selected (selected) {
     navlink = selected;
   }
 
-  $(".vb-navbar").hide();
+  // Reset stato menù e dropdown
   $(".navlink.active").removeClass("active");
+  $(".dropdown-menu.show").removeClass("show");
+  $(".vb-navbar").hide();
+
+  // Imposta l'area attiva
   navlink.addClass("active");
 
   if (tag != "account") {
     $("#" + tag + "_button_bar").show();
   }
 
-  // Nasconde il menu dropdown
-  $(".dropdown-menu.show").removeClass("show");
 }
 
 // Compone e mostra/nasconde la modale di scelte
@@ -649,25 +660,20 @@ function set_value ( elem ) {
   $("#" + input_id).text( elem.text() );
 }
 
-// Mostra/nasconde la freccia dropdown
-// e aggiorna le opzioni disponibili
-function show_dropdown_btn (navlink, visible = true) {
-
-  btn_dropdown = navlink.find(".vb-btn-dropdown");
-
-  visible ?
-    btn_dropdown.removeClass("invisible") :
-    btn_dropdown.addClass("invisible");
-}
-
 // Mostra/nasconde il menù dropdown
-function show_dropdown_menu (navlink) {
+function show_dropdown_menu (event, btn_link, visible = false) {
 
-  menu_dropdown = navlink.find(".vb-btn-dropdown .dropdown-menu");
+  event.preventDefault();
+  $(".btn-link + .dropdown-menu").removeClass("show");
 
-  menu_dropdown.is(":visible") ?
-    menu_dropdown.removeClass("show") :
+  menu_dropdown = btn_link.siblings(".dropdown-menu");
+  btn_left = btn_link.offset().left;
+  constant_left = 240; // Determinata a schermo
+
+  if (visible) {
+    menu_dropdown.css("left", parseInt(btn_left - constant_left) + "px");
     menu_dropdown.addClass("show");
+  }
 }
 
 // Mostra/nasconde i pulsanti edita/elimina riga

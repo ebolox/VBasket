@@ -17,16 +17,22 @@
   }
   $account_script .= '</script>';
 
-  $activity_attributes = array("btn_color" => "btn-vb", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
+  $activity_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
   $activity_options = array();
   foreach ($vb["activity"] as $sect) {
     array_push($activity_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
 
-  $book_attributes = array("btn_color" => "btn-vb", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
+  $book_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
   $book_options = array();
   foreach ($vb["book"] as $sect) {
     array_push($book_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
+  }
+
+  $media_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
+  $media_options = array();
+  foreach ($vb["media"] as $sect) {
+    array_push($media_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
 ?>  
   <div id="ui_navbar">
@@ -35,33 +41,12 @@
         <div class="col-2">
           <a id="navlink_home" class="p-2 text-dark" href="#"><img id="logo" src="assets/images/logo_big.jpg" /></a>
         </div>
-        <div class="col">
-          <div class="navlink mt-3 mr-4 d-inline-block">
-            <a id="navlink_calendar" class="navlink btn-link active mr-1" href="#">
-              <i class="bi bi-calendar-week mr-2"></i>
-              <span class="mr-2">Calendario</span>
-            </a>
-          </div>
-          <div class="navlink mt-3 mr-4 d-inline-block">
-            <a id="navlink_technique" class="navlink btn-link mr-1" href="#">
-              <i class="bi bi-easel mr-2"></i>
-              <span class="mr-2">Area tecnica</span>
-            </a>
-          </div>
-          <div class="navlink mt-3 mr-4 d-inline-block">
-            <a id="navlink_activity" class="navlink btn-link mr-1" href="#">
-              <i class="bi bi-activity mr-2"></i>
-              <span class="mr-2">Attività</span>
-            </a>
-          <?= button_icon_dropdown ("activity", "selector", "bi bi-caret-down-fill", "", $activity_options, $activity_attributes) ?>
-          </div>
-          <div class="navlink mt-3 d-inline-block">
-            <a id="navlink_book" class="navlink btn-link mr-1" href="#">
-              <i class="bi bi-journal-richtext mr-2"></i>
-              <span class="mr-2">Rubrica</span>
-            </a>
-          <?= button_icon_dropdown ("book", "selector", "bi bi-caret-down-fill", "", $book_options, $book_attributes) ?>
-          </div>
+        <div class="col row">
+          <?= link_text ("navlink", "calendar", "Calendario", "bi bi-calendar-week") ?>
+          <?= link_text ("navlink", "technique", "Campo", "bi bi-easel") ?>
+          <?= link_text ("navlink", "activity", "Attività", "bi bi-activity", $activity_options) ?>
+          <?= link_text ("navlink", "book", "Rubrica", "bi bi-journal-richtext", $book_options) ?>
+          <?= link_text ("navlink", "media", "Media", "bi bi-images", $media_options) ?>
         </div>
         <div class="col-2">
           <?= $account_btn; ?>

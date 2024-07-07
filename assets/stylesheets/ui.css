@@ -499,6 +499,14 @@ a.btn-link.active:hover {
   cursor: pointer;
 }
 
+a.btn-link + .dropdown-menu {
+  background-color: var(--hazelnut-light);
+  margin-top: -10px;
+}
+a.btn-link + .dropdown-menu > .dropdown-item {
+  background-color: transparent;
+}
+
 div.btn-link {
   width: 48px;
   height: 48px;

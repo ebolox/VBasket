@@ -40,6 +40,8 @@
     "coaches" => "Coaches",
     "cup" => "Coppa",
     "cups" => "Coppe",
+    "document" => "Documento",
+    "documents" => "Documenti",
     "event" => "Evento",
     "events" => "Eventi",
     "field" => "Campo di gioco",
@@ -48,6 +50,8 @@
     "friendlys" => "Amichevoli",
     "game" => "Partita",
     "games" => "Partite",
+    "image" => "Immagine",
+    "images" => "Immagini",
     "manager" => "Dirigente",
     "managers" => "Dirigenti",
     "meeting" => "Meeting",
@@ -62,6 +66,8 @@
     "other" => "Altro",
     "others" => "Altri",
     "registry" => "Anagrafica",
+    "screen" => "Schermo",
+    "screens" => "Schermi",
     "staff" => "Staff",
     "team" => "Squadra",
     "teams" => "Squadre",
@@ -70,7 +76,9 @@
     "training" => "Allenamento",
     "trainings" => "Allenamenti",
     "trophy" => "Torneo",
-    "trophies" => "Tornei"
+    "trophies" => "Tornei",
+    "video" => "Video",
+    "videos" => "Video"
   );
 
   // Mesi
@@ -136,7 +144,8 @@
   // Aree e Sezioni
   $vb = array(
     "activity" => array("event", "game", "training"),
-    "book" => array("account", "club", "field", "team")
+    "book" => array("account", "club", "field", "team"),
+    "media" => array("document", "image", "screen", "video")
   );
 
   // Liste valore, nome delle colonne Anagrafica
