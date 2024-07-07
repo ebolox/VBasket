@@ -1,4 +1,10 @@
 <?php
+  // Icona/simbolo del Ruolo all'interno della squadra
+  function account_marker ($role, $text) {
+
+    return '<span class="role-' . $role . ' mr-2"">' . $text . '</span>';
+  }
+
   // Crea un campo con etichetta e button dropdown
   function button_dropdown ($model, $param, $label, $value = "", $options = [], $attributes = []) {
 
@@ -294,21 +300,24 @@
     return $code;
   }
 
-  function object_contextual_toolbar ($section_tag, $object_id) {
+  function link_text ($context, $tag, $label, $icon_class, $options = []) {
 
-    global $btn_params;
+    $btn_id = $context . "_" . $tag;
 
-    $code = '<td scope="col" class="' . $section_tag . '-toolbar">';
-    $code .= button_icon ($btn_params["edit"]["icon_class"], $btn_params["edit"]["color"], array("id" => $section_tag .'_edit_' . $object_id, "class" => "btn-edit", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
-    $code .= button_icon ($btn_params["delete"]["icon_class"], $btn_params["delete"]["color"], array("id" => $section_tag .'_delete_' . $object_id, "class" => "btn-delete", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
-    $code .= '</td>';
+    $code = '<div class="mt-3 mr-3 ml-3 d-inline-block">';
+    $code .= '<a id="' . $btn_id . '" class="btn-link ' . $context . ' mr-1" href="#">';
+    $code .= '<i class="' . $icon_class . ' mr-2"></i><span>' . $label . '</span>';
+    $code .= '</a>';
+    if (!empty($options)) {
+      $code .= '<div class="dropdown-menu" aria-labelledby="' . $btn_id . '">';
+      foreach ($options as $opt) {
+        $code .= '<a class="dropdown-item btn-link" href="#" data-value="' . $opt["value"] . '">' . $opt["label"] . '</a>';
+      }
+      $code .= '</div>';
+    }
+    $code .= '</div>';
 
     return $code;
-  }
-
-  function account_marker ($role, $text) {
-
-    return '<span class="role-' . $role . ' mr-2"">' . $text . '</span>';
   }
 
   // Funzione per rendere maiuscola la prima lettera di una stringa multibyte
@@ -355,6 +364,18 @@
     include $filename; // Include il file contenente il codice PHP
     $code .= ob_get_clean(); // Ottiene l'output del buffer e lo pulisce
     $code .= modal_base_footer ();
+
+    return $code;
+  }
+
+  function object_contextual_toolbar ($section_tag, $object_id) {
+
+    global $btn_params;
+
+    $code = '<td scope="col" class="' . $section_tag . '-toolbar">';
+    $code .= button_icon ($btn_params["edit"]["icon_class"], $btn_params["edit"]["color"], array("id" => $section_tag .'_edit_' . $object_id, "class" => "btn-edit", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
+    $code .= button_icon ($btn_params["delete"]["icon_class"], $btn_params["delete"]["color"], array("id" => $section_tag .'_delete_' . $object_id, "class" => "btn-delete", "shape" => "circle", "margin" => "ml-2", "invisible" => true));
+    $code .= '</td>';
 
     return $code;
   }
