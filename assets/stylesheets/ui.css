@@ -33,7 +33,8 @@ body {
 
 :root {
   --hazelnut: #e6e4c3;
-  --hazelnut-light: rgba(247, 246, 217, 0.5);
+  --hazelnut-very-light: rgba(247, 246, 217, 0.5);
+  --hazelnut-light: rgba(247, 246, 217);
   --hazelnut-dark: #918f75;
   --mint-light: #d0f2e8;
   --smurf: #81c8df;
@@ -48,10 +49,12 @@ body {
   --apricot: #e36903;
   --apricot-dark: #cc5f03;
   --apricot-light: #f0af7a;
+  --kiwi: #3dca5e;
   --peach: #ffc107;
   --bluegrey: #0a2d7e;
   --bluegrey-light: #4161ac;
   --disabled: #e9ecef;
+  --strawberry: #f9051c;
   --size-24: 24px;
   --size-28: 28px;
   --size-32: 32px;
@@ -66,9 +69,13 @@ ul {
   list-style: none;
 }
 
-.green { color: #3dca5e; }
+.green { color: var(--kiwi); }
 .orange { color: var(--peach); }
-.red { color: #f9051c; }
+.red { color: var(--strawberry); }
+
+.bg-green { background-color: var(--kiwi); }
+.bg-orange { background-color: var(--peach); }
+.bg-red { background-color: var(--strawberry); }
 
 .h-32 {
   height: 32px !important;
