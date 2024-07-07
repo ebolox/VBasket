@@ -1,7 +1,14 @@
 var model = "eboard";
 var sign = "+";
-var timer_id;
-var timer_on = true;
+
+/* Timer primario */
+var timer_primary_id;
+var timer_primary_on = true;
+/* Timer secondario */
+var timer_secondary;
+var hold_time = 2000;
+var timer_secondary_id;
+var timer_secondary_on = true;
 
 $(document).ready(function() {
 
@@ -10,15 +17,23 @@ $(document).ready(function() {
 
   // Eventi del tabellone
   $("#ta_name, #tb_name").click( function () { modal_team ($(this), true); });
-  $("#timer").click( function () { handle_countdown (); });
+  $("#timer_primary").click( function () { handle_countdown_primary (); });
   $("#quarter").click( function () { handle_counter ($(this)); });
   $("#ta_points, #tb_points").click( function () { handle_counter ($(this)); });
   $("#ta_fouls, #tb_fouls, #ta_timeout, #tb_timeout").click( function () { handle_dot ($(this)); });
   $("#arrow").click( function () { handle_arrow (); });
   $("#ta_service, #tb_service").click( function () { handle_service (); });
+  $("#eboard_secondary").click( function () { handle_countdown_secondary (); });
 
   // Posizione verticale della freccia
   box_period_position ();
+
+  // Gestione tempo di click
+  $("#timer_secondary").on("mousedown", function() {
+    timer_secondary = setTimeout(reset_secondary, hold_time);
+  }).on("mouseup mouseleave", function() {
+    clearTimeout(timer_secondary);
+  });
 
   /* Toolbar */
   // Selettori elementi a schermo
@@ -28,8 +43,8 @@ $(document).ready(function() {
 
   // Pulsanti gestione Tempo
   $("#" + model + "_timer_reset").click( function () { set_timer (); });
-  $("#" + model + "_timer_play").click( function () { handle_countdown (); });
-  $("#" + model + "_timer_pause").click( function () { handle_countdown (true); });
+  $("#" + model + "_timer_play").click( function () { handle_countdown_primary (); });
+  $("#" + model + "_timer_pause").click( function () { handle_countdown_primary (true); });
 
   // Pulsante Segno
   $("#" + model + "_sign label.btn").click( function () { handle_sign ($(this)); });
@@ -46,7 +61,10 @@ $(document).ready(function() {
     value = $(this).data("value");
 
     set_value ($(this));
+
+    // Font di tabellone principale e secondario
     $("#" + model + "_content").attr("class", "container mt-4 " + $(this).data("value"));
+    $("#" + model + "_secondary").attr("class", $(this).data("value"));
 
     // Aggiorna il db
     update_eboard ("font", value.replace("font-", ""), true);
@@ -64,7 +82,7 @@ function box_period_position () {
 }
 
 // Funzione per diminuire il tempo di un secondo alla volta
-function countdown () {
+function countdown_primary () {
 
   // Ottieni il tempo attuale dal testo dell'elemento
   var time_string = $("#timer").text();
@@ -84,7 +102,36 @@ function countdown () {
     $("#timer").text(minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0"));
 
     // Attendi un secondo e chiama nuovamente la funzione countdown
-    timer_id = setTimeout(countdown, 1000);
+    timer_primary_id = setTimeout(countdown_primary, 1000);
+  } else {
+    // Se il tempo è scaduto, esegui un'azione aggiuntiva
+    alert("Tempo scaduto!");
+  }
+}
+
+// Funzione per diminuire il tempo di un secondo alla volta
+function countdown_secondary () {
+
+  // Ottieni il tempo attuale dal testo dell'elemento
+  var seconds = parseInt($("#timer_secondary").text());
+
+  // Calcola il nuovo tempo
+  if (seconds > 0) {
+
+    seconds--;
+
+    // Aggiorna il testo dell'elemento con il nuovo tempo
+    $("#timer_secondary").text(seconds.toString());
+
+    // Aggiorna il testo dell'elemento con il nuovo tempo
+    if (seconds <= 5) {
+      $("#eboard_secondary").addClass("bg-red").removeClass("bg-green");
+    } else {
+      $("#eboard_secondary").removeClass("bg-red").addClass("bg-green");
+    }
+
+    // Attendi un secondo e chiama nuovamente la funzione countdown
+    timer_secondary_id = setTimeout(countdown_secondary, 1000);
   } else {
     // Se il tempo è scaduto, esegui un'azione aggiuntiva
     alert("Tempo scaduto!");
@@ -129,7 +176,7 @@ function handle_components (btn) {
   field = btn.find("input[type='hidden']").first();
   icon = btn.find("i.bi").first();
   tag = btn.data("tag");
-  components = $(".box-" + tag);
+  components = $(".box-" + tag.replace("_", "-"));
 
   if (field.val() == "1") {
     icon_class = "bi bi-x text-danger";
@@ -151,20 +198,36 @@ function handle_components (btn) {
   update_eboard (tag, new_value, true);
 }
 
-// Interrompe il countdown
-function handle_countdown (force_pause = false) {
+// Interrompe il countdown gara
+function handle_countdown_primary (force_pause = false) {
 
-  if (timer_on || force_pause) {
-    clearTimeout(timer_id);
-    timer_on = false;
+  if (timer_primary_on || force_pause) {
+    clearTimeout(timer_primary_id);
+    timer_primary_on = false;
   } else {
-    countdown();
-    timer_on = true;
+    countdown_primary();
+    timer_primary_on = true;
   }
 
   // Aggiorna db
-  value = $("#timer").text();
+  value = $("#timer_primary").text();
   update_eboard ("timer", value);
+}
+
+// Interrompe il countdown dei 24 secondi
+function handle_countdown_secondary (force_pause = false) {
+
+  if (timer_secondary_on || force_pause) {
+    clearTimeout(timer_secondary_id);
+    timer_secondary_on = false;
+  } else {
+    countdown_secondary();
+    timer_secondary_on = true;
+  }
+
+  // Aggiorna db
+  value = $("#timer_secondary").text();
+  update_eboard ("timer_secondary", value);
 }
 
 // Gestione aumento/diminuzione i contatori
@@ -259,7 +322,7 @@ function modal_team (btn_team, show) {
 function reset_board () {
 
   // Timer
-  handle_countdown (true);
+  handle_countdown_primary (true);
   set_timer ();
 
   // Punteggi
@@ -267,6 +330,11 @@ function reset_board () {
 
   // Falli e Time-out
   $("#ta_fouls, #tb_fouls, #ta_timeout, #tb_timeout").find("i").attr("class", "bi bi-circle ml-4");
+}
+
+// Reimposta i secondi al valore predefinito
+function reset_secondary() {
+  $("#timer_secondary").text(24);
 }
 
 // Assegna gli eventi ai pulsanti della modale squadra
@@ -294,7 +362,7 @@ function set_modal_team_events (team_id) {
 function set_timer () {
   min = $("#" + model + "_timer_min").val();
   sec = $("#" + model + "_timer_sec").val();
-  $("#timer").text(min + ":" + sec);
+  $("#timer_primary").text(min + ":" + sec);
 
   // Aggiorna db
   update_eboard ("timer", min + ":" + sec);

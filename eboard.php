@@ -75,7 +75,8 @@
   $tb_timeout = !empty($object["tb_timeout"]) ? (int)$object["tb_timeout"] : 0;
   $tb_service = empty($object["service"]) ? false : true;
   $quarter = !empty($object["quarter"]) ? $object["quarter"] : 1;
-  $timer = !empty($object["timer"]) ? $object["timer"] : "10:00";
+  $timer_primary = !empty($object["timer_primary"]) ? $object["timer_primary"] : "10:00";
+  $timer_secondary = !empty($object["timer_secondary"]) ? $object["timer_secondary"] : "24";
   $arrow = empty($object["arrow"]) ? true : false;
 ?>
   <div class="container">
@@ -139,7 +140,7 @@
             </div>
       
             <div class="col-6 text-center">
-              <h1 id="timer" class="box-timer orange"><?= $timer; ?></h1>
+              <h1 id="timer_primary" class="box-timer-primary orange"><?= $timer_primary ?></h1>
             </div>
       
             <div class="col text-center">
@@ -159,8 +160,8 @@
       
           </div>
         </div>
-        <div id="<?= $model ?>_secondary">
-          <h1 class="box-timer">24</h1>
+        <div id="<?= $model ?>_secondary" class="box-timer-secondary font-<?= $config["font"] ?><?= $object["timer_secondary"] <= 5 ? " bg-red" : " bg-green" ?>">
+          <h1 id="timer_secondary"><?= $timer_secondary ?></h1>
         </div>
 <?php
   /* Schermo eboard : fine */
@@ -232,27 +233,28 @@
   );
 
   $settings = [
+    ["tag" => "timer_primary",   "label" => "Tempo gara",   "checked" => $config["timer_primary"]],
+    ["tag" => "timer_secondary", "label" => "Tempo possesso", "checked" => $config["timer_secondary"]],
     ["tag" => "team",    "label" => "Squadre",   "checked" => $config["team"]],
     ["tag" => "points",  "label" => "Punteggio", "checked" => $config["points"]],
     ["tag" => "quarter", "label" => "Periodo",   "checked" => $config["quarter"]],
-    ["tag" => "timer",   "label" => "Tempo",     "checked" => $config["timer"]],
     ["tag" => "fouls",   "label" => "Falli",     "checked" => $config["fouls"]],
     ["tag" => "timeout", "label" => "Time-out",  "checked" => $config["timeout"]],
     ["tag" => "arrow",   "label" => "Freccia",   "checked" => $config["arrow"]], 
-    ["tag" => "service", "label" => "Servizio",   "checked" => $config["service"]]
+    ["tag" => "service", "label" => "Servizio",  "checked" => $config["service"]]
   ];
 ?>
   <nav id="<?= $model ?>_sidebar" class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
       <div id="eboard_config">
-        <h5><i class="bi bi-gear-fill mr-2"></i>Configurazione tabellone</h5>
+        <h5><i class="bi bi-gear-fill mr-2"></i>Configurazione</h5>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <div class="form-label">Caratteri</div>
+            <div class="form-label float-right">Caratteri</div>
             <div class="form-data"><?= vb_dropdown ("eboard_config", "font", "font-" . $config["font"], $font_options, $font_attributes); ?></div>
           </li>
           <li class="nav-item">
-            <div class="form-label">Componenti</div>
+            <div class="form-label float-right">Componenti</div>
             <div class="form-data">
               <ul>
 <?php
@@ -273,16 +275,16 @@
       </div>
       <div id="eboard_effects">
         <h5><i class="bi bi-music-note-beamed mr-2"></i>Audio e Video</h5>
-        <div class="mt-2">
-          <div class="mb-2">
+        <div class="mt-3">
+          <div>
             <button class="btn btn-sm btn-primary btn-sound" value="audio_1">Gingle NBA</button>
             <audio id="player_audio_1" class="vb-player" src="audio/nba_sound.ogg"></audio>
           </div>
-          <div class="mb-2">
+          <div class="mt-2">
             <button class="btn btn-sm btn-primary btn-sound" value="audio_2">Coro Defense</button>
             <audio id="player_audio_2" class="vb-player" src="audio/miami_defense.ogg"></audio>
           </div>
-          <div>
+          <div class="mt-2">
             <button class="btn btn-sm btn-primary btn-sound" value="audio_3">Sirena</button>
             <audio id="player_audio_3" class="vb-player" src="audio/long_buzzer.ogg"></audio>
           </div>

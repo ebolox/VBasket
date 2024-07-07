@@ -642,6 +642,7 @@ tr.game-row.text-success > td.game-toolbar button.btn-icon {
 
 .sidebar div.nav-item,
 .sidebar li.nav-item {
+  width: 100%;
   padding: 5px 0;
 }
 

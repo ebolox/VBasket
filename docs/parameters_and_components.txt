@@ -1,2 +1,4 @@
 /* z-index */
 = 1020 : .sticky-top [#form_navbar]
+= 999  : #eboard_secondary
+= 99   : .dropdown-menu

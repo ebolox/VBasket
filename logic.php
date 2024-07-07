@@ -672,7 +672,8 @@
     $object = [
       "id" => 999999,
       "game_id" => 999999,
-      "timer" => "09:59",
+      "timer_primary" => "09:59",
+      "timer_secondary" => "24",
       "quarter" => 4,
       "arrow" => "a",
       "ta_id" => 1,
@@ -699,7 +700,8 @@
     $default = [
       "id" => 999999,
       "eboard_id" => 999999,
-      "timer" => true,
+      "timer_primary" => true,
+      "timer_secondary" => true,
       "quarter" => true,
       "arrow" => true,
       "teams" => true,
