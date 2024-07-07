@@ -4,15 +4,6 @@
   }
 
   $model = "screen";
-
-  // Liste valore, nome delle opzioni e attributi del pulsante Squadre
-  $team_attributes = array("btn_color" => "btn-primary");
-  $team_opts = array(
-    array("value" => "handled", "label" => "Gestite"),
-    array("value" => "all", "label" => "Tutte")
-  );
-  $team_db = get_teams();
-  $team_options = $team_opts + $team_db;
 ?>
   <div id="<?= $model ?>_content" class="vb-content vb-list mt-4">
 
@@ -27,7 +18,7 @@
           <h5>Immagini presenti</h5>
         <div class="drag-out">
 <?php
-  $directory = "assets/images/screen/";
+  $directory = "public/screen/";
   $files = array_diff(scandir($directory), ['..', '.']);
 
   $response = [];
