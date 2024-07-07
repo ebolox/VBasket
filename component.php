@@ -448,12 +448,6 @@
     return $code;
   }
 
-  function team_box ($team_ids, $team_options, $team_attributes) {
-
-    
-
-  }
-
   function vb_color ($model, $param, $value) {
     $code = '<input type="color" class="form-control form-control-color vb-color" id="' . $model . '_' . $param . '" name="' . $model . '[' . $param . ']" value="' . $value . '">';
 

@@ -190,7 +190,6 @@ function delete_object (event, btn, model, object_id = null) {
       asynchronous: true,
       evalScripts: true,
       onComplete: function() { console.log("delete_object complete"); },
-      onSuccess: function() { if ($("#" + model + "_list > table > tbody > tr.text-success").length > 0) { $("#" + row_id).remove(); }},
       onLoading: function() { console.log("delete_object loading"); }
     });
   }
