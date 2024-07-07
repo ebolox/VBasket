@@ -198,6 +198,35 @@ function delete_object (event, btn, model, object_id = null) {
   event.stopPropagation();
 }
 
+// Elimina più di un elemento permanentemente
+function delete_objects (model) {
+
+  if (confirm('Sei sicuro di voler eliminare questi elementi?')) {
+
+    rows = $("#" + model + "_list > table > tbody > tr.text-success");
+    object_ids = []
+    rows.each( function () {
+      object_id = $(this).replace("object_", "");
+      object_ids.push(object_id);
+    });
+
+    params = {
+      action: "delete_objects",
+      model: model,
+      ids: object_ids
+    };
+
+    update_backend("logic.php", {
+      parameters: $.param(params),
+      method: "POST",
+      asynchronous: true,
+      evalScripts: true,
+      onComplete: function() { console.log("delete_objects complete"); },
+      onLoading: function() { console.log("delete_objects loading"); }
+    });
+  }
+}
+
 // Carica la scheda dell'elemento desiderato
 function edit_object (model, object_id) {
 
@@ -603,6 +632,9 @@ function set_list_events (model, section_tag) {
 
   // Si aggiorna il selettore alla sezione attuale
   $("#section_selector").data("value", section_tag);
+
+  // Gestione pulsanti navlist
+  $("#" + model + "_delete").click( function () { delete_objects (section_tag); });
 
   // Gestione righe della tabella
   rows = $("#" + model + "_list > table > tbody > tr");
