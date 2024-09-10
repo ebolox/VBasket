@@ -5,7 +5,7 @@
   $model = "account";
   $object = get_object_tab();
   $action = $_POST["action"];
-  $filename = "logo_big.jpg";
+  $filename = "papero.jpg";
 
   if ($action != "init_object") {
 
@@ -15,16 +15,11 @@
     $named_full = extend_account_name($object["named"], $object["name_first"], $object["name_last"], $object["nickname"]);
 
     // Foto account
-    $sql_img = "SELECT * FROM images WHERE object_type = 'account' AND object_id = " . $object["id"] . " AND main = 1";
-    $result = $db_conn->query($sql_img);
-    $img = $result->fetch_array();
-    if (!empty($img)) {
-      $filename = $img['filename'];
-    }
+    $filename = get_main_file ($model, $object["id"]);
   }
 
-  $file_url_supposed = "assets/images/" . $filename;
-  $file_url = file_exists($file_url_supposed) ? $file_url_supposed : "assets/images/logo_big.jpg";
+  $file_url_supposed = "public/images/" . $filename;
+  $file_url = file_exists($file_url_supposed) ? $file_url_supposed : "public/images/papero.jpg";
     
   // Tipo di tesserato
   $account_type_options = array(
@@ -60,6 +55,7 @@
 
           <?= field_image($model, $file_url) ?>
 
+          <?= account_mandatory_data($object) ?>
         </div>
         <div class="col-md-5 text-right">
 
@@ -130,4 +126,5 @@
 
     </form>
   </div>
+  <script src="assets/javascript/section_tab.js"></script>
   <script src="assets/javascript/account.js"></script>

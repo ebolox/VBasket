@@ -1,8 +1,26 @@
 <?php
+  // 
+  function account_mandatory_data ($data) {
+
+    $code = '<div class="">';
+
+    if ($data["purpose"] == "registration") {
+
+      $code .= '<div class=""><label>Iscrizione</label></div>';
+      $code .= '<div class=""><label>Prima rata</label></div>';
+      $code .= '<div class=""><label>Seconda rata</label></div>';
+    } else {
+
+      $code .= '<div class=""><label>' . $data["purpose"] . '</label></div>';
+    }
+
+    $code .= '</div>';
+  }
+
   // Icona/simbolo del Ruolo all'interno della squadra
   function account_marker ($role, $text) {
 
-    return '<span class="role-' . $role . ' mr-2"">' . $text . '</span>';
+    return '<span class="role-' . $role . ' mr-2">' . $text . '</span>';
   }
 
   // Crea un campo con etichetta e button dropdown
@@ -219,10 +237,11 @@
   // Crea il box Immagine
   function field_image ($model, $filename) {
 
-    $code = '<div class="vb-image">';
+    $code = '<div class="box-image">';
+    $code .= '<div class="vb-image">';
     $code .= '<img id="' . $model . '_img" class="img-fluid" src="' . $filename . '" />';
     $code .= '<input type="file" id="' . $model . '_img_file" class="d-none">';
-    $code .= '</div>';
+    $code .= '</div></div>';
 
     return $code;
   }
@@ -292,10 +311,31 @@
   }
 
   // Icona attivo/disattivo
-  function icon_selected ($select_status = true) {
+  function icon_arrow ($direction = "right", $class_name = "") {
+
+    return '<i class="bi bi-chevron-' . $direction . ' ' . $class_name . '"></i>';
+  }
+
+  // Icona attivo/disattivo
+  function icon_selected ($select_status = true, $size = "") {
+
+    switch ($size){
+      case "large": $size = "-lg"; break;
+      default: $size = ""; break;
+    }
+
     $code = $select_status ?
-              '<i class="bi bi-check text-success"></i>' :
-              '<i class="bi bi-x text-danger"></i>';
+              '<i class="bi bi-check' . $size . ' text-success"></i>' :
+              '<i class="bi bi-x' . $size . ' text-danger"></i>';
+
+    return $code;
+  }
+
+  function icon_upload () {
+    $code = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">';
+    $code .= '<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>';
+    $code .= '<path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>';
+    $code .= '</svg>';
 
     return $code;
   }
@@ -315,6 +355,22 @@
       }
       $code .= '</div>';
     }
+    $code .= '</div>';
+
+    return $code;
+  }
+
+  function list_empty ($section_tag) {
+
+    global $lang_it;
+    global $female_words;
+    $rachid = init_pluralizer();
+
+    $first_add = in_array($section_tag, $female_words) ? " la prima" : " il primo";
+
+    $code = '<div class="mt-2 mb-2">';
+    $code .= '<span class="mr-3 ml-3">0 ' . $lang_it[$rachid->pluralize($section_tag)] . ' presenti.</span>';
+    $code .= link_text ("section", "new", "Aggiungi" . $first_add, "");
     $code .= '</div>';
 
     return $code;
@@ -407,7 +463,7 @@
 
     global $lang_it;
 
-    $code = '<div class="vb-tab-title text-uppercase pr-3 pb-1 mb-3">';
+    $code = '<div class="vb-tab-title text-uppercase underlined pr-3 pb-1 mb-3">';
     $code .= '<i class="bi bi-file-earmark-richtext mr-2 ml-4"></i>' . $lang_it[$area];
     $code .= '</div>';
 
@@ -444,6 +500,23 @@
       $code .= button_icon ($btn_params[$btn]["icon_class"], $btn_params[$btn]["color"], array("id" => $area .'_' . $btn, "shape" => "circle", "margin" => "ml-2", "disabled" => $btn_status));
     }
     $code .= '</div></div>';
+
+    return $code;
+  }
+
+  function vb_boolean ($model, $param, $value, $label_on = false, $label_off = false) {
+
+    $btn_id = $model . '_' . $param;
+    $btn_name = $model . '[' . $param . ']';
+
+    if (empty($label_on)) { $label_on = icon_selected(true, "large"); }
+    if (empty($label_off)) { $label_off = icon_selected(false, "large"); }
+
+    $code = '<button class="form-control vb-boolean" id="' . $btn_id . '" name="' . $btn_name . '" data-value="' . $value . '">';
+    $code .= '<span class="vb-boolean-label">' . ($value ? $label_on : $label_off) . '</span>';
+    $code .= '<sub class="vb-boolean-on">' . $label_on . '</sub>';
+    $code .= '<sub class="vb-boolean-off">' . $label_off . '</sub>';
+    $code .= '</button>';
 
     return $code;
   }
@@ -505,7 +578,6 @@
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
     
-
     $code = '<div class="vb-text">';
     $code .= '<button class="btn form-control btn-edit" style="' . (empty($value) ? '' : ' display: none;') . '"><i class="bi bi-pencil"></i></button>';
     $code .= '<input type="text" class="form-control" id="' . $field_id . '" name="' . $field_name . '" value="' . $value . '" placeholder="' . $param . '" style="' . (empty($value) ? ' display: none;' : '') . '" />';

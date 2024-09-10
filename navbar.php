@@ -6,7 +6,7 @@
   $rachid = init_pluralizer();
 
   $account_id = get_account_id();
-  $account_image = get_image("account", $account_id, array("main" => false));
+  $account_image = get_main_file("account", $account_id, "image");
   $account_name = compose_account_name($account_id);
 
   $account_btn = '<a id="navlink_account" class="navlink btn-link" href="#"><i class="bi bi-person-lines-fill"></i></a>';
@@ -34,25 +34,37 @@
   foreach ($vb["media"] as $sect) {
     array_push($media_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
+
+  $col_size = is_mobile() ? "3" : "2";
 ?>  
   <div id="ui_navbar">
     <div class="container d-flex flex-column flex-md-row align-items-center pr-2 pl-2 pt-1 pb-1 px-md-3 mb-3 mb-md-0 bg-white">
       <nav class="row w-100">
-        <div class="col-2">
-          <a id="navlink_home" class="p-2 text-dark" href="#"><img id="logo" src="assets/images/logo_big.jpg" /></a>
+
+        <div class="col-<?= $col_size ?>">
+          <a id="navlink_home" class="p-2 text-dark" href="#"><img id="logo" class="img-fluid" src="assets/images/logo_big.jpg" /></a>
         </div>
+
+<?php if (is_mobile()) { ?>
+        <div class="col text-right">
+          <?= button_icon("bi bi-list", "primary", array("id" => "btn_menu", "shape" => "circle")) ?>
+        </div>
+<?php } else { ?>
         <div class="col row">
           <?= link_text ("navlink", "calendar", "Calendario", "bi bi-calendar-week") ?>
           <?= link_text ("navlink", "technique", "Campo", "bi bi-easel") ?>
           <?= link_text ("navlink", "activity", "Attività", "bi bi-activity", $activity_options) ?>
-          <?= link_text ("navlink", "book", "Rubrica", "bi bi-journal-richtext", $book_options) ?>
+          <?= link_text ("navlink", "book", "Segreteria", "bi bi-inboxes", $book_options) ?>
           <?= link_text ("navlink", "media", "Media", "bi bi-images", $media_options) ?>
         </div>
-        <div class="col-2">
+<?php } ?>
+
+        <div class="col-<?= $col_size ?>">
           <?= $account_btn; ?>
         </div>
+
       </nav>
-      <input type="hidden" id="account_id" name="account[id]" value="<?= $account_id; ?>" />
+      <input type="hidden" id="logged_id" name="account[id]" value="<?= $account_id; ?>" />
     </div>
   </div>
   <?= $account_script; ?>

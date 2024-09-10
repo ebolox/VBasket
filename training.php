@@ -41,7 +41,6 @@
             <li style="display: none;">Giorno</li>
             <li>Ora inizio</li>
             <li>Ora fine</li>
-            <li>Nome</li>
           </ul>
 
         </div>
@@ -57,16 +56,15 @@
         <div class="col-md-12">
 
           <ul class="form-data">
+            <li><?= vb_text ($model, "name", $object["name"]); ?></li>
             <li><?= vb_dropdown ($model, "type", $object["type"], $type_options); ?></li>
-            <li><?= vb_text ($model, "round", $object["round"]); ?></li>
-            <li><?= vb_dropdown ($model, "field", $object["field_id"], $field_options); ?></li>
             <li><?= vb_dropdown ($model, "team", $object["team_id"], $team_options); ?></li>
+            <li><?= vb_dropdown ($model, "field", $object["field_id"], $field_options); ?></li>
             <li><?= vb_date ($model, "date_on", format_to_ddmmyyyy($object["date_on"])); ?></li>
             <li style="display: none;"><?= vb_dropdown ($model, "frequence", $object["frequence"], $frequence_options); ?></li>
             <li style="display: none;"><?= vb_dropdown ($model, "week_day", $object["week_day"], $week_day_options); ?></li>
             <li><?= vb_text ($model, "time_start", $object["time_start"]); ?></li>
             <li><?= vb_text ($model, "time_stop", $object["time_stop"]); ?></li>
-            <li><?= vb_text ($model, "name", $object["name"]); ?></li>
           </ul>
 
         </div>

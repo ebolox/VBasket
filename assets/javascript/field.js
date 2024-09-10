@@ -4,8 +4,6 @@ $(document).ready( function () {
   model = $("#form_model").val();
   object_id = $("#form_id").val();
 
-  // Cambia l'immagine aggiornando il db
-  change_picture (model);
 
   // Gestione campo di testo
   $("#" + model + "_name").change( function () { update_object (model, object_id, param, $(this).val()); });
@@ -16,10 +14,7 @@ $(document).ready( function () {
     update_object (model, object_id, "town", $(this).data("value"));
   });
 
-  // Gestione pulsanti form
-  set_tab_buttons (action, model, object_id);
-
-  if (action == "edit_object") {
+  if (action != "edit_object") {
 
     // Gestione campi di testo
     $.each([" place", "address", "gps", "email", "phone", "notes"],  function (i, param) {

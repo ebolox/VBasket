@@ -65,7 +65,7 @@ h2 {
 #roster_details > div label {
   color: var(--cacao) !important;
   padding-bottom: 2px;
-  border-bottom: 1px solid var(--bluegrey-light);
+  border-bottom: 1px solid var(--sea-light);
   margin-bottom: 4px;
 }
 

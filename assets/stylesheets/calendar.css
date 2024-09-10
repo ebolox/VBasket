@@ -72,9 +72,7 @@
   border-left: 0 !important;
 }
 
-.activity-event,
-.activity-game,
-.activity-training {
+.box-activity {
 	position: absolute;
   width: 60px;
   color: white;
@@ -86,6 +84,10 @@
   opacity: .8;
 }
 
+.box-activity.box-extended {
+  width: unset;
+}
+
 .activity-event {
   background-color: var(--air-light);
 }
@@ -95,5 +97,32 @@
 }
 
 .activity-training {
-  background-color: var(--bluegrey);
+  background-color: var(--sea);
+}
+
+.activity-name,
+.activity-menu-contextual {
+  vertical-align: top;
+  display: inline-block;
+}
+
+.activity-name {
+  width: 60px;
+}
+
+.activity-menu-contextual {
+  width: 100px;
+  display: none;
+}
+
+.activity-menu-contextual ul {
+  padding-left: 4px;
+  text-align: left;
+}
+
+.activity-menu-contextual a.btn-link {
+  color: white;
+}
+.activity-menu-contextual a.btn-link:hover {
+  color: var(--apricot);
 }

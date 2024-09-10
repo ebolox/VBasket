@@ -28,7 +28,7 @@
     var model = "book";
     var section = "<?= $section ?>";
   </script>
-  <script src="assets/javascript/section.js"></script>
+  <script src="assets/javascript/section_list.js"></script>
 <?php
   }
 ?>

@@ -294,30 +294,6 @@ function handle_sign (btn) {
   sign = btn.find("input:checked").data("value");
 }
 
-// Compone e mostra/nasconde la modale info squadra
-function modal_team (btn_team, show) {
-
-  // Se show è false o esiste già, la modale si chiude
-  modal_hide ("modal_team", show);
-
-  modal_show ("modal_team");
-
-  params = {
-    action: "get_roster",
-    team_id: btn_team.data("id"),
-    game_id: $("#game_id").val()
-  };
-
-  update_frontend("modal_team_content", "roster.php", {
-    parameters: $.param(params),
-    method: "POST",
-    asynchronous: true,
-    evalScripts: true,
-    onComplete: function () { console.log("update_team_results complete"); },
-    onLoading: function () { console.log("update_team_results loading"); }
-  });
-}
-
 // Assegna i valori impostati nella toolbar
 function reset_board () {
 

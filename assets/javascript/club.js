@@ -4,13 +4,7 @@ $(document).ready( function () {
   model = $("#form_model").val();
   object_id = $("#form_id").val();
 
-  // Cambia l'immagine aggiornando il db
-  change_picture (model);
-
-  // Gestione pulsanti form
-  set_tab_buttons (action, model, object_id);
-
-  if (action == "edit_object") {
+  if (action != "init_object") {
   
     // Gestione campi di testo
     $.each(["name", "place", "address", "phone", "email", "phone_alt", "website", "facebook", "instagram", "youtube"],  function (i, param) {

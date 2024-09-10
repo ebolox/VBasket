@@ -73,7 +73,7 @@ h2 {
   border-bottom-right-radius: .2rem;
 }
 .input-group > .input-group-prepend > .input-group-text {
-  background-color: var(--bluegrey);
+  background-color: var(--sea);
   border: 0;
   border-radius: 0;
   opacity: .65;

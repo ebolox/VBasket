@@ -40,7 +40,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="ext/fontawesome-free-6.5.1-web/css/fontawesome.css">
-  <link rel="stylesheet" href="assets/stylesheets/ui.css">
+  <link rel="stylesheet" href="assets/stylesheets/ui_element.css">
+  <link rel="stylesheet" href="assets/stylesheets/ui_standard.css">
   <link rel="stylesheet" href="assets/stylesheets/account.css">
   <link rel="stylesheet" href="assets/stylesheets/book.css">
   <link rel="stylesheet" href="assets/stylesheets/calendar.css">

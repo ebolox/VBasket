@@ -29,7 +29,7 @@
     "assistant" => "Assistente",
     "assistants" => "Assistenti",
     "athletic" => "Atletico",
-    "book" => "Rubrica",
+    "book" => "Segreteria",
     "brainstorming" => "Riunione societaria",
     "calendar" => "Calendario",
     "championship" => "Campionato",
@@ -40,12 +40,16 @@
     "coaches" => "Coaches",
     "cup" => "Coppa",
     "cups" => "Coppe",
-    "document" => "Documento",
-    "documents" => "Documenti",
+    "delete" => "Elimina",
+    "edit" => "Modifica",
     "event" => "Evento",
     "events" => "Eventi",
     "field" => "Campo di gioco",
     "fields" => "Campi di gioco",
+    "file" => "Documento",
+    "files" => "Documenti",
+    "first f" => "Prima",
+    "first m" => "Primo",
     "friendly" => "Amichevole",
     "friendlys" => "Amichevoli",
     "game" => "Partita",
@@ -54,18 +58,30 @@
     "images" => "Immagini",
     "manager" => "Dirigente",
     "managers" => "Dirigenti",
+    "media" => "Media",
     "meeting" => "Meeting",
     "name" => "Nome",
     "names" => "Nomi",
     "name-last" => "Cognome",
     "name-first" => "Nome",
+    "other f" => "Altra",
+    "other m" => "Altro",
+    "others f" => "Altre",
+    "others m" => "Altri",
     "party" => "Festa",
     "parties" => "Feste",
+    "player f" => "Giocatrice",
     "player" => "Giocatore",
+    "players f" => "Giocatrici",
     "players" => "Giocatori",
+    "presence" => "Presenza",
+    "presences" => "Presenze",
+    "presence_training" => "Presenze allenamento",
     "other" => "Altro",
     "others" => "Altri",
     "registry" => "Anagrafica",
+    "roster" => "Formazione",
+    "rosters" => "Formazioni",
     "screen" => "Schermo",
     "screens" => "Schermi",
     "staff" => "Staff",
@@ -95,6 +111,18 @@
     "Ottobre",
     "Novembre",
     "Dicembre"
+  );
+
+  // Sostantivi divisi per maschili e femminili
+  $female_words = array(
+    "activity",
+    "club",
+    "game",
+    "image",
+    "party",
+    "roster",
+    "team",
+    "town"
   );
 // Fine
 
@@ -145,8 +173,35 @@
   $vb = array(
     "activity" => array("event", "game", "training"),
     "book" => array("account", "club", "field", "team"),
-    "media" => array("document", "image", "screen", "video")
+    "media" => array("file", "image", "screen", "video")
   );
+
+  // Settori di appartenenza Squadre
+  $team_sectors = array(
+    "minibasket" => array(
+      "Pulcini",
+      "Scoiattoli",
+      "Aquilotti",
+      "Esordienti"
+    ),
+    "youth" => array(
+      "Under 13",
+      "Under 14",
+      "Under 15",
+      "Under 16",
+      "Under 17",
+      "Under 18",
+      "Under 19",
+      "Under 20"
+    ),
+    "senior" => array(
+      "Senior",
+      "Amatoriale"
+    )
+  );
+
+  // Elenco degli objectable
+  $objectable_models = array("account", "club", "event", "field", "screen", "team", "training");
 
   // Liste valore, nome delle colonne Anagrafica
   $registry_column_opts = array(
@@ -159,4 +214,9 @@
     array("value" => "document-id", "label" => "Documento"),
     array("value" => "sport-fitness", "label" => "Idoneità")
   );
+
+  // Estensioni dei file ammessi
+  $image_extensions = ["jpg", "jpeg", "png", "gif", "bmp", "tiff", "svg"];
+  $video_extensions = ["mp4", "avi", "mov", "wmv", "flv", "mkv", "webm"];
+  $audio_extensions = ["mp3", "wav", "ogg", "flac", "aac", "wma", "m4a"];
 ?>

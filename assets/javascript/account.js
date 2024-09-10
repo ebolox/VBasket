@@ -4,15 +4,6 @@ $(document).ready( function () {
   model = $("#form_model").val();
   object_id = $("#form_id").val();
 
-  // Gestione upload immagine
-  change_picture (model);
-
-  // Gestione pulsanti form
-  set_tab_buttons (action, model, object_id);
-
-  $(".btn-edit").click( function () { switch_to_edit(event, $(this).next()); });
-  $(".btn-edit + input[type='text']").change( function () { switch_to_edit(event, $(this)); });
-
   if (action != "init_object") {
 
     // Gestione campi di testo

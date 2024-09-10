@@ -120,8 +120,38 @@
   // Ritorna il blocco div dell'Attività
   // compilato con i dati utili al calendario
   function create_activity ($act_type, $act_label, $act_data) {
+    global $lang_it;
 
-    return '<div class="activity-' . $act_type . '" id="act_' . $act_data["cell_id"] . '" data-time-start="' . $act_data["time_start"] . '" data-time-last="' . $act_data["time_last"] . '">' . $act_label . '</div>';
+    $element_id = $act_type . '_' . $act_data["id"];
+    $element_type = $act_type . 'activity[type]';
+
+    // Contenitore attività
+    $code = '<form class="box-activity activity-' . $act_type . '" id="act_' . $act_data["cell_id"] . '" data-time-start="' . $act_data["time_start"] . '" data-time-last="' . $act_data["time_last"] . '">';
+
+    // Parametri dell'activity
+    $code .= '<input type="hidden" id="activity_type" name="activity[type]" value="' . $act_type . '" />';
+    $code .= '<input type="hidden" id="activity_id" name="activity[id]" value="' . $act_data["id"] . '" />';
+
+    // Nome attività e parametri
+    $code .= '<div class="activity-name">' . $act_label . '</div>';
+
+    // Menù contestuale
+    $code .= '<div class="activity-menu-contextual">';
+    $code .= '<ul>';
+    foreach(["presences", "edit", "delete"] as $val) {
+      $code .= '<li>';
+      $code .= '<a class="btn-link" data-value="' . $val . '" href="#">';
+      $code .= icon_arrow("right", "f-size-12 mr-1");
+      $code .= '<span>' . $lang_it[$val] . '</span>';
+      $code .= '</a>';
+      $code .= '</li>';
+    }
+    $code .= '</ul>';
+    $code .= '</div>';
+
+    $code .= '</form>';
+ 
+    return  $code;
   }
 
   // Crea un nuovo oggetto e
@@ -236,22 +266,73 @@
     global $vb;
     $rachid = init_pluralizer();
 
-    if (in_array($_POST["model"], array_merge($vb["activity"], $vb["book"]))) {
+    $model_name = in_array($_POST["model"], array("audio", "image", "video")) ? "file" : $_POST["model"];
+    $object_id = $_POST["id"];
+
+    if (in_array($model_name, array_merge($vb["activity"], $vb["book"], $vb["media"]))) {
 
       // Object che richiedono più tabelle
       // Si usano le query base, tipo $sql_game
-      $var_name = "sql_" . $rachid->pluralize($_POST["model"]);
+      $var_name = "sql_" . $rachid->pluralize($model_name);
 
       global $$var_name;
-      $sql = $$var_name . " WHERE tx.id=" . $_POST["id"];
+      $sql = $$var_name . " WHERE tx.id=" . $object_id;
     } else {
 
       // Object da tabella singola
-      $sql = "SELECT * FROM " . $rachid->pluralize($_POST["model"]) . " WHERE id=" . $_POST["id"];
+      $sql = "SELECT * FROM " . $rachid->pluralize($model_name) . " WHERE id=" . $object_id;
     }
     $result = $db_conn->query($sql);
 
     return $result->fetch_array();
+  }
+
+  // Recupera i dati delle presenze di una determinata attività
+  function edit_presences () {
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    $activity_type = $_POST["activity_type"];
+    $activity_id = $_POST["activity_id"];
+
+    // Si cerca nella tabella presences una corrispondenza
+    $sql_presences = "SELECT id, activity_type, activity_id, present_ids, late_ids FROM presences WHERE activity_type='" . $activity_type . "' and activity_id=" . $activity_id;
+    $result_presences = $db_conn->query($sql_presences);
+
+    if ($result_presences->num_rows > 0) {
+      $presences = $result_presences->fetch_array();
+
+    } else {
+      // Creiamo il nuovo record presences
+      $sql = "INSERT presences ('activity_type', 'activity_id', 'present_ids', 'late_ids') VALUES ('" . $activity_type . "', '" . $activity_id . "', NULL, NULL)";
+      $result = $db_conn->query($sql);
+
+      // Recupera l'ID del record appena inserito
+      $presences_id = $db_conn->insert_id;
+
+      $presences = array(
+        "id" => $presences_id,
+        "activity_type" => $activity_type,
+        "activity_id" => $activity_id,
+        "present_ids" => json_encode([]),
+        "late_ids" => json_encode([])
+      );
+    }
+
+    switch($activity_type) {
+      case "event": $sql_activity = $sql_events; break;
+      case "game": $sql_activity = $sql_games; break;
+      case "training": $sql_activity = $sql_trainings; break;
+      default: $sql_activity = $sql_trainings;
+    }
+    $conditions = " WHERE id=" . $activity_id;
+    $result_activity = $db_conn->query($sql_activity . $conditions);
+
+    if ($result_activity->num_rows > 0) {
+      $activity = $result_activity->fetch_array();
+    } else {
+      return "<script>alert('Nessun " . $lang_it[$rachid->singularize($activity_type)] . " presente con ID " . $activity_id . "');</script>";
+    }
   }
 
   // Definizione del formato named
@@ -280,6 +361,28 @@
     }
 
     return $full;
+  }
+
+  // Restituisce il filetype di un File
+  function get_file_type($filename) {
+
+    global $image_extensions;
+    global $video_extensions;
+    global $audio_extensions;
+
+    // Ottieni l'estensione del file
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    
+    // Determina il tipo di file in base all"estensione
+    if (in_array($extension, $image_extensions)) {
+      return "image";
+    } elseif (in_array($extension, $video_extensions)) {
+      return "video";
+    } elseif (in_array($extension, $audio_extensions)) {
+      return "audio";
+    } else {
+      return "other";
+    }
   }
 
   // Variabili di una form base
@@ -355,6 +458,8 @@
     global $btn_params;
 
     $records = get_activity_section($section_tag);
+
+    if (count($records) == 0) { return list_empty($section_tag); }
 
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
@@ -472,8 +577,9 @@
   }
 
   // Ritorna un'hash con i dati dell'attività passata come parametro
-  function get_activity_data ($act) {
+  function get_activity_data ($act_type, $act) {
 
+    $act_id = $act["id"];
 		$week_day = $act["date_on"] != "" ? date('N', strtotime($act["date_on"])) : $act["week_day"];
 		$hour_start = substr($act["time_start"], 0, 2);
     $time_start = substr($act["time_start"], -2);
@@ -481,6 +587,8 @@
 		$time_stop = $act["time_stop"] != "" ? substr($act["time_stop"], -2) : (int)$time_start;
 
     return [
+      "type" => $act_type,
+      "id" => $act_id,
       "time_start" => $time_start,
       "time_last" => ((int)$hour_stop - (int)$hour_start) * 60 + ((int)$time_stop - (int)$time_start),
       "cell_id" => "field_" . $act["field_id"] . '_' . $week_day . '_' . $hour_start
@@ -493,6 +601,9 @@
     global $lang_it;
 
     $records = get_book_section($section_tag);
+
+    if (count($records) == 0) { return list_empty($section_tag); }
+
     $col_param = $section_tag == "team" ? "club" : "town";
     switch ($section_tag) {
       case "account": $col1_param = "name-last";
@@ -513,8 +624,8 @@
     $results .= '<th scope="col" class="cell-' . $col1_param . '">' . $lang_it[$col1_param] . '</th>';
     $results .= '<th scope="col" class="cell-' . $col2_param . '">' . $lang_it[$col2_param] . '</th>';
       if ($section_tag == "account") {
-        $results .= '<td scope="col" class="cell-account-type">Profilo</th>';
-        $results .= '<td scope="col" class="cell-roster">Squadre</th>';
+        $results .= '<th scope="col" class="cell-account-type">Profilo</th>';
+        $results .= '<th scope="col" class="cell-roster">Squadre</th>';
       }
     $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
@@ -525,12 +636,12 @@
       $name_short = !empty($record[$short_id]) ? ' <span style="font-weight: 400;">(' . $record[$short_id] . ')</span>' : "";
 
       $results .= '<tr id="object_' . $record["id"] . '" class data-type="' . $section_tag . '">';
-      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="cell-' . $col1_param . '">' . $record[str_replace("-", "_", $col1_param)] . $name_short . '</th>';
-      $results .= '<td scope="col" class="cell-' . $col2_param . '">' . $record[str_replace("-", "_", $col2_param)] . '</th>';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</td>';
+      $results .= '<td scope="col" class="cell-' . $col1_param . '">' . $record[str_replace("-", "_", $col1_param)] . $name_short . '</td>';
+      $results .= '<td scope="col" class="cell-' . $col2_param . '">' . $record[str_replace("-", "_", $col2_param)] . '</td>';
       if ($section_tag == "account") {
-        $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$record["account_type"]] . '</th>';
-        $results .= '<td scope="col" class="cell-roster">' . $record["rosters_count"] . '</th>';
+        $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$record["account_type"]] . '</td>';
+        $results .= '<td scope="col" class="cell-roster">' . $record["rosters_count"] . '</td>';
       }
       $results .= object_contextual_toolbar ($section_tag, $record["id"]);
       $results .= '</tr>';
@@ -576,6 +687,7 @@
   function get_calendar_by ($activity_tag, $team_tag, $account_id) {
 
     global $lang_it;
+    $rachid = init_pluralizer();
 
     // Ottieni la data corrente
     $current_date = new DateTime();
@@ -595,7 +707,7 @@
     if ($team_tag == "all") {
       $conditions .= ";";
     } elseif ($team_tag == "handled") {
-      $conditions .= " and tx.team in (" . implode(", ", handled_teams($account_id)) . ");";
+      $conditions .= " and tx.team in (" . implode(", ", handled_team_ids($account_id)) . ");";
     } else {
       $conditions .= " and tx.team = " . $team_tag . ";";
     }
@@ -623,7 +735,7 @@
     //if (count($result_events) > 0) {
     //  foreach ($result_events as $res) {
     //
-		//		$activity_data = get_activity_data($res);
+		//		$activity_data = get_activity_data(activity_type, $res);
     //    $activity_label = !empty($res["name_short"]) ? $res["name_short"] : $res["name"];
     //
     //    $results .= create_activity("event", $activity_label, $activity_data);
@@ -632,7 +744,7 @@
     if (count($result_games) > 0) {
       foreach ($result_games as $res) {
 
-				$activity_data = get_activity_data($res);
+				$activity_data = get_activity_data("game", $res);
         $activity_label = !empty($res["team_short"]) ? $res["team_short"] : $res["team"];
 
         $results .= create_activity("game", $activity_label, $activity_data);
@@ -641,7 +753,7 @@
     if (count($result_trainings) > 0) {
       foreach ($result_trainings as $res) {
 
-				$activity_data = get_activity_data($res);
+				$activity_data = get_activity_data("training", $res);
         $activity_label = !empty($res["team_short"]) ? $res["team_short"] : $res["team"];
 
         $results .= create_activity("training", $activity_label, $activity_data);
@@ -650,6 +762,17 @@
 		$results .= "<script>apply_activities();</script>";
 
     echo $results;
+  }
+
+  // Recupera i dati delle club
+  function get_club_teams_summary ($club_id) {
+    global $db_conn;
+    global $sql_club_teams_summary;
+
+    $sql = $sql_club_teams_summary . " WHERE club_id=" . $club_id;
+    $teams = do_ask($sql);
+
+    return $teams;
   }
 
   // Recupera i dati delle club
@@ -766,85 +889,135 @@
   }
 
   // Recupera un'immagine
-  function get_image ($object_type, $object_id, $options = []) {
+  function get_main_file ($object_type, $object_id, $filetype = "image") {
+
     global $db_conn;
+    global $sql_main_file;
+    global $objectable_models;
 
-    $conditions = "object_type='" . $object_type . "' and ";
-    $conditions .= "object_id=" . $object_id;
+    $filename = get_missing_image ($object_type);
+    $param_validation = (
+      (!empty($object_type) && in_array($object_type, $objectable_models)) &&
+      (!empty($object_id) && is_positive_integer ($object_id))
+    );
 
-    $sql = "SELECT id, filename FROM images WHERE object_type='" . $object_type . "' and object_id=" . $object_id;
-    $result = $db_conn->query($sql);
-    $image = $result->fetch_array();
+    if ($param_validation) {
+      $sql_conditions = "object_type = '" . $object_type . "' AND object_id = " . $object_id . " AND filetype = '" . $filetype . "';";
+      $sql_img = $sql_main_file . " AND " . $sql_conditions;
 
-	return $image["filename"];
+      $result = $db_conn->query($sql_img);
+      $img = $result->fetch_array();
+      if (!empty($img)) {
+        $filename = !empty($img["filename"]) ? $img["filename"] : $filename;
+      }
+    }
+
+    return $filename;
   }
 
-  // Ritorna la schermata Media della sezione desiderata
-  function get_media ($section_tag) {
+  function get_missing_image ($model_name) {
 
-    switch ($section_tag) {
-      case "image":
-        get_media_images ();
-        break;
-      case "screen":
-        get_media_screens ();
-        break;
-      default:
-        get_media_files ($section_tag);
-        break;
+    return $model_name == "account" ? "papero_vb.jpg" : "logo_big.jpg";
+  }
+
+  // Ritorna lista degli objectable per tipo
+  function get_objectables ($object_type, $object_id) {
+
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    if (empty($object_type)) {
+
+      // Se non ci sono associazioni
+      return array();
     }
+
+    // Se il file è associato ad un objectables
+    $sql = "SELECT id, name FROM " . $rachid->pluralize($object_type) . " WHERE id=" . $object_id;
+    $result = $db_conn->query($sql);
+    $item_associated = $result->fetch_array();
+
+    return $item_associated;
   }
 
   // Ritorna la tabella dei file media desiderati
-  function get_media_files ($file_type) {
+  function get_media ($section_tag) {
     global $lang_it;
 
-    $records = get_media_section($file_type);
-    $col_param = $section_tag == "team" ? "club" : "town";
-    switch ($section_tag) {
-      case "account": $col1_param = "name-last";
-                      $col2_param = "name-first";
-                      break;
-      case "team": $col1_param = "name";
-                    $col2_param = "club";
-                    break;
-      default: $col1_param = "name";
-                $col2_param = "town";
-                break;
-    }
+    $records = get_media_section($section_tag);
+
+    if (count($records) == 0) { return list_empty($section_tag); }
 
     $results = '<table class="table table-striped">';
     $results .= '<thead>';
     $results .= '<tr>';
     $results .= '<th scope="col" class="cell-nr">#</th>';
-    $results .= '<th scope="col" class="cell-' . $col1_param . '">' . $lang_it[$col1_param] . '</th>';
-    $results .= '<th scope="col" class="cell-' . $col2_param . '">' . $lang_it[$col2_param] . '</th>';
-      if ($section_tag == "account") {
-        $results .= '<td scope="col" class="cell-account-type">Profilo</th>';
-        $results .= '<td scope="col" class="cell-roster">Squadre</th>';
-      }
+    $results .= '<th scope="col" class="cell-name">Nome</th>';
+    if ($section_tag == "screen") {
+      $results .= '<th scope="col" class="cell-message">Messaggio</th>';
+      $results .= '<th scope="col" class="cell-attached">Allegati</th>';
+    } else {
+      $results .= '<th scope="col" class="cell-filename">File</th>';
+      $results .= '<th scope="col" class="cell-objectable">Associato a</th>';
+      $results .= '<th scope="col" class="cell-main">Principale</th>';
+    }
     $results .= '<th scope="col" class="cell-toolbar"></th>';
     $results .= '</tr>';
     $results .= '</thead>';
     $results .= '<tbody>';
     foreach ($records as $key => $record) {
-      $short_id = $section_tag == "account" ? "nickname" : "name_short";
-      $name_short = !empty($record[$short_id]) ? ' <span style="font-weight: 400;">(' . $record[$short_id] . ')</span>' : "";
+      $name_short = !empty($record["name_short"]) ? ' <span style="font-weight: 400;">(' . $record[$short_id] . ')</span>' : "";
 
       $results .= '<tr id="object_' . $record["id"] . '" class data-type="' . $section_tag . '">';
-      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</th>';
-      $results .= '<td scope="col" class="cell-' . $col1_param . '">' . $record[str_replace("-", "_", $col1_param)] . $name_short . '</th>';
-      $results .= '<td scope="col" class="cell-' . $col2_param . '">' . $record[str_replace("-", "_", $col2_param)] . '</th>';
-      if ($section_tag == "account") {
-        $results .= '<td scope="col" class="cell-account-type">' . $lang_it[$record["account_type"]] . '</th>';
-        $results .= '<td scope="col" class="cell-roster">' . $record["rosters_count"] . '</th>';
+      $results .= '<td scope="col" class="cell-nr text-center">' . ($key + 1) . '</td>';
+      $results .= '<td scope="col" class="cell-name">' . $record["name"] . $name_short . '</td>';
+      if ($section_tag == "screen") {
+        $results .= '<td scope="col" class="cell-message">' . $lang_it[$record["message"]] . '</td>';
+        $results .= '<td scope="col" class="cell-attached">' . $record["attached_count"] . '</td>';
+      } else {
+        $results .= '<td scope="col" class="cell-filename">' . $record["filename"] . '</td>';
+        $results .= '<td scope="col" class="cell-objectable">' . $record["object_type"] . ' ' . $record["object_id"] . '</td>';
+        $results .= '<td scope="col" class="cell-main">' . (!empty($record["main"]) ? icon_selected(true, "large") : "") . '</td>';
       }
       $results .= object_contextual_toolbar ($section_tag, $record["id"]);
       $results .= '</tr>';
     }
     $results .= '</tbody>';
     $results .= '</table>';
-    $results .= '<script>set_list_events ("book", "' . $section_tag . '");</script>';
+    $results .= '<script>set_list_events ("media", "' . $section_tag . '");</script>';
+
+    return $results;
+  }
+
+  // Recupera i dati della sezione desiderata
+  function get_media_section ($tag) {
+    global $db_conn;
+
+    switch ($tag) {
+      case "audio":
+        global $sql_media_audios;
+        $sql = $sql_media_audios; break;
+      case "file":
+        global $sql_media_files;
+        $sql = $sql_media_files; break;
+      case "image":
+        global $sql_media_images;
+        $sql = $sql_media_images; break;
+      case "screen":
+        global $sql_media_screens;
+        $sql = $sql_media_screens; break;
+      case "video":
+        global $sql_media_videos;
+        $sql = $sql_media_videos; break;
+      default: break;
+    }
+
+    $result = $db_conn->query($sql);
+
+    $results = array();
+    while ($row = $result->fetch_assoc()) {
+      $results[] = $row;
+    }
 
     return $results;
   }
@@ -855,9 +1028,11 @@
 
     $response = "";
     if (isset($_POST) && isset($_POST["action"])) {
-      $response = $_POST["action"] == "init_object" ?
-        init_object () :
-        edit_object ();
+      switch($_POST["action"]) {
+        case "init_object": $response = init_object (); break;
+        case "edit_presences": $response = edit_presences (); break;
+        default: $response = edit_object ();
+      }
     }
 
     return $response;
@@ -923,9 +1098,17 @@
   }
 
   // Determina la sezione da mostrare
-  function get_section_to_view ($section) {
+  function get_section_to_view ($missing_section) {
 
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $section = "";
+
+    if (in_array($_SERVER["REQUEST_METHOD"], ["GET", "POST"])) {
+      if (!empty($_GET["section"])) {
+        $section = $_GET["section"];
+      }
+      if (!empty($_GET["last_view"])) {
+        $section = $_GET["last_view"];
+      }
       if (!empty($_POST["section"])) {
         $section = $_POST["section"];
       }
@@ -934,7 +1117,7 @@
       }
     }
 
-    return $section;
+    return empty($section) ? $missing_section : $section;
   }
 
   // Recupera i dati anagrafici di tutti gli account
@@ -1016,15 +1199,28 @@
     return $calendar_days;
   }
 
-  // Recupera le squadre di pertinenza dell'utente
-  function handled_teams ($account_id) {
+  // Recupera gli id squadre di pertinenza dell'utente
+  function handled_team_ids ($account_id) {
     global $db_conn;
 
     if (!isset($account_id)) { $account_id = get_account_id(); }
 
-    $sql = "SELECT team_id FROM rosters WHERE account_id=" . $account_id;
+    $sql = "SELECT team_id FROM rosters WHERE account_id = " . $account_id;
     $result = $db_conn->query($sql);
     return $result->fetch_array();
+  }
+
+  // Ritorna le squadre associate ad un profilo
+  function handled_teams ($account_id) {
+    global $db_conn;
+    global $sql_account_teams;
+
+    if (!isset($account_id)) { $account_id = get_account_id(); }
+
+    $sql = $sql_account_teams . " WHERE r.account_id = '" . $account_id . "';";
+    $result = do_ask($sql);
+
+    return $result;
   }
 
   // Inizializza un tabellone elettronico
@@ -1083,12 +1279,31 @@
       }
     }
 
+    if (in_array($_POST["model"], $vb["media"]) && $_POST["model"] != "media") {
+      $response["filename"] = "";
+    }
+
     return $response;
   }
 
   // Inizializza istanza della classe Pluralizer
   function init_pluralizer () {
     return new rachid\pluralizer\Pluralizer();
+  }
+
+  function is_mobile() {
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $mobile_agents = ['Android', 'iPhone', 'iPod', 'iPad', 'BlackBerry', 'Windows Phone', 'Opera Mini', 'IEMobile'];
+
+    foreach ($mobile_agents as $agent) {
+      if (stripos($user_agent, $agent) !== false) { return true; }
+    }
+
+    return false;
+  }
+
+  function is_positive_integer ($variable) {
+    return filter_var($variable, FILTER_VALIDATE_INT) !== false && $variable > 0;
   }
 
   // Ritora il numero di maglia
@@ -1161,17 +1376,18 @@
 
       // Controlliamo la presenza dell'immagine main
       // per l'elemento in editing
-      $sql_main = "SELECT id FROM images WHERE object_type = '" . $_POST["object_type"] . "' AND object_id = " . $_POST["object_id"] . " AND main = 1";
+      $sql_main = "SELECT id FROM files WHERE object_type = '" . $_POST["object_type"] . "' AND object_id = " . $_POST["object_id"] . " AND main = 1";
       $result_main = $db_conn->query($sql_main);
-      $main = $result_main->fetch_array();
+      $main_image = $result_main->fetch_array();
 
-      $sql_insert = "INSERT INTO images (filename, object_type, object_id, main) VALUES ('" . $filename . "', '" . $_POST["object_type"] . "', " . $_POST["object_id"] . ", 1)";
+      $filetype = get_file_type($main_image["filename"]);
+      $sql_insert = "INSERT INTO files (filename, filetype, object_type, object_id, main) VALUES ('" . $filename . "', '" . $filetype . "', '" . $_POST["object_type"] . "', " . $_POST["object_id"] . ", 1)";
 
       if(move_uploaded_file($temp_file, $upload_path)) {
         $result = $db_conn->query($sql_insert);
   
-        if (!empty($main)) {
-          $sql_update = "UPDATE images SET main = 0 WHERE id=" . $main["id"];
+        if (!empty($main_image)) {
+          $sql_update = "UPDATE files SET main = 0 WHERE id=" . $main_image["id"];
           $result = $db_conn->query($sql_update);
         }
 
@@ -1222,7 +1438,7 @@
           $response['status'] = 'success';
           $response['message'] = 'File uploaded successfully';
 
-          $sql_uploaded = "UPDATE images (filename, object_id) VALUES ('" . basename($file['name']) . "', 'screen');";
+          $sql_uploaded = "UPDATE files (filename, object_id) VALUES ('" . basename($file['name']) . "', 'screen');";
           $result = $db_conn->query($sql_uploaded);
         } else {
           $response['message'] = 'There was an error uploading your file';

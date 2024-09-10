@@ -48,7 +48,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="ext/fontawesome-free-6.5.1-web/css/fontawesome.css">
 
-  <link rel="stylesheet" href="assets/stylesheets/ui.css">
+  <link rel="stylesheet" href="assets/stylesheets/ui_standard.css">
+  <link rel="stylesheet" href="assets/stylesheets/ui_element.css">
   <link rel="stylesheet" href="assets/stylesheets/eboard.css">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

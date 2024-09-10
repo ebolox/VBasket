@@ -4,7 +4,7 @@
   $model = "activity";
 
   // Sezione da mostrare
-  $section = get_section_to_view ((isset($_GET) && !empty($_GET["section"])) ? $_GET["section"] : "game");
+  $section = get_section_to_view ("game");
 
   if ($_SERVER["REQUEST_METHOD"] === "GET") {
 ?>
@@ -30,7 +30,7 @@
     var model = "activity";
     var section = "<?= $section ?>";
   </script>
-  <script src="assets/javascript/section.js"></script>
+  <script src="assets/javascript/section_list.js"></script>
 <?php
   }
 ?>

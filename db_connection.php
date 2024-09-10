@@ -13,17 +13,17 @@
 
   // Determinare se la richiesta proviene da localhost o produzione
   if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
-      // Ambiente di sviluppo
-      $server_name = $dev_server_name;
-      $username = $dev_username;
-      $password = $dev_password;
-      $db_name = $dev_db_name;
+    // Ambiente di sviluppo
+    $server_name = $dev_server_name;
+    $username = $dev_username;
+    $password = $dev_password;
+    $db_name = $dev_db_name;
   } else {
-      // Ambiente di produzione
-      $server_name = $prod_server_name;
-      $username = $prod_username;
-      $password = $prod_password;
-      $db_name = $prod_db_name;
+    // Ambiente di produzione
+    $server_name = $prod_server_name;
+    $username = $prod_username;
+    $password = $prod_password;
+    $db_name = $prod_db_name;
   }
 
   $db_conn = new mysqli($server_name, $username, $password, $db_name);
@@ -37,6 +37,36 @@
 	$fields_to_tx = "fields f ON f.id = tx.field";
 	$teams_to_tx = "teams t_team ON t_team.id = tx.team";
 	$towns_to_tx = "towns tw ON tw.id = tx.town";
+  $objectables_to_tx = "accounts a ON f.object_type = 'account' AND f.object_id = a.id
+    LEFT JOIN
+      clubs c ON f.object_type = 'club' AND f.object_id = c.id
+    LEFT JOIN
+      events e ON f.object_type = 'event' AND f.object_id = e.id
+    LEFT JOIN
+      fields fi ON f.object_type = 'field' AND f.object_id = fi.id
+    LEFT JOIN
+      screens sc ON f.object_type = 'screen' AND f.object_id = sc.id
+    LEFT JOIN
+      teams t ON f.object_type = 'team' AND f.object_id = t.id
+    LEFT JOIN
+      trainings tr ON f.object_type = 'training' AND f.object_id = tr.id";
+
+  $sql_account_teams = "
+    SELECT
+      r.id AS id,
+      t.id AS team_id,
+      t.name AS team_name,
+      t.name_short AS team_short,
+      c.id AS club_id,
+      c.name AS club,
+      r.role AS role,
+      r.jersey_nr AS jersey_nr
+    FROM
+      rosters r
+    LEFT JOIN
+      teams t ON t.id = r.team_id
+    LEFT JOIN
+      clubs AS c ON c.id = t.club_id";
 
   $sql_accounts = "
     SELECT
@@ -53,7 +83,7 @@
       tx.password,
       tx.account_type,
       tx.document_id,
-      tx.sport_fitness,
+      q.sport_fitness,
       COALESCE(r.rosters_count, 0) AS rosters_count
     FROM accounts tx
     LEFT JOIN (
@@ -62,7 +92,8 @@
         COUNT(*) AS rosters_count
       FROM rosters
       GROUP BY account_id
-    ) r ON tx.id = r.account_id";
+    ) r ON tx.id = r.account_id
+    LEFT JOIN qualifications q ON q.account_id = tx.id";
 
   $sql_activity_events = "
     SELECT
@@ -139,7 +170,7 @@
       a.password,
       a.account_type,
       a.document_id,
-      a.sport_fitness,
+      q.sport_fitness,
       COALESCE(r.rosters_count, 0) AS rosters_count
     FROM accounts a
     LEFT JOIN (
@@ -148,7 +179,8 @@
         COUNT(*) AS rosters_count
       FROM rosters
       GROUP BY account_id
-    ) r ON a.id = r.account_id";
+    ) r ON a.id = r.account_id
+    LEFT JOIN qualifications q ON q.account_id = a.id";
 
   $sql_book_clubs = "
     SELECT
@@ -161,7 +193,9 @@
       c.email,
       c.phone,
       c.phone_alt,
-      c.facebook
+      c.facebook,
+      c.instagram,
+      c.youtube
     FROM clubs c
     LEFT JOIN towns AS tw
     ON c.town = tw.id";
@@ -187,14 +221,46 @@
       t.name_short,
       c.id AS club_id,
       c.name AS club,
+      tc.category_name AS category_name,
+      tc.level AS level,
+      tc.composition AS composition,
       t.jersey_first,
       t.jersey_second,
       t.season,
       t.year_start,
       t.year_stop
-    FROM teams t
-    LEFT JOIN clubs AS c
-    ON c.id = t.club_id";
+    FROM
+      teams t
+    LEFT JOIN
+      clubs AS c
+    ON
+      c.id = t.club_id
+    LEFT JOIN
+      team_categories AS tc
+    ON
+      tc.id = t.category_id";
+
+  // Recupera i dati per il sommario
+  // delle squadre di una società
+  $sql_club_teams_summary = "
+    SELECT
+      t.id,
+      t.name,
+      t.name_short,
+      tc.category_name AS category_name,
+      tc.level AS level,
+      tc.composition AS composition,
+      t.jersey_first,
+      t.jersey_second,
+      t.season,
+      t.year_start,
+      t.year_stop
+    FROM
+      teams t
+    LEFT JOIN
+      team_categories AS tc
+    ON
+      tc.id = t.category_id";
 
   $sql_clubs = "
     SELECT
@@ -207,7 +273,9 @@
       tx.email,
       tx.phone,
       tx.phone_alt,
-      tx.facebook
+      tx.facebook,
+      tx.instagram,
+      tx.youtube
     FROM clubs tx
     LEFT JOIN " . $towns_to_tx;
 
@@ -244,6 +312,24 @@
     FROM fields tx
     LEFT JOIN " . $towns_to_tx;
 
+  $sql_files = "
+    SELECT
+      tx.id AS id,
+      tx.filename AS filename,
+      tx.filetype AS filytype,
+      tx.name AS name,
+      tx.name_short AS name_short,
+      tx.object_type AS object_type,
+      tx.object_id AS object_id,
+      tx.main AS main,
+      tx.archived AS archived,
+      tx.created_at AS created_at,
+      tx.modified_at AS modified_at,
+      COALESCE(a.name, c.name, e.name, fi.name, sc.name, t.name, tr.name) AS object_name
+    FROM
+      files tx
+    LEFT JOIN " . $objectables_to_tx;
+
   $sql_games = "
     SELECT
       tx.id AS id,
@@ -278,6 +364,103 @@
       (SELECT name FROM teams WHERE id = g.opponent) AS b_name
     FROM games g";
 
+  /* Query per immagine principale di ogni objectables */
+  $sql_main_file = "
+    SELECT
+      *
+    FROM
+      files
+    WHERE
+      main = 1
+      AND archived = 0";
+
+  $sql_media_audios = "
+    SELECT
+      f.id,
+      f.filename,
+      f.name,
+      f.name_short,
+      f.object_type,
+      f.object_id,
+      f.main,
+      f.archived,
+      f.created_at,
+      f.modified_at
+    FROM
+      files f
+    WHERE
+      filetype = 'audio'";
+
+  $sql_media_files = "
+    SELECT
+      f.id,
+      f.filename,
+      f.name,
+      f.name_short,
+      f.object_type,
+      f.object_id,
+      f.main,
+      f.archived,
+      f.created_at,
+      f.modified_at
+    FROM
+      files f
+    WHERE
+      filetype = 'other'";
+
+  $sql_media_images = "
+    SELECT
+      f.id,
+      f.filename,
+      f.name,
+      f.name_short,
+      f.object_type,
+      f.object_id,
+      f.main,
+      f.archived,
+      f.created_at,
+      f.modified_at
+    FROM
+      files f
+    WHERE
+      filetype = 'image'";
+
+  $sql_media_screens = "
+    SELECT
+      s.id,
+      s.name,
+      s.name_short,
+      s.message,
+      COUNT(f.id) AS attached_count,
+      s.archived,
+      s.created_at,
+      s.modified_at
+    FROM
+      screens s
+    LEFT JOIN
+      files AS f
+    ON
+      f.object_type = 'screen' and f.object_id = s.id
+    GROUP BY
+      s.id";
+
+  $sql_media_videos = "
+    SELECT
+      f.id,
+      f.filename,
+      f.name,
+      f.name_short,
+      f.object_type,
+      f.object_id,
+      f.main,
+      f.archived,
+      f.created_at,
+      f.modified_at
+    FROM
+      files f
+    WHERE
+      filetype = 'video'";
+
   $sql_registry = "
     SELECT
       a.id,
@@ -288,12 +471,15 @@
       a.phone,
       a.account_type,
       a.document_id,
-      a.sport_fitness,
+      q.sport_fitness,
       r.role,
       r.jersey_nr
-    FROM accounts a
-    LEFT JOIN rosters AS r
-    ON r.account_id = a.id";
+    FROM
+      accounts a
+    JOIN
+      rosters AS r ON r.account_id = a.id
+    LEFT JOIN
+      qualifications AS q ON q.account_id = a.id";
 
   $sql_roster = "
     SELECT
@@ -308,7 +494,20 @@
       r.role AS role,
       r.jersey_nr AS jersey_nr
     FROM rosters r
-    JOIN accounts a ON  a.id = r.account_id";
+    JOIN accounts a ON  a.id = r.account_id
+    LEFT JOIN qualifications q ON q.account_id = a.id";
+
+  $sql_screens = "
+        SELECT
+      tx.id AS id,
+      tx.name AS name,
+      tx.name_short AS name_short,
+      tx.message AS message,
+      tx.archived AS archived,
+      tx.created_at AS created_at,
+      tx.modified_at AS modified_at
+    FROM
+      screens tx";
 
   $sql_teams = "
     SELECT
@@ -325,6 +524,22 @@
     FROM teams tx
     LEFT JOIN clubs AS c
     ON c.id = tx.club_id";
+
+  $sql_team_roster = "
+    SELECT
+      a.id AS id,
+      a.name_last AS name_last,
+      a.name_first AS name_first,
+      a.nickname AS nickname,
+      a.named AS named,
+      a.email AS email,
+      a.phone AS phone,
+      q.sport_fitness AS sport_fitness,
+      r.role AS role,
+      r.jersey_nr AS jersey_nr
+    FROM rosters r
+    JOIN accounts a ON  a.id = r.account_id
+    JOIN qualifications q ON q.account_id = a.id";
 
   $sql_trainings = "
     SELECT

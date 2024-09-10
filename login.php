@@ -76,7 +76,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
 
-  <link rel="stylesheet" href="assets/stylesheets/ui.css">
+  <link rel="stylesheet" href="assets/stylesheets/ui_standard.css">
+  <link rel="stylesheet" href="assets/stylesheets/ui_element.css">
   <link rel="stylesheet" href="assets/stylesheets/login.css">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -86,7 +87,7 @@
 <body>
   <form class="form-signin" method="post" action="login.php">
     <div class="mr-5">
-      <img id="logo" src="assets/images/logo_big.jpg" />
+      <img id="logo_login" src="assets/images/logo_big.jpg" />
       <p class="mt-2 mb-2 text-center text-white">Valdicornia Basket © 2017-2024</p>
     </div>
     <div>

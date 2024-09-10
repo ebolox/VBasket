@@ -14,6 +14,9 @@ $(document).ready( function () {
   $("#" + model + "_new").click( function () { init_object (); });
   $("#" + model + "_print").click( function () { print_screen ($(this)); });
 
+  // Link per aggiungere primo elemento alla Sezione
+  $("#section_new").click( function () { init_object (); });
+
   if (model == "activity") {
     // Click su icone tabellone elettronico
     rows.find("td.cell-eboard").find("i.bi-calendar-x").click( function () { eboard_popup (event, $(this)); });

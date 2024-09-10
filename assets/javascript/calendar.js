@@ -4,14 +4,13 @@ var calendar_teams = $("input[name='calendar[teams]']");
 var calendar_activities = $("input[name='calendar[activities]']");
 var activity_type = $("input[name='activity[type]']");
 var activity_id = $("input[name='activity[id]']");
-var activity_classes = ".activity-event, .activity-game, .activity-training";
 
 // Modale scelta attività da creare
 var activity_modal_title = "Quale attività vuoi creare?";
 var activity_modal_choices = [
-  { "label": "Allenamento", "class": "btn-primary", "click": "modal_choice(false); init_object('training');" },
-  { "label": "Partita", "class": "btn-primary", "click": "modal_choice(false); init_object('game');" },
-  { "label": "Evento", "class": "btn-primary", "click": "modal_choice(false); init_object('event');" }
+  { "label": "Allenamento", "class": "btn-primary", "click": "main_menu_selected($('#navlink_activity')); modal_hide('modal_choice'); init_object('training');" },
+  { "label": "Partita", "class": "btn-primary", "click": "main_menu_selected($('#navlink_activity')); modal_hide('modal_choice'); init_object('game');" },
+  { "label": "Evento", "class": "btn-primary", "click": "main_menu_selected($('#navlink_activity')); modal_hide('modal_choice'); init_object('event');" }
 ];
 
 $(document).ready( function () {
@@ -59,11 +58,34 @@ $(document).ready( function () {
   // Inizializziamo il calendario
   // con ogni attività su ogni campo delle squadre gestite
   update_calendar(calendar_activities.val(), calendar_teams.val());
+
+  // Azioni menù contestuale
+  $(".box-activity .activity-menu-contextual .btn-link").click( function () {
+    action_to_do = $(this).data("value");
+
+    switch (action_to_do) {
+      case "presences":
+        parent_form = $(this).closest("form");
+        activity_type = parent_form.find("input[name='activity[type]']");
+        activity_id = parent_form.find("input[name='activity[tid]']");
+
+        edit_presences(activity_type, activity_id);
+        break;
+      case "edit":
+        alert('edit_object();');
+        break;
+      case "delete":
+        alert('delete_object();');
+        break;
+      default:
+        break;
+    }
+  });
 });
 
 // Attacca le attività sul calendario
 function apply_activities () {
-	$(activity_classes).each( function () {
+	$(".box-activity").each( function () {
 		cell_id = $(this).attr("id").replace("act_", "");
     time_start = parseInt($(this).attr("data-time-start"));
     time_last = parseInt($(this).attr("data-time-last"));
@@ -72,8 +94,22 @@ function apply_activities () {
 console.log("cell_id: " + cell_id + " | cell_x: " + cell_x + " | cell_y: " + cell_y);
 		$(this).offset({top: cell_y, left: cell_x});
 		$(this).css("height", time_last + "px");
-    $(this).click( function (cell_id) { alert(cell_id); });
+    $(this).click( function () { show_activity_menu_contextual($(this)); });
 	});
+}
+
+// Mostra/nasconde il menù contestuale dell'attività
+function show_activity_menu_contextual (box) {
+  menu = box.find(".activity-menu-contextual");
+  show_menu = menu.is(":hidden");
+
+  $(".box-activity .activity-menu-contextual").hide();
+  $(".box-activity").removeClass("box-extended");
+
+  if (show_menu) {
+    menu.css("display", "inline-block");
+    box.addClass("box-extended");
+  }
 }
 
 // Mostra il calendario col campo scelto
@@ -129,13 +165,13 @@ function show_calendar_for_hour (tag) {
 function update_calendar (activity_tag, team_tag) {
 
   // Elimina le attività presenti
-  $(activity_classes).remove();
+  $(".box-activity").remove();
 
   params = {
     action: "get_calendar_by",
     activity_tag: activity_tag,
     team_tag: team_tag,
-    account_id: $("#account_id").val()
+    account_id: $("#logged_id").val()
   };
 
   update_frontend("activity_board", "logic.php", {
@@ -143,7 +179,7 @@ function update_calendar (activity_tag, team_tag) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function () { console.log("update_team_results complete"); },
-    onLoading: function () { console.log("update_team_results loading"); }
+    onLoading: function () { console.log("update_team_results loading"); },
+    onComplete: function () { console.log("update_team_results complete"); }
   });
 }

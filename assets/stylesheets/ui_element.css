@@ -1,0 +1,81 @@
+/* inizio: Menù interfaccia */
+#logo {
+  max-height: 48px;
+  margin-top: 4px;
+}
+
+#ui_navbar {
+  background-color: #fff;
+}
+
+.vb-navbar {
+  width: 100%;
+  background-color: var(--air);
+  padding: 10px;
+  margin: 0;
+  z-index: 99;
+}
+
+.vb-navbar .form-group {
+  display: inline-block;
+}
+
+.vb-navbar .btn > i.bi {
+  margin-right: 3px;
+}
+
+a.navlink {
+  height: 24px !important;
+  text-transform: uppercase;
+  margin: auto 0;
+  display: inline-block;
+}
+a.navlink > img {
+  height: 100%;
+}
+
+a#navlink_account {
+  position: relative;
+  top: 10px;
+  margin: unset;
+}
+
+a#navlink_account > i.bi {
+  font-size: 1.5rem;
+}
+
+#ui_content h4 {
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  #logo {
+    max-height: 40px;
+    margin-top: 8px;
+  }
+
+  #btn_menu {
+    width: 40px;
+    height: 40px;
+    font-size: var(--size-32);
+    margin-top: 4px;
+  }
+}
+/* fine: Menù interfaccia */
+
+/* inizio: Lista Presenze */
+#list_presence {
+  border: 0;
+}
+
+.presence.name_last,
+.presence.name_first  {
+  max-width: calc((100% - 30px) / 2);
+}
+
+.presence.present,
+.presence.late,
+.presence.missing  {
+  min-width: 30px;
+  text-align: center;
+}

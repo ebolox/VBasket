@@ -50,7 +50,7 @@ $(document).ready( function () {
       main_menu_selected ($(this));
     });
   });
-  $("#navlink_account").click( function () { edit_object ("account", $("#account_id").val()); });
+  $("#navlink_account").click( function () { edit_object ("account", $("#logged_id").val()); });
 
   // Link con opzioni a dropdown nascosto
   $.each(["activity", "book", "media"],  function (i, param) {
@@ -62,16 +62,11 @@ $(document).ready( function () {
     btn_link.parent().mouseleave( function () { show_dropdown_menu (event, $(this)); });
 
     dropdown_menu.find(".dropdown-item").click( function () { update_section_by_navbar ($(this), param); });
-    dropdown_menu.mouseenter( function () { show_dropdown_btn ($(this), true); });
-    dropdown_menu.mouseleave( function () { show_dropdown_btn ($(this)); });
+    dropdown_menu.mouseleave( function () { show_dropdown_menu (event, $(this)); });
   });
-});
 
-// Cambia l'immagine aggiornando il db
-function change_picture (model) {
-  $("#" + model + "_img").click( function(){ $("#" + model + "_img_file").trigger("click"); });
-  $("#" + model + "_img_file").on("change", function (e) { preload_image(e, model + "_img", model, $("#form_id").val()); });
-}
+  // $("#navlink_calendar").click(); :: esegue funzione update_calendar
+});
 
 // Converte la stringa serializzata in un hash (oggetto JavaScript)
 function convert_to_hash (encode_string) {
@@ -274,6 +269,25 @@ function edit_object_from_list (event, btn, model = null) {
   event.stopPropagation();
 }
 
+// Carica la scheda dell'elemento desiderato
+function edit_presences (object_type, object_id) {
+
+  params = {
+    action: "edit_presences",
+    activity_type: object_type,
+    activity_id: object_id
+  };
+
+  update_frontend("ui_content", "presences.php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function() { console.log("edit presences tab complete"); },
+    onLoading: function() { console.log("edit presences tab loading"); }
+  });
+}
+
 // Crea la scheda nuova dell'elemento desiderato
 function init_object (model = null) {
 
@@ -410,6 +424,7 @@ function init_pikaday (model, object_id) {
 // Mostra il menù principale per l'elemento selezionato
 function main_menu_selected (selected) {
 
+  // Cliccando da navbar
   if (selected.attr("class").match("dropdown-item")) {
     tag = selected.data("value");
     area_tag = "activity";
@@ -423,6 +438,7 @@ function main_menu_selected (selected) {
 
     navlink = $("#navlink_" + area_tag);
   } else {
+    // Cliccando da listbar
     tag = selected.attr("id").replace("navlink_", "");
     navlink = selected;
   }
@@ -462,9 +478,10 @@ function modal_choice (show, title = false, choices = {}) {
 
 // Compila la modale
 function modal_fill (id, title, content) {
-  // Titolo e scelte in modale
+
+  // Titolo e pulsanti scelta
   $("#" + id + "_label").text(title);
-  $("#" + id + " .modal-body").empty().append(content);
+  $("#" + id + "_content").append(content);
 }
 
 // Nasconde la modale tramite id
@@ -476,12 +493,16 @@ function modal_hide (id, show = false) {
     // Modale nascosta e layer rimosso
     modal.fadeOut().removeClass("show");
     $(".modal-backdrop").remove();
+
+    $("#" + id + "_label").empty();
+    $("#" + id + "_content").empty();
     return false;
   }
 }
 
 // Mostra la modale ed il suo sfondo
 function modal_show (id) {
+
   // Layer grigio sull'interfaccia
   modal_cover = $(".modal-backdrop");
   if (modal_cover.length == 0) {
@@ -493,6 +514,30 @@ function modal_show (id) {
   modal_cover.addClass("show");
   modal = $("#" + id);
   modal.fadeIn().addClass("show");
+}
+
+// Compone e mostra/nasconde la modale info squadra
+function modal_team (btn_team, show) {
+
+  // Se show è false o esiste già, la modale si chiude
+  modal_hide ("modal_team", show);
+
+  modal_show ("modal_team");
+
+  params = {
+    action: "get_roster",
+    team_id: btn_team.data("id"),
+    game_id: $("#game_id").val()
+  };
+
+  update_frontend("modal_team_content", "roster.php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onComplete: function () { console.log("update_team_results complete"); },
+    onLoading: function () { console.log("update_team_results loading"); }
+  });
 }
 
 // Gestisce il click su riga di tabella
@@ -512,34 +557,8 @@ function object_selected (context, row) {
   }
 }
 
-// Mostra/nasconde la barra laterale
-function sidebar_collapse (id, context) {
-
-  change_content = false;
-  if ((context == "config" && $("#eboard_effects").is(":visible")) || (context == "effects" && $("#eboard_config").is(":visible"))) {
-    change_content = true;
-  }
-
-  // Mostra il contenuto richiesto
-  if (context == "config") {
-    $("#eboard_config").show();
-    $("#eboard_effects").hide();
-  } else {
-    $("#eboard_config").hide();
-    $("#eboard_effects").show();
-  }
-
-  if (!change_content) {
-    sidebar = $("#" + id);
-    right_pos = parseInt(sidebar.css("right")) == 0 ? "-300px" : "0px";
-
-    // Movimento orizzontale della sidebar
-    sidebar.animate({ "right": right_pos }, "slow");
-  }
-}
-
 // Precarica un'immagine e aggiorna il db
-function preload_image (e, target_id, object_type, object_id) {
+function preload_image (e, target_id, object_type, object_id, main_file) {
   var file = e.target.files[0];
   var reader = new FileReader();
 
@@ -560,6 +579,7 @@ function preload_image (e, target_id, object_type, object_id) {
     formData.append("action", "upload_image");
     formData.append("object_type", object_type);
     formData.append("object_id", object_id);
+    formData.append("main", main_file);
 
     $.ajax({
       url: "logic.php",
@@ -570,7 +590,13 @@ function preload_image (e, target_id, object_type, object_id) {
       processData: false,
       success: function(response) {
         console.log(response);
-        $('#' + target_id).attr('src', filename);
+        $('#' + target_id).attr("src", filename);
+
+        // Se l'utente sta cambiando la sua foto
+        // aggiorniamo la foto nel navbar
+        if (object_type == "account" && object_id == $("#logged_id").val()) {
+          $("#navlink_account").attr("src", filename);
+        }
       },
       error: function(xhr, status, error) {
         console.error(error);
@@ -586,6 +612,22 @@ function preload_image (e, target_id, object_type, object_id) {
 // come riferimento per il soggetto della stampa
 function print_screen (btn) {
   window.print();
+}
+
+// Click su pulsante booleano
+// cambia lo stato e il valore
+function set_boolean (btn) {
+  label_on = btn.data("on");
+  label_off = btn.data("off");
+  status_actual = parseInt(btn.data("value"));
+
+  if (status_actual) {
+    btn.data("value", 0);
+    btn.empty().html(label_off);
+  } else {
+    btn.data("value", 1);
+    btn.empty().html(label_on);
+  }
 }
 
 function set_checked ( elem ) {
@@ -613,17 +655,6 @@ function set_dropdown (model, object_id, opt, opt_objects) {
   $("input[name='" + model + "[" + object_id + "]']").val(tag);
 
   return tag;
-}
-
-// Aggiorna il menu dropdown al click su un'opzione
-function set_dropdown_menu (opt) {
-
-  dd_menu = opt.parent();
-  menu_options = dd_menu.find(".dropdown-item");
-
-  menu_options.show();
-  opt.hide();
-  dd_menu.removeClass("show");
 }
 
 // Assegna gli eventi a righe e pulsanti
@@ -695,6 +726,7 @@ function set_value ( elem ) {
 function show_dropdown_menu (event, btn_link, visible = false) {
 
   event.preventDefault();
+  event.stopPropagation();
   $(".btn-link + .dropdown-menu").removeClass("show");
 
   menu_dropdown = btn_link.siblings(".dropdown-menu");
@@ -718,6 +750,32 @@ function show_toolbar (row, show) {
   }
 
   show ? toolbar.removeClass("invisible").addClass("visible") : toolbar.removeClass("visible").addClass("invisible");
+}
+
+// Mostra/nasconde la barra laterale
+function sidebar_collapse (id, context) {
+
+  change_content = false;
+  if ((context == "config" && $("#eboard_effects").is(":visible")) || (context == "effects" && $("#eboard_config").is(":visible"))) {
+    change_content = true;
+  }
+
+  // Mostra il contenuto richiesto
+  if (context == "config") {
+    $("#eboard_config").show();
+    $("#eboard_effects").hide();
+  } else {
+    $("#eboard_config").hide();
+    $("#eboard_effects").show();
+  }
+
+  if (!change_content) {
+    sidebar = $("#" + id);
+    right_pos = parseInt(sidebar.css("right")) == 0 ? "-300px" : "0px";
+
+    // Movimento orizzontale della sidebar
+    sidebar.animate({ "right": right_pos }, "slow");
+  }
 }
 
 // Passa da pulsante Edit a field e viceversa
@@ -775,7 +833,7 @@ function update_content (page, parameters = []) {
     params = {
       last_view: parameters["last_view"] ?
                   parameters["last_view"] :
-                  (parameters["section"] ? parameters["section"] : parameters["section"])
+                  (parameters["section"] ? parameters["section"] : "game")
     };
   }
 
@@ -794,8 +852,32 @@ function update_content (page, parameters = []) {
   });
 }
 
+// Aggiorna il menu dropdown al click su un'opzione
+function update_dropdown_menu (opt) {
+
+  dd_menus = $(".navlink + .dropdown-menu");
+  menu_options = dd_menus.find(".dropdown-item");
+  section_tag = opt.data("value");
+  section_switcher = $("#section_selector + .dropdown-menu");
+
+  // Nasconde i dropdown della navbar e
+  // ne rende disponibile le opzioni
+  menu_options.show();
+  dd_menus.removeClass("show");
+
+  
+  // Nasconde dropdown della lista e
+  // ne rende disponibile le opzioni
+  section_switcher.find(".dropdown-item").show();
+  section_switcher.removeClass("show");
+
+  // Nasconde le opzioni uguale a quella desiderata
+  // da tutti i dropdown-menu
+  $("a[data-value='" + section_tag + "']").hide();
+}
+
 // Aggiorna la pagina con dati da server
-function update_frontend (container, url, options) {
+function update_frontend (target_obj, url, options) {
 
   options = options || {};
 
@@ -805,16 +887,33 @@ function update_frontend (container, url, options) {
     data: options.parameters,
 		asynchronous: options.asynchronous,
     dataType: "html",
-    beforeSend: options.onLoading,
+    beforeSend: function() {
+
+      // target_obj can either be an id or an object { success: ..., failure: ... }
+      var dom_object = target_obj.success ? target_obj.success : $("#" + target_obj);
+
+      // Effetto Attesa dialogo col server
+      dom_object.toggleClass("waiting-time");
+
+      // funzioni passate con la chiamata ajax
+      if (options.onLoading) {
+        options.onLoading();
+      }
+    },
     success: function (response) {
 
-      // container can either be an id or an object { success: ..., failure: ... }
-      var container_obj = container.success ? container.success : $("#" + container);
-      container_obj.html(response);
+      // target_obj can either be an id or an object { success: ..., failure: ... }
+      var dom_object = target_obj.success ? target_obj.success : $("#" + target_obj);
+      dom_object.html(response);
 
+        // Rimuove l'effetto Attesa dialogo col server
+        dom_object.toggleClass("waiting-time");
+        
       if (options.onComplete) {
         options.onComplete();
       }
+
+      return false;
     },
     error: function(xhr, status, error) {
       console.log("update_frontend error:", error);
@@ -867,9 +966,8 @@ function update_section_by_list_toolbar (model, btn) {
   // Aggiorna la variabile globale
   section = section_tag;
 
-  // Aggiorna icona dropdown
-  section_switcher.find(".dropdown-item").show();
-  section_switcher.find(".dropdown-item[data-value='" + section_tag + "']").hide();
+  // Aggiorna i menu dropdown
+  update_dropdown_menu (btn);
 
   // Aggiorna il titolo della Sezione
   $("#section_btn").attr("data-value", section_tag);
@@ -882,7 +980,12 @@ function update_section_by_list_toolbar (model, btn) {
 // Aggiorna la pagina alla Sezione cliccata
 function update_section_by_navbar (btn, param) {
 
-  update_content (param, { section: btn.data("value") });
+  section_tag = btn.data("value");
+
+  // Aggiorna la variabile globale
+  section = section_tag;
+
+  update_content (param, { section: section_tag });
   main_menu_selected (btn);
-  set_dropdown_menu (btn);
+  update_dropdown_menu (btn);
 }
