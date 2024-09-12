@@ -12,12 +12,12 @@ $(document).ready( function () {
     $("#" + model + "_" + param).change( function () { update_object (model, object_id, param, $(this).val()); });
   });
 
-  // Gestione campi squadra
-  $("#btn_" + model + "_team").find(".dropdown-menu > .dropdown-item").click( function () {
-    team_id = $(this).data("value");
-
-    set_value ($(this));
-    update_object (model, object_id, param, team_id);
+  // Gestione campi con dropdown
+  $.each(["field", "team", "type"],  function (i, param) {
+    $("#" + model + "_" + param).siblings(".dropdown-menu").first().find(".dropdown-item").click( function () {
+      set_value ($(this));
+      update_object (model, object_id, param, $(this).data("value"));
+    });
   });
 
   // Gestione pulsanti Tipo e Campo di allenamento
