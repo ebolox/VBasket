@@ -41,6 +41,9 @@
       } elseif ($_POST['action'] === 'update_object') {
         update_object();
 
+      } elseif ($_POST['action'] === 'update_presences') {
+        update_presences();
+
       } elseif ($_POST['action'] === 'init_eboard') {
         init_eboard();
 
@@ -296,15 +299,17 @@
     $activity_id = $_POST["activity_id"];
 
     // Si cerca nella tabella presences una corrispondenza
-    $sql_presences = "SELECT id, activity_type, activity_id, present_ids, late_ids FROM presences WHERE activity_type='" . $activity_type . "' and activity_id=" . $activity_id;
+    $sql_presences = "SELECT id, activity_type, activity_id, present_ids, late_ids, missing_ids FROM presences WHERE activity_type='" . $rachid->singularize($activity_type) . "' and activity_id=" . $activity_id;
     $result_presences = $db_conn->query($sql_presences);
 
+    // Se un record Presences esiste
     if ($result_presences->num_rows > 0) {
-      $presences = $result_presences->fetch_array();
 
+      $presences = $result_presences->fetch_array();
     } else {
-      // Creiamo il nuovo record presences
-      $sql = "INSERT presences ('activity_type', 'activity_id', 'present_ids', 'late_ids') VALUES ('" . $activity_type . "', '" . $activity_id . "', NULL, NULL)";
+
+      // Altrimenti creiamo il nuovo record presences
+      $sql = "INSERT presences (activity_type, activity_id, present_ids, late_ids, missing_ids) VALUES ('" . $activity_type . "', " . $activity_id . ", NULL, NULL, NULL)";
       $result = $db_conn->query($sql);
 
       // Recupera l'ID del record appena inserito
@@ -319,20 +324,7 @@
       );
     }
 
-    switch($activity_type) {
-      case "event": $sql_activity = $sql_events; break;
-      case "game": $sql_activity = $sql_games; break;
-      case "training": $sql_activity = $sql_trainings; break;
-      default: $sql_activity = $sql_trainings;
-    }
-    $conditions = " WHERE id=" . $activity_id;
-    $result_activity = $db_conn->query($sql_activity . $conditions);
-
-    if ($result_activity->num_rows > 0) {
-      $activity = $result_activity->fetch_array();
-    } else {
-      return "<script>alert('Nessun " . $lang_it[$rachid->singularize($activity_type)] . " presente con ID " . $activity_id . "');</script>";
-    }
+    return $presences;
   }
 
   // Definizione del formato named
@@ -549,6 +541,60 @@
     return $results;
   }
 
+  // Ritorna un'hash con i dati di una specifica attività
+  function get_activity ($act_type, $act_id) {
+
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    switch($act_type) {
+      case "event":
+        global $sql_activity_events;
+        $sql_activity = $sql_activity_events;
+        $table_id = "e";
+        break;
+      case "game":
+        global $sql_activity_games;
+        $sql_activity = $sql_activity_games;
+        $table_id = "g";
+        break;
+      case "training":
+        global $sql_activity_trainings;
+        $sql_activity = $sql_activity_trainings;
+        $table_id = "t";
+        break;
+      default:
+        global $sql_activity_trainings;
+        $sql_activity = $sql_activity_trainings;
+        $table_id = "t";
+    }
+
+    $sql = $sql_activity . " WHERE " . $table_id . ".id=" . $act_id;
+    $result = $db_conn->query($sql);
+    $activity = $result->fetch_array();
+
+    return $activity;
+  }
+
+  // Ritorna un'hash con i dati dell'attività passata come parametro
+  function get_activity_data_for_calendar ($act_type, $act) {
+
+    $act_id = $act["id"];
+		$week_day = $act["date_on"] != "" ? date('N', strtotime($act["date_on"])) : $act["week_day"];
+		$hour_start = substr($act["time_start"], 0, 2);
+    $time_start = substr($act["time_start"], -2);
+		$hour_stop = $act["time_stop"] != "" ? substr($act["time_stop"], 0, 2) : ((int)$hour_start + 2);
+		$time_stop = $act["time_stop"] != "" ? substr($act["time_stop"], -2) : (int)$time_start;
+
+    return [
+      "type" => $act_type,
+      "id" => $act_id,
+      "time_start" => $time_start,
+      "time_last" => ((int)$hour_stop - (int)$hour_start) * 60 + ((int)$time_stop - (int)$time_start),
+      "cell_id" => "field_" . $act["field_id"] . '_' . $week_day . '_' . $hour_start
+    ];
+  }
+
   // Recupera i dati della sezione desiderata
   function get_activity_section ($tag) {
     global $db_conn;
@@ -574,25 +620,6 @@
     }
 
     return $results;
-  }
-
-  // Ritorna un'hash con i dati dell'attività passata come parametro
-  function get_activity_data ($act_type, $act) {
-
-    $act_id = $act["id"];
-		$week_day = $act["date_on"] != "" ? date('N', strtotime($act["date_on"])) : $act["week_day"];
-		$hour_start = substr($act["time_start"], 0, 2);
-    $time_start = substr($act["time_start"], -2);
-		$hour_stop = $act["time_stop"] != "" ? substr($act["time_stop"], 0, 2) : ((int)$hour_start + 2);
-		$time_stop = $act["time_stop"] != "" ? substr($act["time_stop"], -2) : (int)$time_start;
-
-    return [
-      "type" => $act_type,
-      "id" => $act_id,
-      "time_start" => $time_start,
-      "time_last" => ((int)$hour_stop - (int)$hour_start) * 60 + ((int)$time_stop - (int)$time_start),
-      "cell_id" => "field_" . $act["field_id"] . '_' . $week_day . '_' . $hour_start
-    ];
   }
 
   // Ritorna la tabella della sezione desiderata
@@ -735,7 +762,7 @@
     //if (count($result_events) > 0) {
     //  foreach ($result_events as $res) {
     //
-		//		$activity_data = get_activity_data(activity_type, $res);
+		//		$activity_data = get_activity_data_for_calendar(activity_type, $res);
     //    $activity_label = !empty($res["name_short"]) ? $res["name_short"] : $res["name"];
     //
     //    $results .= create_activity("event", $activity_label, $activity_data);
@@ -744,7 +771,7 @@
     if (count($result_games) > 0) {
       foreach ($result_games as $res) {
 
-				$activity_data = get_activity_data("game", $res);
+				$activity_data = get_activity_data_for_calendar("game", $res);
         $activity_label = !empty($res["team_short"]) ? $res["team_short"] : $res["team"];
 
         $results .= create_activity("game", $activity_label, $activity_data);
@@ -753,7 +780,7 @@
     if (count($result_trainings) > 0) {
       foreach ($result_trainings as $res) {
 
-				$activity_data = get_activity_data("training", $res);
+				$activity_data = get_activity_data_for_calendar("training", $res);
         $activity_label = !empty($res["team_short"]) ? $res["team_short"] : $res["team"];
 
         $results .= create_activity("training", $activity_label, $activity_data);
@@ -932,8 +959,9 @@
       return array();
     }
 
+    $cols = $object_type == "team" ? "name, name_short" : "name";
     // Se il file è associato ad un objectables
-    $sql = "SELECT id, name FROM " . $rachid->pluralize($object_type) . " WHERE id=" . $object_id;
+    $sql = "SELECT id, " . $cols . " FROM " . $rachid->pluralize($object_type) . " WHERE id=" . $object_id;
     $result = $db_conn->query($sql);
     $item_associated = $result->fetch_array();
 
@@ -1126,7 +1154,7 @@
     global $sql_registry;
 
     $conditions = "";
-    if (!empty($team_id) && $team_id != "all") { $conditions = " WHERE (r.team_id='" . $team_id . "')"; }
+    if (!empty($team_id) && $team_id != "all") { $conditions = " WHERE (r.team_id='" . $team_id . "') ORDER BY a.name_last ASC"; }
 
     $sql = $sql_registry . $conditions;
     $result = $db_conn->query($sql);
@@ -1415,6 +1443,29 @@
     }
 
     $result = $db_conn->query($sql);
+  }
+
+  // Aggiorna uno specifico presences
+  function update_presences () {
+    global $db_conn;
+
+    // Converte la stringa JSON in array PHP
+    $presences_id = $_POST["id"];
+    $present_ids = $_POST['present_ids'] == "" ? "null" : $_POST['present_ids'];
+    $late_ids = $_POST['late_ids'] == "" ? "null" : $_POST['late_ids'];
+    $missing_ids = $_POST['missing_ids'] == "" ? "null" : $_POST['missing_ids'];
+
+    // Aggiorna i 3 ids
+    $request = $db_conn->prepare("UPDATE presences SET present_ids = ?, late_ids = ?, missing_ids = ? WHERE id = ?");
+
+    // Bind dei parametri (s = string, i = integer)
+    $request->bind_param('sssi', $present_ids, $late_ids, $missing_ids, $presences_id);
+
+    if ($request->execute()) {
+      return "ok";
+    } else {
+      return "ko";
+    }
   }
 
   function upload_screen_items () {

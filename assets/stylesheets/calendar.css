@@ -82,6 +82,7 @@
   border-top: 8px solid var(--apricot);
   border-radius: 0 0 30px 30px;
   opacity: .8;
+  cursor: pointer;
 }
 
 .box-activity.box-extended {

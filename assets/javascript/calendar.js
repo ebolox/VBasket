@@ -57,30 +57,7 @@ $(document).ready( function () {
 
   // Inizializziamo il calendario
   // con ogni attività su ogni campo delle squadre gestite
-  update_calendar(calendar_activities.val(), calendar_teams.val());
-
-  // Azioni menù contestuale
-  $(".box-activity .activity-menu-contextual .btn-link").click( function () {
-    action_to_do = $(this).data("value");
-
-    switch (action_to_do) {
-      case "presences":
-        parent_form = $(this).closest("form");
-        activity_type = parent_form.find("input[name='activity[type]']");
-        activity_id = parent_form.find("input[name='activity[tid]']");
-
-        edit_presences(activity_type, activity_id);
-        break;
-      case "edit":
-        alert('edit_object();');
-        break;
-      case "delete":
-        alert('delete_object();');
-        break;
-      default:
-        break;
-    }
-  });
+  update_calendar(calendar_activities.val(), calendar_teams.val()); 
 });
 
 // Attacca le attività sul calendario
@@ -96,6 +73,30 @@ console.log("cell_id: " + cell_id + " | cell_x: " + cell_x + " | cell_y: " + cel
 		$(this).css("height", time_last + "px");
     $(this).click( function () { show_activity_menu_contextual($(this)); });
 	});
+}
+
+// Assegna gli eventi ai menù contestuali
+function apply_contextual_menu () {
+  $(".box-activity .activity-menu-contextual .btn-link").click( function () {
+    action_to_do = $(this).data("value");
+
+    switch (action_to_do) {
+      case "presences":
+        parent_form = $(this).closest("form");
+        activity_type = parent_form.find("input#activity_type").val();
+        activity_id = parent_form.find("input#activity_id").val();
+
+        edit_presences(activity_type, activity_id);
+        break;
+      case "edit":
+        alert('edit_object();');
+        break;
+      case "delete":
+        alert('delete_object();');
+        break;
+      default: break;
+    }
+  });
 }
 
 // Mostra/nasconde il menù contestuale dell'attività
@@ -180,6 +181,10 @@ function update_calendar (activity_tag, team_tag) {
     asynchronous: true,
     evalScripts: true,
     onLoading: function () { console.log("update_team_results loading"); },
-    onComplete: function () { console.log("update_team_results complete"); }
+    onComplete: function () {
+      // Azioni menù contestuale
+      apply_contextual_menu();
+      console.log("update_team_results complete");
+    }
   });
 }

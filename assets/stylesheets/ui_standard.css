@@ -23,6 +23,7 @@ body {
   font-family: "Ubuntu", sans-serif;
   font-weight: 400;
   font-style: normal;
+  font-size: var(--size-m);
   background-color: var(--sea-dark);
   overflow-x: hidden;
 }

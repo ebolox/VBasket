@@ -331,6 +331,21 @@
     return $code;
   }
 
+  // Icona attivo/disattivo
+  function icon ($icon_class, $options = []) {
+
+    $icon_color = "";
+    $btn_classes = "";
+    $other_classes = "";
+
+    if (isset($options)) {
+      if (isset($options["icon_color"])) { $icon_color = " " . $options["icon_color"]; }
+      if (isset($options["other_classes"])) { $other_classes = " " . $options["other_classes"]; }
+      if (isset($options["is_button"])) { $btn_classes = " btn btn-vb"; }
+    }
+    return '<i class="' . $icon_class . $icon_color . $btn_classes . $other_classes . '"></i>';
+  }
+
   function icon_upload () {
     $code = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">';
     $code .= '<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>';

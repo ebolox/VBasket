@@ -62,20 +62,3 @@ a#navlink_account > i.bi {
   }
 }
 /* fine: Menù interfaccia */
-
-/* inizio: Lista Presenze */
-#list_presence {
-  border: 0;
-}
-
-.presence.name_last,
-.presence.name_first  {
-  max-width: calc((100% - 30px) / 2);
-}
-
-.presence.present,
-.presence.late,
-.presence.missing  {
-  min-width: 30px;
-  text-align: center;
-}

@@ -103,6 +103,7 @@
       e.type AS type,
       tw.name AS town,
       e.place AS place,
+      e.field AS field_id,
       f.name AS field,
       d.date_on AS date_on,
       d.time_start AS time_start,
@@ -120,10 +121,13 @@
       g.name AS name,
       g.type AS type,
       g.round AS round,
+      t_team.id AS team_id,
       t_team.name AS team,
+      t_opponent.id AS opponent_id,
       t_opponent.name AS opponent,
       g.side AS side,
       e.id AS eboard_id,
+      g.field AS field_id,
       f.name AS field,
       d.date_on AS date_on,
       d.time_start AS time_start,
@@ -142,7 +146,9 @@
       t.id AS id,
       t.name AS name,
       t.type AS type,
+      t.field AS field_id,
       f.name AS field,
+      t_team.id AS team_id,
       t_team.name AS team,
       t_team.name_short AS team_short,
       d.date_on AS date_on,
@@ -478,8 +484,22 @@
       accounts a
     JOIN
       rosters AS r ON r.account_id = a.id
-    LEFT JOIN
-      qualifications AS q ON q.account_id = a.id";
+    LEFT JOIN (
+      SELECT 
+        q1.*
+      FROM 
+        qualifications q1
+      JOIN (
+        -- Subquery to get the most recent qualification for each account
+        SELECT 
+          account_id, 
+          MAX(sport_fitness) AS most_recent_date
+        FROM 
+          qualifications
+        GROUP BY 
+          account_id
+      ) q2 ON q1.account_id = q2.account_id AND q1.sport_fitness = q2.most_recent_date
+    ) AS q ON q.account_id = a.id";
 
   $sql_roster = "
     SELECT

@@ -630,6 +630,21 @@ function set_boolean (btn) {
   }
 }
 
+/* Cambia lo stato del pulsante icona on/off */
+function set_boolean_icon (btn, status_on, status_off, status_on_color = "", status_off_color = "") {
+
+  if (btn.attr("class").match("btn-off")) {
+
+    btn.removeClass("btn-off").addClass("btn-on");
+    btn.find("i").removeClass(status_on).removeClass(status_on_color);
+    btn.find("i").addClass(status_off).addClass(status_off_color);
+  } else {
+    btn.removeClass("btn-on").addClass("btn-off");
+    btn.find("i").removeClass(status_off).removeClass(status_off_color);
+    btn.find("i").addClass(status_on).addClass(status_on_color);
+  }
+}
+
 function set_checked ( elem ) {
   input_name = elem.attr("id").split("_");
   input_value = elem.attr("class").match("success") ? false : true;
@@ -731,7 +746,7 @@ function show_dropdown_menu (event, btn_link, visible = false) {
 
   menu_dropdown = btn_link.siblings(".dropdown-menu");
   btn_left = btn_link.offset().left;
-  constant_left = 240; // Determinata a schermo
+  constant_left = 440; // Determinata a schermo
 
   if (visible) {
     menu_dropdown.css("left", parseInt(btn_left - constant_left) + "px");
@@ -807,11 +822,14 @@ function update_backend (url, options) {
     method: options.method ? options.method : 'GET',
     data: options.parameters,
     asynchronous: options.asynchronous,
-    dataType: options.evalScripts ? 'script' : 'text',
+    dataType: 'html',
     beforeSend: options.onLoading,
     success: function (res) {
 
-      return res;
+      // funzioni passate con la chiamata ajax
+      if (options.onComplete) {
+        options.onComplete(res);
+      }
     },
     error: function(xhr, status, error) {
       console.log('update_backend error:', error);
