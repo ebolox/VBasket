@@ -488,24 +488,9 @@
 
       $field = !empty($record["field"]) ? $record["field"] : "n.d.";
 
-      switch ($record["frequence"]) {
-        case "once":
-          $date = format_to_ddmmyyyy($record["date_on"]); break;
-        case "daily":
-          $date = "Giornaliero"; break;
-        case "week_once":
-          $date = "Ogni " . $record["week_day"]; break;
-        case "week_work":
-          $date = "Lun > Ven"; break;
-        case "week_end":
-          $date = "Sab Dom"; break;
-        default:
-          $date = "n.d."; break;
-      }
-
       $type = $lang_it[$record["type"]];
 
-      $day_past = ($record["frequence"] == "once" && $record["date_on"] >= date("Y-m-d")) ? false : true;
+      $day_past = $record["date_on"] >= date("Y-m-d") ? false : true;
       $eboard = get_game_board($record["id"]);
       $eboard_icon = empty($eboard) ? "bi bi-calendar-x text-danger" : ($day_past ? "bi bi-calendar-plus text-primary" : "bi bi-calendar-check text-success");
 
@@ -526,7 +511,7 @@
       if ($section_tag == "game") {
         $results .= '<td scope="col" class="cell-opponent">' . $record["opponent"] . '</td>';
       }
-      $results .= '<td scope="col" class="cell-date">' . $date . '</td>';
+      $results .= '<td scope="col" class="cell-date">' . $record["date_on"] . '</td>';
       $results .= '<td scope="col" class="cell-field cell-optional">' . $field . '</td>';
       if ($section_tag == "game") {
         $results .= '<td scope="col" class="cell-eboard text-center"><i class="' . $eboard_icon . '" data-id="' . $eboard["id"] . '"></i></td>';
@@ -1234,8 +1219,14 @@
     if (!isset($account_id)) { $account_id = get_account_id(); }
 
     $sql = "SELECT team_id FROM rosters WHERE account_id = " . $account_id;
-    $result = $db_conn->query($sql);
-    return $result->fetch_array();
+    $result = do_ask($sql);
+
+    $team_ids = [];
+    foreach ($result as $key => $value) {
+      if (!in_array($value["team_id"], $team_ids)) { array_push($team_ids, $value["team_id"]); }
+    }
+
+    return $team_ids;
   }
 
   // Ritorna le squadre associate ad un profilo
@@ -1281,7 +1272,6 @@
       $response["type"] = "";
       $response["field_id"] = "";
       $response["field"] = "";
-      $response["frequence"] = "";
       $response["week_day"] = "";
       $response["date_on"] = "";
       $response["time_start"] = "";
@@ -1436,7 +1426,7 @@
               $_POST["model"] :
               $rachid->pluralize($_POST["model"]);
 
-    if (in_array($_POST["param"], array("frequence", "date_on", "week_day", "time_start", "time_stop"))) {
+    if (in_array($_POST["param"], array("date_on", "week_day", "time_start", "time_stop"))) {
       $sql = "UPDATE dates set " . $_POST["param"] . "='" . $_POST["value"] . "' WHERE object_type='" . $_POST["model"] . "' AND object_id=" . $_POST["id"];
     } else {
       $sql = "UPDATE " . $table . " set " . $_POST["param"] . "='" . $_POST["value"] . "' WHERE id=" . $_POST["id"];

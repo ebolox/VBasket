@@ -108,7 +108,6 @@
       d.date_on AS date_on,
       d.time_start AS time_start,
       d.time_stop AS time_stop,
-      d.frequence AS frequence,
       d.week_day AS week_day
     FROM events e
     LEFT JOIN towns AS tw ON e.town = tw.id
@@ -132,7 +131,6 @@
       d.date_on AS date_on,
       d.time_start AS time_start,
       d.time_stop AS time_stop,
-      d.frequence AS frequence,
       d.week_day AS week_day
     FROM games g
     LEFT JOIN dates d ON d.object_type = 'game' AND d.object_id = g.id
@@ -154,7 +152,6 @@
       d.date_on AS date_on,
       d.time_start AS time_start,
       d.time_stop AS time_stop,
-      d.frequence AS frequence,
       d.week_day AS week_day
     FROM trainings t
     JOIN dates d ON d.object_type = 'training' AND d.object_id = t.id
@@ -298,7 +295,6 @@
       d.date_on AS date_on,
       d.time_start AS time_start,
       d.time_stop AS time_stop,
-      d.frequence AS frequence,
       d.week_day AS week_day
     FROM events tx
     JOIN dates d ON d.object_type = 'event' AND d.object_id = tx.id
@@ -353,7 +349,6 @@
       d.date_on AS date_on,
       d.time_start AS time_start,
       d.time_stop AS time_stop,
-      d.frequence AS frequence,
       d.week_day AS week_day
     FROM games tx
     JOIN dates d ON d.object_type = 'game' AND d.object_id = tx.id
@@ -568,13 +563,12 @@
       tx.type AS type,
       f.id AS field_id,
       f.name AS field,
-      tx.id AS team_id,
+      t_team.id AS team_id,
       t_team.name AS team,
       t_team.name_short AS team_short,
       d.date_on AS date_on,
       d.time_start AS time_start,
       d.time_stop AS time_stop,
-      d.frequence AS frequence,
       d.week_day AS week_day
     FROM trainings tx
     JOIN dates d ON d.object_type = 'training' AND d.object_id = tx.id
