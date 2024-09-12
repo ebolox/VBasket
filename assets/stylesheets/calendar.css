@@ -1,3 +1,7 @@
+#calendar_button_bar {
+  display: none;
+}
+
 #btn_calendar_activities > .btn-group-append,
 #btn_calendar_teams > .btn-group-append {
   width: 150px;
