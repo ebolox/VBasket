@@ -1203,8 +1203,13 @@
     $calendar_days = array();
 
     // Riempie l'array delle colonne con le date di ogni giorno della settimana
+    $separator = is_mobile() ? "<br />" : " ";
     for ($i = 0; $i < 7; $i++) {
-      $formatted_date = $days_short[$today->format('N') - 1] . ' ' . $today->format('d');
+
+      $day_of_week = $today->format('N') - 1;
+      $day_nr = $today->format('d');
+      $formatted_date = $days_short[$day_of_week] . $separator . $day_nr;
+
       $calendar_days[] = $formatted_date;
       $today->modify('+1 day');
     }
