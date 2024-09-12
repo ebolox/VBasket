@@ -760,6 +760,10 @@ tr.game-row.text-success > td.game-toolbar button.btn-icon {
 /* Classi solo Mobile */
 /* inizio        */
 @media (max-width: 767px) {
+  body {
+    font-size: var(--size-s);
+  }
+
   .vb-content {
     position: relative;
     top: 0;
