@@ -133,8 +133,8 @@
 
   foreach ($actors as $actor) {
     if ($actor["role"] == "player") {
-      $name_last = isset($actor["name_last"]) ? (strlen($actor["name_last"]) > 10 ? substr($actor["name_last"], 0, 7) . "..." : $actor["name_last"]) : "-";
-      $name_first = isset($actor["name_first"]) ? (strlen($actor["name_first"]) > 10 ? substr($actor["name_first"], 0, 7) . "..." : $actor["name_first"]) : "-";
+      $name_last = isset($actor["name_last"]) ? ((is_mobile() && strlen($actor["name_last"]) > 10) ? substr($actor["name_last"], 0, 7) . "..." : $actor["name_last"]) : "-";
+      $name_first = isset($actor["name_first"]) ? ((is_mobile() && strlen($actor["name_first"]) > 10) ? substr($actor["name_first"], 0, 7) . "..." : $actor["name_first"]) : "-";
       $birth_year = isset($actor["birth_date"]) ? "(" . substr($actor["birth_date"], 2, 2) . ")" : "-";
 ?>
         <tr data-actor-id="<?= $actor["id"] ?>">
