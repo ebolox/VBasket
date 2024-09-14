@@ -123,8 +123,8 @@ function create_object () {
       method: "POST",
       asynchronous: true,
       evalScripts: true,
-      onComplete: function() { console.log("create " + model + " tab complete"); },
-      onLoading: function() { console.log("create " + model + " tab loading"); }
+      onLoading: function() { console.log("create " + model + " tab loading"); },
+      onComplete: function() { console.log("create " + model + " tab complete"); }
     });
 
   } else {
@@ -151,11 +151,11 @@ function delete_account (account_id) {
       method: "POST",
       asynchronous: true,
       evalScripts: true,
+      onLoading: function() { console.log("delete_account loading"); },
       onComplete: function() {
         team_id = $("input[name='registry[teams]']").val();
         get_registry_by_team (team_id);
-      },
-      onLoading: function() { console.log("delete_account loading"); }
+      }
     });
   }
 }
@@ -184,8 +184,8 @@ function delete_object (event, btn, model, object_id = null) {
       method: "POST",
       asynchronous: true,
       evalScripts: true,
-      onComplete: function() { console.log("delete_object complete"); },
-      onLoading: function() { console.log("delete_object loading"); }
+      onLoading: function() { console.log("delete_object loading"); },
+      onComplete: function() { console.log("delete_object complete"); }
     });
   }
 
@@ -215,8 +215,8 @@ function delete_objects (model) {
       method: "POST",
       asynchronous: true,
       evalScripts: true,
-      onComplete: function() { console.log("delete_objects complete"); },
-      onLoading: function() { console.log("delete_objects loading"); }
+      onLoading: function() { console.log("delete_objects tab loading"); },
+      onComplete: function() { console.log("delete_objects complete"); }
     });
   }
 }
@@ -235,8 +235,8 @@ function edit_object (model, object_id) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("edit " + model + " tab complete"); },
-    onLoading: function() { console.log("edit " + model + " tab loading"); }
+    onLoading: function() { console.log("edit " + model + " tab loading"); },
+    onComplete: function() { console.log("edit " + model + " tab complete"); }
   });
 }
 
@@ -262,8 +262,8 @@ function edit_object_from_list (event, btn, model = null) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("edit " + model + " tab complete"); },
-    onLoading: function() { console.log("edit " + model + " tab loading"); }
+    onLoading: function() { console.log("edit " + model + " tab loading"); },
+    onComplete: function() { console.log("edit " + model + " tab complete"); }
   });
 
   event.stopPropagation();
@@ -283,8 +283,8 @@ function edit_presences (object_type, object_id) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("edit presences tab complete"); },
-    onLoading: function() { console.log("edit presences tab loading"); }
+    onLoading: function() { console.log("edit presences tab loading"); },
+    onComplete: function() { console.log("edit presences tab complete"); }
   });
 }
 
@@ -303,8 +303,8 @@ function init_object (model = null) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("init " + model + " model complete"); },
-    onLoading: function() { console.log("init " + model + " model loading"); }
+    onLoading: function() { console.log("init " + model + " model loading"); },
+    onComplete: function() { console.log("init " + model + " model complete"); }
   });
 }
 
@@ -330,8 +330,8 @@ function get_account_tab (action, update_navbar = true, account_id = null) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function() { console.log("tab_account complete"); },
-    onLoading: function() { console.log("tab_account loading"); }
+    onLoading: function() { console.log("tab_account loading"); },
+    onComplete: function() { console.log("tab_account complete"); }
   });
 }
 
@@ -348,8 +348,8 @@ function get_activity (section) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function () { console.log("update_activity_results complete"); },
-    onLoading: function () { console.log("update_activity_results loading"); }
+    onLoading: function () { console.log("update_activity_results loading"); },
+    onComplete: function () { console.log("update_activity_results complete"); }
   });
 }
 
@@ -367,8 +367,8 @@ function get_section (model, section) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function () { console.log("update_" + section + "_results complete"); },
-    onLoading: function () { console.log("update_" + section + "_results loading"); }
+    onLoading: function () { console.log("update_activity_results loading"); },
+    onComplete: function () { console.log("update_" + section + "_results complete"); }
   });
 }
 
@@ -535,8 +535,8 @@ function modal_team (btn_team, show) {
     method: "POST",
     asynchronous: true,
     evalScripts: true,
-    onComplete: function () { console.log("update_team_results complete"); },
-    onLoading: function () { console.log("update_team_results loading"); }
+    onLoading: function () { console.log("update_team_results loading"); },
+    onComplete: function () { console.log("update_team_results complete"); }
   });
 }
 
@@ -968,8 +968,8 @@ function update_object (model, object_id, param, value, init = false) {
       method: "POST",
       asynchronous: true,
       evalScripts: false,
-      onComplete: function() { console.log("update_" + model + " complete"); },
-      onLoading: function() { console.log("update_" + model + " loading"); }
+      onLoading: function() { console.log("update_" + model + " loading"); },
+      onComplete: function() { console.log("update_" + model + " complete"); }
     });
   }
 }
