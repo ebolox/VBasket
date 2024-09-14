@@ -83,8 +83,8 @@ function apply_contextual_menu () {
     switch (action_to_do) {
       case "presences":
         parent_form = $(this).closest("form");
-        activity_type = parent_form.find("input#activity_type").val();
-        activity_id = parent_form.find("input#activity_id").val();
+        activity_type = parent_form.find("input[name='activity[type]']").val();
+        activity_id = parent_form.find("input[name='activity[id]']").val();
 
         edit_presences(activity_type, activity_id);
         break;
