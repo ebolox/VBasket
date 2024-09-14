@@ -2,7 +2,6 @@
   include_once("logic.php");
   
   global $lang_it;
-  $rachid = init_pluralizer();
 
   // Oggetto presences
   $model = "presences";
@@ -21,7 +20,7 @@
   $ids = array(
     "present_ids" => "", 
     "late_ids" => "",
-    "missing_ids" => "",
+    "missing_ids" => ""
   );
   foreach ($ids as $key => $val) {
     if (isset($presences[$key]) && !empty($presences[$key])) {
@@ -73,7 +72,7 @@
         </li>
         <li>
           <i class="bi bi-clipboard-data ml-2 mr-1"></i>
-          <span><?= strtolower($lang_it[$rachid->singularize($activity["type"])]) ?></span>
+          <span><?= strtolower($lang_it[$activity["type"]]) ?></span>
         </li>
         <li>
           <i class="bi bi-geo-alt ml-2 mr-1"></i>
@@ -100,7 +99,7 @@
 
       <div class="col-2">
         <i class="bi bi-clipboard-data ml-2 mr-1"></i>
-        <span><?= strtolower($lang_it[$rachid->singularize($activity["type"])]) ?></span>
+        <span><?= strtolower($lang_it[$activity["type"]]) ?></span>
       </div>
 
       <div class="col-3">

@@ -292,14 +292,14 @@
 
   // Recupera i dati delle presenze di una determinata attività
   function edit_presences () {
+
     global $db_conn;
-    $rachid = init_pluralizer();
 
     $activity_type = $_POST["activity_type"];
     $activity_id = $_POST["activity_id"];
 
     // Si cerca nella tabella presences una corrispondenza
-    $sql_presences = "SELECT id, activity_type, activity_id, present_ids, late_ids, missing_ids FROM presences WHERE activity_type='" . $rachid->singularize($activity_type) . "' and activity_id=" . $activity_id;
+    $sql_presences = "SELECT id, activity_type, activity_id, present_ids, late_ids, missing_ids FROM presences WHERE activity_type='" . $activity_type . "' and activity_id=" . $activity_id;
     $result_presences = $db_conn->query($sql_presences);
 
     // Se un record Presences esiste
