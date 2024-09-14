@@ -1156,7 +1156,7 @@
   function get_teams () {
     global $db_conn;
 
-    $sql = "SELECT id as value, name as label FROM teams WHERE season=2023";
+    $sql = "SELECT id as value, name as label FROM teams WHERE season=" . date("Y");
     $result = $db_conn->query($sql);
 
     $teams = array();
