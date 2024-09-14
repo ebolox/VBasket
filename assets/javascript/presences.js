@@ -64,9 +64,9 @@ function set_presence_initial () {
   raw_late_ids = $("#presences_late_ids").val();
   raw_missing_ids = $("#presences_missing_ids").val();
 
-  present_ids = raw_present_ids == "" ? "" : raw_present_ids.split(',').map(id => parseInt(id));
-  late_ids = raw_late_ids == "" ? "" : raw_late_ids.split(',').map(id => parseInt(id));
-  missing_ids = raw_missing_ids == "" ? "" : raw_missing_ids.split(',').map(id => parseInt(id));
+  present_ids = (isNaN(raw_present_ids) || raw_present_ids == "") ? "" : raw_present_ids.split(',').map(id => parseInt(id));
+  late_ids = (isNaN(raw_late_ids) || raw_late_ids == "") ? "" : raw_late_ids.split(',').map(id => parseInt(id));
+  missing_ids = (isNaN(raw_missing_ids) || raw_missing_ids == "") ? "" : raw_missing_ids.split(',').map(id => parseInt(id));
 
   if (present_ids.length > 0) {
 
@@ -111,10 +111,9 @@ function set_presence_totals () {
   late_ids = raw_late_ids == "" ? "" : raw_late_ids.split(',').map(id => parseInt(id));
   missing_ids = raw_missing_ids == "" ? "" : raw_missing_ids.split(',').map(id => parseInt(id));
 
-  if (present_ids.length > 0) { cell_presents.html(present_ids.length); }
-  if (late_ids.length > 0) { cell_lates.html(late_ids.length); }
-  if (missing_ids.length > 0) { cell_missings.html(missing_ids.length); }
-
+  cell_presents.html(present_ids.length);
+  cell_lates.html(late_ids.length);
+  cell_missings.html(missing_ids.length);
 }
 
 // Aggiorna gli input hidden present/late/missing_ids
