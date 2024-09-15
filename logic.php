@@ -355,28 +355,6 @@
     return $full;
   }
 
-  // Restituisce il filetype di un File
-  function get_file_type($filename) {
-
-    global $image_extensions;
-    global $video_extensions;
-    global $audio_extensions;
-
-    // Ottieni l'estensione del file
-    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-    
-    // Determina il tipo di file in base all"estensione
-    if (in_array($extension, $image_extensions)) {
-      return "image";
-    } elseif (in_array($extension, $video_extensions)) {
-      return "video";
-    } elseif (in_array($extension, $audio_extensions)) {
-      return "audio";
-    } else {
-      return "other";
-    }
-  }
-
   // Variabili di una form base
   function form_variables ($action, $model, $object_id) {
 
@@ -861,6 +839,28 @@
     $objects = do_ask ($sql_events);
 
     return $objects;
+  }
+
+  // Restituisce il filetype di un File
+  function get_file_type($filename) {
+
+    global $image_extensions;
+    global $video_extensions;
+    global $audio_extensions;
+
+    // Ottieni l'estensione del file
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+    // Determina il tipo di file in base all"estensione
+    if (in_array($extension, $image_extensions)) {
+      return "image";
+    } elseif (in_array($extension, $video_extensions)) {
+      return "video";
+    } elseif (in_array($extension, $audio_extensions)) {
+      return "audio";
+    } else {
+      return "other";
+    }
   }
 
   // Ritorna l'ID tabellone elettronico di una partita
