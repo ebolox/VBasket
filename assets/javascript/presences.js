@@ -13,11 +13,11 @@ $(document).ready( function () {
 // se ritardo, presenza o assenza
 function presence_icon (btn) {
   if (btn.attr("class").match("missing")) {
-    return "bi bi-x-square";
+    return "bi bi-x-square text-danger";
   } else if (btn.attr("class").match("present")) {
-    return "bi bi-check-square";
+    return "bi bi-check-square text-success";
   } else {
-    return "bi bi-r-square";
+    return "bi bi-r-square text-warning";
   }
 }
 

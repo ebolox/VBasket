@@ -335,15 +335,16 @@
   function icon ($icon_class, $options = []) {
 
     $icon_color = "";
-    $btn_classes = "";
+    $btn_class = "";
     $other_classes = "";
 
     if (isset($options)) {
       if (isset($options["icon_color"])) { $icon_color = " " . $options["icon_color"]; }
       if (isset($options["other_classes"])) { $other_classes = " " . $options["other_classes"]; }
-      if (isset($options["is_button"])) { $btn_classes = " btn btn-vb"; }
+      if (isset($options["is_clickable"])) { $btn_clickable = " btn"; }
+      if (isset($options["is_button"])) { $btn_class = " btn-vb"; }
     }
-    return '<i class="' . $icon_class . $icon_color . $btn_classes . $other_classes . '"></i>';
+    return '<i class="' . $icon_class . $icon_color . $btn_clickable . $btn_class . $other_classes . '"></i>';
   }
 
   function icon_upload () {
