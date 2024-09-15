@@ -65,4 +65,16 @@ th.presence.present {
   #data_presences ul:first-child {
     max-width: 120px !important;
   }
+
+  td.presence.name-last {
+    width: 45%;
+    max-width: 160px;
+  }
+
+  td.presence.late,
+  td.presence.missing,
+  td.presence.present {
+    width: 18%;
+    max-width: 60px;
+  }
 }

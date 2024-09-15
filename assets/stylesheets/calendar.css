@@ -135,3 +135,20 @@
 .activity-menu-contextual a.btn-link:hover {
   color: var(--apricot);
 }
+
+@media (max-width: 767px) {
+
+  .field-1,
+  .field-2 {
+    width: 40px !important;
+    max-width: 40px !important;
+  }
+
+  .activity-name {
+    width: 36px;
+  }
+
+  .activity-menu-contextual {
+    width: 90px;
+  }
+}

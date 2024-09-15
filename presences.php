@@ -120,7 +120,9 @@
       <thead>
         <tr>
           <th class="presence name-last"><?= $lang_it["name-last"] ?></th>
+          <?php if (!is_mobile()) { ?>
           <th class="presence name-first"><?= $lang_it["name-first"] ?></th>
+          <?php } ?>
           <th class="presence present"><?= $lang_it["present"] ?></th>
           <th class="presence late"><?= $lang_it["late"] ?></th>
           <th class="presence missing"><?= $lang_it["missing"] ?></th>
@@ -129,17 +131,21 @@
 
       <tbody>
 <?php
-  $btn_icon = icon("bi bi-dash-circle-dotted", ["is_button" => true]);
+  $btn_icon = icon("bi bi-dash-circle-dotted", ["is_clickable" => true]);
 
   foreach ($actors as $actor) {
     if ($actor["role"] == "player") {
-      $name_last = isset($actor["name_last"]) ? ((is_mobile() && strlen($actor["name_last"]) > 10) ? substr($actor["name_last"], 0, 7) . "..." : $actor["name_last"]) : "-";
-      $name_first = isset($actor["name_first"]) ? ((is_mobile() && strlen($actor["name_first"]) > 10) ? substr($actor["name_first"], 0, 7) . "..." : $actor["name_first"]) : "-";
+      $name_last = isset($actor["name_last"]) ? ((is_mobile() && strlen($actor["name_last"]) > 15) ? substr($actor["name_last"], 0, 7) . "..." : $actor["name_last"]) : "-";
+      $name_first = isset($actor["name_first"]) ? ((is_mobile() && strlen($actor["name_first"]) > 15) ? substr($actor["name_first"], 0, 7) . "..." : $actor["name_first"]) : "-";
       $birth_year = isset($actor["birth_date"]) ? "(" . substr($actor["birth_date"], 2, 2) . ")" : "-";
 ?>
         <tr data-actor-id="<?= $actor["id"] ?>">
+          <?php if (is_mobile()) { ?>
+          <td class="presence name-last"><sup class="mr-1"><?= $birth_year ?></sup><?= $name_last ?> <?= $name_first ?></td>
+          <?php } else { ?>
           <td class="presence name-last"><sup class="mr-1"><?= $birth_year ?></sup><?= $name_last ?></td>
           <td class="presence name-first"><?= $name_first ?></td>
+          <?php } ?>
           <td class="btn-off presence present"><?= $btn_icon ?></td>
           <td class="btn-off presence late"><?= $btn_icon ?></td>
           <td class="btn-off presence missing"><?= $btn_icon ?></td>
@@ -152,7 +158,7 @@
 
       <tfoot>
         <tr>
-          <th class="presence" colspan=2><?= $lang_it["total"] ?> <?= strtolower($lang_it["players"]) ?>: <?= count($actors) ?></th>
+          <th class="presence"<?= is_mobile() ? "" : " colspan=2" ?>><?= $lang_it["total"] ?> <?= strtolower($lang_it["players"]) ?>: <?= count($actors) ?></th>
           <th class="presence present"></th>
           <th class="presence late"></th>
           <th class="presence missing"></th>
