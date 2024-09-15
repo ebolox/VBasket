@@ -86,7 +86,7 @@
 </head>
 <body>
   <form class="form-signin" method="post" action="login.php">
-    <div class="mr-5">
+    <div<?= is_mobile() ? "" : ' class="mr-5"' ?>>
       <img id="logo_login" src="assets/images/logo_big.jpg" />
       <p class="mt-2 mb-2 text-center text-white">Valdicornia Basket © 2017-2024</p>
     </div>

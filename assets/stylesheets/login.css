@@ -67,5 +67,8 @@ body {
   color: #dc3545;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
+  .form-signin {
+    text-align: center;
+  }
 }
