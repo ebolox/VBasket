@@ -101,15 +101,17 @@ function apply_contextual_menu () {
 
 // Mostra/nasconde il menù contestuale dell'attività
 function show_activity_menu_contextual (box) {
+  boxes = $(".box-activity");
   menu = box.find(".activity-menu-contextual");
   show_menu = menu.is(":hidden");
 
-  $(".box-activity .activity-menu-contextual").hide();
-  $(".box-activity").removeClass("box-extended");
+  boxes.find(".activity-menu-contextual").hide();
+  boxes.removeClass("box-extended").removeClass("box-minimized");
 
   if (show_menu) {
     menu.css("display", "inline-block");
     box.addClass("box-extended");
+    boxes.not(".box-extended").addClass("box-minimized");
   }
 }
 

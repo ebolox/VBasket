@@ -78,7 +78,6 @@
 
 .box-activity {
 	position: absolute;
-  width: 60px;
   color: white;
   text-align: center;
   padding: 1px;
@@ -90,7 +89,12 @@
 }
 
 .box-activity.box-extended {
-  width: unset;
+  opacity: 1;
+  z-index: 9;
+}
+
+.box-activity.box-minimized {
+  opacity: .3;
 }
 
 .activity-event {
