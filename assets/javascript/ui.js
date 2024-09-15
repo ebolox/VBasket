@@ -27,6 +27,7 @@ var vb = {
 var lang_it = {
   account: "Profilo",
   accounts: "Profili",
+  are_you_sure: "Sei sicuro di",
   club: "Società",
   clubs: "Società",
   event: "Evento",
@@ -37,8 +38,10 @@ var lang_it = {
   games: "Partite",
   team: "Squadra",
   teams: "Squadre",
+  this_element: "questo elemento",
   training: "Allenamento",
-  trainings: "Allenamenti"
+  trainings: "Allenamenti",
+  wish_to_delete: "voler eliminare"
 }
 
 $(document).ready( function () {
@@ -163,7 +166,7 @@ function delete_account (account_id) {
 // Elimina un elemento permanentemente
 function delete_object (event, btn, model, object_id = null) {
 
-  if (confirm('Sei sicuro di voler eliminare questo elemento?')) {
+  if (confirm(lang_it["are_you_sure"] + ' ' + lang_it["wish_to_delete"] + ' ' + lang_it["this_element"] + '?')) {
 
     if (!object_id){
       row_id = (["activity", "book"].indexOf(model) >= 0) ?
@@ -189,7 +192,9 @@ function delete_object (event, btn, model, object_id = null) {
     });
   }
 
-  event.stopPropagation();
+  if (event && typeof event.stopPropagation === 'function') {
+    event.stopPropagation();
+  }
 }
 
 // Elimina più di un elemento permanentemente

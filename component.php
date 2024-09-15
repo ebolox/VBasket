@@ -451,6 +451,29 @@
     return $code;
   }
 
+  // Campi input hidden di valori presences
+  function hidden_data_presences ($model, $presences_id, $ids) {
+
+    echo '
+      <!-- Dati presences -->
+      <input type="hidden" id="' . $model . '_id" name="' . $model .'[id]" value="' . $presences_id .'" />
+      <input type="hidden" id="' . $model . '_late_ids" name="' . $model .'[late_ids]" value="' . $ids["late_ids"] .'" />
+      <input type="hidden" id="' . $model . '_missing_ids" name="' . $model .'[missing_ids]" value="' . $ids["missing_ids"] .'" />
+      <input type="hidden" id="' . $model . '_present_ids" name="' . $model .'[present_ids]" value="' . $ids["present_ids"] .'" />
+    ';
+  }
+
+  // Campi input hidden di valori attività
+  function hidden_data_activity ($model, $activity, $activity_type, $activity_id) {
+
+    echo '
+      <!-- Dati attività -->
+      <input type="hidden" id="' . $model .'_activity_type" name="' . $model .'[activity_type]" value="' . $activity_type .'" />
+      <input type="hidden" id="' . $model .'_activity_id" name="' . $model .'[activity_id]" value="' . $activity_id .'" />
+      <input type="hidden" id="' . $model .'_team_id" name="' . $model .'[team_id]" value="' . $activity["team_id"] .'" />
+    ';
+  }
+
   function roster_details ($members, $coach_ids, $assistant_ids, $staff_ids, $player_ids) {
 
     $code = '<div id="roster_details">';

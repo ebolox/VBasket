@@ -80,19 +80,19 @@ function apply_contextual_menu () {
   $(".box-activity .activity-menu-contextual .btn-link").click( function () {
     action_to_do = $(this).data("value");
 
+    parent_form = $(this).closest("form");
+    activity_type = parent_form.find("input[name='activity[type]']").val();
+    activity_id = parent_form.find("input[name='activity[id]']").val();
+
     switch (action_to_do) {
       case "presences":
-        parent_form = $(this).closest("form");
-        activity_type = parent_form.find("input[name='activity[type]']").val();
-        activity_id = parent_form.find("input[name='activity[id]']").val();
-
         edit_presences(activity_type, activity_id);
         break;
       case "edit":
-        alert('edit_object();');
+        edit_object(activity_type, activity_id);
         break;
       case "delete":
-        alert('delete_object();');
+        delete_object (null, $(this), activity_type, activity_id);
         break;
       default: break;
     }
