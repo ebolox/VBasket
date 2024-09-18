@@ -507,7 +507,7 @@
       $results .= '<td scope="col" class="cell-date">' . $record["date_on"] . '</td>';
       $results .= '<td scope="col" class="cell-field cell-optional">' . $field . '</td>';
       if ($section_tag == "game") {
-        $results .= '<td scope="col" class="cell-eboard text-center"><i class="' . $eboard_icon . '" data-id="' . $eboard["id"] . '"></i></td>';
+        $results .= '<td scope="col" class="cell-eboard text-center"><i class="' . $eboard_icon . '" data-id="' . (empty($eboard) ? "" : $eboard["id"]) . '"></i></td>';
       }
       $results .= object_contextual_toolbar ($section_tag, $key + 1);
       $results .= '</tr>';
