@@ -607,7 +607,8 @@
 
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
-    $field_label = '<i class="bi bi-pencil"></i>';
+    $field_label = icon_pencil();
+
     foreach ($options as $opt) {
       if ($opt["value"] == $value) {
         $field_label = $opt["label"];
@@ -640,7 +641,7 @@
     $field_name = $model . "[" . $param . "]";
     
     $code = '<div class="vb-text">';
-    $code .= '<button class="btn form-control btn-edit" style="' . (empty($value) ? '' : ' display: none;') . '"><i class="bi bi-pencil"></i></button>';
+    $code .= '<button class="btn form-control btn-edit" style="' . (empty($value) ? '' : ' display: none;') . '">' . icon_pencil() . '</button>';
     $code .= '<input type="text" class="form-control" id="' . $field_id . '" name="' . $field_name . '" value="' . $value . '" placeholder="' . $param . '" style="' . (empty($value) ? ' display: none;' : '') . '" />';
     $code .= '</div>';
 
