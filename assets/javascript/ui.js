@@ -12,9 +12,9 @@ var mandatory_params = {
   club     : ["name"],
   event    : ["name", "type", "town"],
   field    : ["name", "town"],
-  game     : ["type", "team", "opponent"],
+  game     : ["type", "side", "field", "team", "opponent", "date_on", "time_start"],
   team     : ["name"],
-  training : ["type", "team", "field"]
+  training : ["type", "team", "field", "date_on", "time_start"]
 };
 
 // Aree e Sezioni
@@ -107,7 +107,7 @@ function create_object () {
 
   validation = true;
   for (c in parameters[model]) {
-    if (parameters[model][c] == "") { validation = false; }
+    if (parameters[model][c] == "" && mandatory_params[model].indexOf(c) >= 0) { validation = false; }
   }
 
   if (validation) {
@@ -701,18 +701,16 @@ function set_list_events (model, section_tag) {
   rows.find("button.btn-delete").click( function () { delete_object (event, $(this), section_tag); });
 }
 
-function set_radio_value (btn_radio) {
-  btn = btn_radio.parent();
-  btn_id = btn.attr("id").split("_");
-  btn_hidden = $("input[name='" + btn_id[0] + "[" + btn_id[1] + "]']");
+// Assegna lo stato di obbligatorio
+function set_mandatory_fields (model) {
 
-  btn_value = btn_radio.data("value");
-  hidden_value = btn_value.replace("_parameters", "");
-  
+  $.each(mandatory_params[model], function (i, param) {
 
-  btn.find(".btn.active").removeClass("active");
-  btn_radio.addClass("active");
-  btn_hidden.val(hidden_value);
+    elem = $("#" + model + "_" + param);
+    field = elem.closest("li");
+
+    field.addClass("mandatory-param");
+  });
 }
 
 // Gestione dei pulsanti Scheda (tab)
