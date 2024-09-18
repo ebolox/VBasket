@@ -427,6 +427,11 @@ function init_pikaday (model, object_id) {
   return calendar_picker;
 }
 
+function is_mobile () {
+
+  return $(window).width() <= 767;
+}
+
 // Mostra il menù principale per l'elemento selezionato
 function main_menu_selected (selected) {
 
