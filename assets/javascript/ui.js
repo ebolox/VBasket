@@ -810,7 +810,7 @@ function switch_to_edit (event, field) {
     btn.show();
     field.hide();
   } else {
-console.log("val: " + field.val());
+
     btn.hide();
     field.show();
     field.focus();

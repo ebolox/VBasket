@@ -11,6 +11,7 @@ $(document).ready( function () {
   // Gestione pulsanti form
   set_tab_buttons (action, model, object_id);
 
+  // Gestione icona edit
   $(".btn-edit").click( function () { switch_to_edit(event, $(this).next()); });
-  $(".btn-edit + input[type='text']").change( function () { switch_to_edit(event, $(this)); });
+  $(".btn-edit + input[type='text']").blur( function () { switch_to_edit(event, $(this)); });
 });
