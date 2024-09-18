@@ -844,23 +844,20 @@
   // Restituisce il filetype di un File
   function get_file_type($filename) {
 
-    global $image_extensions;
-    global $video_extensions;
-    global $audio_extensions;
+    global $file_extensions;
 
     // Ottieni l'estensione del file
     $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
     // Determina il tipo di file in base all"estensione
-    if (in_array($extension, $image_extensions)) {
-      return "image";
-    } elseif (in_array($extension, $video_extensions)) {
-      return "video";
-    } elseif (in_array($extension, $audio_extensions)) {
-      return "audio";
-    } else {
-      return "other";
+    $file_type = "other";
+    foreach ($file_extensions as $key => $exts) {
+      if (in_array($extension, $file_extensions[$key])) {
+        $file_type = $key;
+      }
     }
+
+    return $file_type;
   }
 
   // Ritorna l'ID tabellone elettronico di una partita

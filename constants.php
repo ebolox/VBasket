@@ -230,7 +230,9 @@
   );
 
   // Estensioni dei file ammessi
-  $image_extensions = ["jpg", "jpeg", "png", "gif", "bmp", "tiff", "svg"];
-  $video_extensions = ["mp4", "avi", "mov", "wmv", "flv", "mkv", "webm"];
-  $audio_extensions = ["mp3", "wav", "ogg", "flac", "aac", "wma", "m4a"];
+  $file_extensions = [
+    "image" => ["jpg", "jpeg", "png", "gif", "bmp", "tiff", "svg"],
+    "video" => ["mp4", "avi", "mov", "wmv", "flv", "mkv", "webm"],
+    "audio" => ["mp3", "wav", "ogg", "flac", "aac", "wma", "m4a"]
+  ]
 ?>
