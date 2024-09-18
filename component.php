@@ -532,7 +532,7 @@
   // Crea la toolbar della scheda
   function tab_toolbar ($action) {
 
-    $code = '<div class="vb-tab-toolbar pb-1 mb-3">';
+    $code = '<div class="vb-tab-toolbar underlined pb-1 mb-3">';
     if ($action == "init_object") {
 			$code .= button_icon ("bi bi-floppy", "success", array("id" => "tab_create", "shape" => "circle"));
     } else {
