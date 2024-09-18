@@ -203,20 +203,22 @@
     if ($deleted_object > 0) {
 
       if ($_POST["model"] == "account") {
-        $code = file_get_contents("registry.php");
+        $code = include("registry.php");
 
       } elseif (in_array($_POST["model"], $vb["book"])) {
-        $code = file_get_contents("book.php");
+        $code = include("book.php");
 
       } elseif (in_array($_POST["model"], $vb["activity"])) {
-        $code = file_get_contents("activity.php");
+        $code = include("activity.php");
 
       } else {
-        $code = file_get_contents("no_result.php");
+        $code = include("no_result.php");
       }
     } else {
-      $code = 'alert("non eliminato");';
+      $code = '<script>alert("non eliminato");</script>';
     }
+
+    return $code;
   }
 
   // Ritorna un array di risultati

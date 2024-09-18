@@ -782,8 +782,9 @@ tr.game-row.text-success > td.game-toolbar button.btn-icon {
   }
 
   .vb-content.vb-list {
-    width: 340px;
-    margin-left: -170px;
+    left: 0;
+    width: 640px;
+    margin: 0 10px;
   }
 }
 /* fine          */

@@ -179,10 +179,11 @@ function delete_object (event, btn, model, object_id = null) {
     params = {
       action: "delete_object",
       model: model,
-      id: object_id
+      id: object_id,
+      last_view: model
     };
 
-    update_backend("logic.php", {
+    update_frontend("ui_content", "logic.php", {
       parameters: $.param(params),
       method: "POST",
       asynchronous: true,
