@@ -57,18 +57,40 @@ $(document).ready( function () {
 
   // Inizializziamo il calendario
   // con ogni attività su ogni campo delle squadre gestite
-  update_calendar(calendar_activities.val(), calendar_teams.val()); 
+  update_calendar(calendar_activities.val(), calendar_teams.val());
+
+  if (is_mobile()) {
+    start_x = 0;  // Initial X position
+
+    $(document).on('touchstart', function(event) {
+      start_x = event.originalEvent.touches[0].clientX;  // Store initial touch position
+    });
+
+    $(document).on('touchmove', function(event) {
+      move_x = event.originalEvent.touches[0].clientX;
+      distance_x = move_x - start_x;
+      $("#ui_navbar").css('left', distance_x + 'px');
+
+      // Optional: Prevent vertical scrolling if horizontal move is greater
+      if (Math.abs(distanceX) > Math.abs(event.originalEvent.touches[0].clientY - startX)) {
+          event.preventDefault();
+      }
+    });
+  }
 });
 
 // Attacca le attività sul calendario
 function apply_activities () {
+
 	$(".box-activity").each( function () {
+
 		cell_id = $(this).attr("id").replace("act_", "");
     time_start = parseInt($(this).attr("data-time-start"));
     time_last = parseInt($(this).attr("data-time-last"));
 		cell_x = parseFloat($("#" + cell_id).offset().left);
 		cell_y = parseFloat($("#" + cell_id).offset().top + time_start);
 console.log("cell_id: " + cell_id + " | cell_x: " + cell_x + " | cell_y: " + cell_y);
+
 		$(this).offset({top: cell_y, left: cell_x});
 		$(this).css("height", time_last + "px");
     $(this).click( function () { show_activity_menu_contextual($(this)); });
@@ -77,9 +99,10 @@ console.log("cell_id: " + cell_id + " | cell_x: " + cell_x + " | cell_y: " + cel
 
 // Assegna gli eventi ai menù contestuali
 function apply_contextual_menu () {
-  $(".box-activity .activity-menu-contextual .btn-link").click( function () {
-    action_to_do = $(this).data("value");
 
+  $(".box-activity .activity-menu-contextual .btn-link").click( function () {
+
+    action_to_do = $(this).data("value");
     parent_form = $(this).closest("form");
     activity_type = parent_form.find("input[name='activity[type]']").val();
     activity_id = parent_form.find("input[name='activity[id]']").val();
