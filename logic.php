@@ -166,22 +166,35 @@
     $model = $_POST["model"];
     $action = $_POST["action"];
 
-    $cols = "";
-    $values = "";
+    $object_cols = "";
+    $object_values = "";
+    $date_cols = "";
+    $date_values = "";
+    $dated = (isset($_POST["date_on"]) && !empty($_POST["date_on"]));
+
     foreach ($_POST as $key => $val) {
-      if (!in_array($key, ["model", "action"])) {
-        $cols .= $key . ",";
-        $values .= "'" . $val . "',";
+      if (!in_array($key, ["model", "action", "date_on", "time_stop", "time_start"])) {
+        $object_cols .= $key . ",";
+        $object_values .= "'" . $val . "',";
+      }
+
+      if ($dated) {
+        if (in_array($key, ["date_on", "time_stop", "time_start"])) {
+          $date_cols .= $key . ",";
+          $date_values .= ($key == "date_on") ? "'" . format_date_from_it($val) . "'," : "'" . $val . "',";
+        }
       }
     }
 
-    $sql = "INSERT INTO " . $rachid->pluralize($model) . " (" . trim($cols, ",") . ") VALUES (" . trim($values, ",") . ");";
-    $result = $db_conn->query($sql);
+    $sql_object = "INSERT INTO " . $rachid->pluralize($model) . " (" . trim($object_cols, ",") . ") VALUES (" . trim($object_values, ",") . ");";
+    $result_object = $db_conn->query($sql_object);
 
-    $sql_new = "SELECT * FROM " . $rachid->pluralize($model) . " ORDER BY id desc LIMIT 1;";
-    $result_new = do_ask_easy($sql_new);
+    $_POST["id"] = $db_conn->insert_id;
 
-    $_POST["id"] = $result_new["id"];
+    if ($dated) {
+      $sql_date = "INSERT INTO dates (object_type,object_id," . trim($date_cols, ",") . ") VALUES ('" . $model . "', " . $_POST["id"] . ", " . trim($date_values, ",") . ");";
+      $result_date = $db_conn->query($sql_date);
+    }
 
     $content = include($model . ".php");
 
