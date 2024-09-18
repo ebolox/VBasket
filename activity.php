@@ -1,5 +1,7 @@
 <?php
-  include('logic.php');
+  if ($_SERVER["REQUEST_METHOD"] === "GET" || ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["action"] != "delete_object")) {
+    include('logic.php');
+  }
 
   $model = "activity";
 

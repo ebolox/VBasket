@@ -1,6 +1,12 @@
 <?php
   // Se arriviamo alla pagina dall'eboard
-  if (!(isset($_GET) && !empty($_GET["watch"]))) { include('logic.php'); }
+  if (
+    !(isset($_GET) && !empty($_GET["watch"])) ||
+    ($_SERVER["REQUEST_METHOD"] === "GET") ||
+    ($_SERVER["REQUEST_METHOD"] === "POST" && !in_array($_POST["action"], ["create_object", "delete_object"]))
+  ) {
+    include('logic.php');
+  }
 
   $model = "game";
   $object = get_object_tab();
