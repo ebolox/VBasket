@@ -55,8 +55,6 @@
             <li>Squadra</li>
             <li>Avversario</li>
             <li>Data</li>
-            <li style="display: none;">Frequenza</li>
-            <li style="display: none;">Giorno</li>
             <li>Ora inizio</li>
             <li>Ora fine</li>
             <li>Nome</li>
@@ -82,8 +80,6 @@
             <li><?= vb_dropdown ($model, "team", $object["team_id"], $team_options); ?></li>
             <li><?= vb_dropdown ($model, "opponent", $object["opponent_id"], $team_options); ?></li>
             <li><?= vb_date ($model, "date_on", format_to_ddmmyyyy($object["date_on"])); ?></li>
-            <li style="display: none;"><?= vb_dropdown ($model, "frequence", "once", $frequence_options); ?></li>
-            <li style="display: none;"><?= vb_dropdown ($model, "week_day", $object["week_day"], $week_day_options); ?></li>
             <li><?= vb_text ($model, "time_start", $object["time_start"]); ?></li>
             <li><?= vb_text ($model, "time_stop", $object["time_stop"]); ?></li>
             <li><?= vb_text ($model, "name", $object["name"]); ?></li>
