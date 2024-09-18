@@ -12,7 +12,7 @@ $(document).ready( function () {
   });
 
   // Gestione campi squadra
-  $.each(["type", "field", "team", "opponent"],  function (i, param) {
+  $.each(["type", "side", "field", "team", "opponent"],  function (i, param) {
     $("#" + model + "_" + param).siblings(".dropdown-menu").first().find(".dropdown-item").click( function () {
       value = $(this).data("value");
 
