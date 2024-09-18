@@ -156,6 +156,18 @@
     return $code;
   }
 
+  // Logica esclusa in alcuni casi
+  function format_date_from_it ($date_on) {
+
+    // Crea un oggetto DateTime dal formato d/m/Y
+    $date = DateTime::createFromFormat('d/m/Y', $date_on);
+
+    // Trasforma la data nel formato Y-m-d
+    $formatted_date = $date->format('Y-m-d');
+
+    return $formatted_date;
+  }
+
   // Crea una select con dropdown multiselezione
   function dropdown_multiselect ($model, $param, $options = [], $attributes = []) {
 
@@ -311,6 +323,22 @@
   }
 
   // Icona attivo/disattivo
+  function icon ($icon_class, $options = []) {
+
+    $icon_color = "";
+    $btn_class = "";
+    $other_classes = "";
+
+    if (isset($options)) {
+      if (isset($options["icon_color"])) { $icon_color = " " . $options["icon_color"]; }
+      if (isset($options["other_classes"])) { $other_classes = " " . $options["other_classes"]; }
+      if (isset($options["is_clickable"])) { $btn_clickable = " btn"; }
+      if (isset($options["is_button"])) { $btn_class = " btn-vb"; }
+    }
+    return '<i class="' . $icon_class . $icon_color . $btn_clickable . $btn_class . $other_classes . '"></i>';
+  }
+
+  // Icona attivo/disattivo
   function icon_arrow ($direction = "right", $class_name = "") {
 
     return '<i class="bi bi-chevron-' . $direction . ' ' . $class_name . '"></i>';
@@ -331,20 +359,12 @@
     return $code;
   }
 
-  // Icona attivo/disattivo
-  function icon ($icon_class, $options = []) {
+  // Icona matita
+  function icon_pencil ($class_color = "") {
 
-    $icon_color = "";
-    $btn_class = "";
-    $other_classes = "";
+    $code = '<i class="bi bi-pencil ' . $class_color . '"></i>';
 
-    if (isset($options)) {
-      if (isset($options["icon_color"])) { $icon_color = " " . $options["icon_color"]; }
-      if (isset($options["other_classes"])) { $other_classes = " " . $options["other_classes"]; }
-      if (isset($options["is_clickable"])) { $btn_clickable = " btn"; }
-      if (isset($options["is_button"])) { $btn_class = " btn-vb"; }
-    }
-    return '<i class="' . $icon_class . $icon_color . $btn_clickable . $btn_class . $other_classes . '"></i>';
+    return $code;
   }
 
   function icon_upload () {
