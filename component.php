@@ -571,6 +571,8 @@
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
 
+    $value = $value == "-" ? "!" : $value;
+
     $code = '<div class="vb-date">';
     $code .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" class="form-control" placeholder="Scegli la data" value="' . $value . '" />';
     if (isset($params["icon"])) {

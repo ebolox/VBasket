@@ -22,6 +22,6 @@ $(document).ready( function () {
   // Gestione pulsanti form
   set_tab_buttons (action, model, object_id);
 
-  // Pikaday initialization
+  // Inizializza il calendario Pikaday
   var picker_date_on = init_pikaday (model, object_id);
 });

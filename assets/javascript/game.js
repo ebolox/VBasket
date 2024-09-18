@@ -22,11 +22,11 @@ $(document).ready( function () {
   });
 
   $(".btn-edit").click( function () { switch_to_edit(event, $(this).next()); });
-  $(".btn-edit + input[type='text']").change( function () { switch_to_edit(event, $(this)); });
+  $(".btn-edit + input[type='text']").blur( function () { switch_to_edit(event, $(this)); });
 
   // Gestione pulsanti form
   set_tab_buttons (action, model, object_id);
 
-  // Pikaday initialization
+  // Inizializza il calendario Pikaday
   var picker_date_on = init_pikaday (model, object_id);
 });
