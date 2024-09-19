@@ -1,6 +1,7 @@
 <?php
   // 
   function account_mandatory_data ($data) {
+    global $lang_it;
 
     $code = '<div class="">';
 
@@ -11,7 +12,7 @@
       $code .= '<div class=""><label>Seconda rata</label></div>';
     } else {
 
-      $code .= '<div class=""><label>' . $data["purpose"] . '</label></div>';
+      $code .= '<div class=""><label>' . $lang_it[$data["purpose"]] . '</label></div>';
     }
 
     $code .= '</div>';
