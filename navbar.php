@@ -51,7 +51,7 @@
         </div>
 <?php } else { ?>
         <div class="col row">
-          <?= link_text ("navlink", "calendar", "Calendario", "bi bi-calendar-week") ?>
+          <?= link_text ("navlink", "calendar", "Calendario", "bi bi-calendar-week", [], ["active" => true]) ?>
           <?= link_text ("navlink", "technique", "Campo", "bi bi-easel") ?>
           <?= link_text ("navlink", "activity", "Attività", "bi bi-activity", $activity_options) ?>
           <?= link_text ("navlink", "book", "Segreteria", "bi bi-inboxes", $book_options) ?>
