@@ -965,6 +965,26 @@
     return $item_associated;
   }
 
+  // Ritorna i dati dell'objectable di uno specifico oggetto
+  function get_object_related_data ($data_type, $object_type, $object_id) {
+
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    if (empty($object_type)) {
+
+      // Se non ci sono associazioni
+      return array();
+    }
+
+    // Se l'oggetto esiste, chiediamo i dati correlati
+    $sql = "SELECT * FROM " . $data_type . " WHERE " . $object_type . "_id=" . $object_id;
+    $result = $db_conn->query($sql);
+    $item_associated = $result->fetch_array();
+
+    return $item_associated;
+  }
+
   // Ritorna la tabella dei file media desiderati
   function get_media ($section_tag) {
     global $lang_it;
@@ -1267,16 +1287,26 @@
   function init_object () {
     global $db_conn;
     global $vb;
+    $rachid = init_pluralizer();
 
     $response = array(
       "id" => ""
     );
 
     if ($_POST["model"] == "account") {
-      $response["name_last"] = "";
-      $response["name_first"] = "";
-      $response["named"] = "";
-      $response["account_type"] = "";
+      $sql = get_last_record_query ($rachid->pluralize($_POST["model"]));
+      $last_object = do_ask_easy($sql);
+
+      $object_params = array_keys($last_object);
+      foreach($object_params as $param) {
+        $response[$param] = "";
+      }
+
+      $object_data = get_object_related_data ("qualifications", "account", 1);
+      $data_params = array_keys($object_data);
+      foreach($data_params as $param) {
+        $response[$param] = "";
+      }
     } else {
       $response["name"] = "";
     }
