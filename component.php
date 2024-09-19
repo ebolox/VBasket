@@ -376,12 +376,13 @@
     return $code;
   }
 
-  function link_text ($context, $tag, $label, $icon_class, $options = []) {
+  function link_text ($context, $tag, $label, $icon_class, $options = [], $attributes = []) {
 
     $btn_id = $context . "_" . $tag;
+    $class_active = (isset($attributes) && isset($attributes["active"]) && $attributes["active"]) ? " active" : "";
 
     $code = '<div class="mt-3 mr-3 ml-3 d-inline-block">';
-    $code .= '<a id="' . $btn_id . '" class="btn-link ' . $context . ' mr-1" href="#">';
+    $code .= '<a id="' . $btn_id . '" class="btn-link ' . $context . $class_active . ' mr-1" href="#">';
     $code .= '<i class="' . $icon_class . ' mr-2"></i><span>' . $label . '</span>';
     $code .= '</a>';
     if (!empty($options)) {
