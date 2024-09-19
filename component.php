@@ -593,10 +593,11 @@
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
 
-    $value = $value == "-" ? "!" : $value;
+    $value = $value == "-" ? "" : $value;
 
     $code = '<div class="vb-date">';
-    $code .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" class="form-control" placeholder="Scegli la data" value="' . $value . '" />';
+    $code .= '<button class="btn form-control btn-edit" style="' . (empty($value) ? '' : ' display: none;') . '">' . icon_pencil() . '</button>';
+    $code .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" class="form-control" value="' . $value . '" />';
     if (isset($params["icon"])) {
       $code .= '<i class="' . $params["icon"] . ' input-prefix text-secondary"></i>';
     }

@@ -817,7 +817,10 @@ function switch_to_edit (event, field) {
 
     btn.hide();
     field.show();
-    field.focus();
+
+    field.parent().attr("class").match("vb-date") ?
+      field.click() :
+      field.focus();
   }
 }
 
