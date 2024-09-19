@@ -1,9 +1,5 @@
 $(document).ready( function () {
 
-  var action = $("#form_action").val();
-  var model = $("#form_model").val();
-  var object_id = $("#form_id").val();
-
   var init_object = action == "init_object" ? true : false;
 
   if (init_object) {
@@ -28,11 +24,5 @@ $(document).ready( function () {
     });
   }
 
-  $(".btn-edit").click( function () { switch_to_edit(event, $(this).next()); });
-  $(".btn-edit + input[type='text']").blur( function () { switch_to_edit(event, $(this)); });
-
   $("#roster_btn").click( function () { modal_team ($(this), true); });
-
-  // Gestione pulsanti form
-  set_tab_buttons (action, model, object_id);
 });

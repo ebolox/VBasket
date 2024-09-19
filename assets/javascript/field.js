@@ -1,10 +1,5 @@
 $(document).ready( function () {
 
-  action = $("#form_action").val();
-  model = $("#form_model").val();
-  object_id = $("#form_id").val();
-
-
   // Gestione campo di testo
   $("#" + model + "_name").change( function () { update_object (model, object_id, param, $(this).val()); });
 
@@ -14,11 +9,8 @@ $(document).ready( function () {
     update_object (model, object_id, "town", $(this).data("value"));
   });
 
-  if (action != "edit_object") {
-
-    // Gestione campi di testo
-    $.each([" place", "address", "gps", "email", "phone", "notes"],  function (i, param) {
-      $("#" + model + "_" + param).change( function () { update_object (model, object_id, param, $(this).val()); });
-    });
-  }
+  // Gestione campi di testo
+  $.each([" place", "address", "gps", "email", "phone", "notes"],  function (i, param) {
+    $("#" + model + "_" + param).change( function () { update_object (model, object_id, param, $(this).val()); });
+  });
 });

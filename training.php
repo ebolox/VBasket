@@ -68,4 +68,5 @@
 
     </form>
   </div>
+  <script src="assets/javascript/section_tab.js"></script>
   <script src="assets/javascript/training.js"></script>

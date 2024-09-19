@@ -97,5 +97,6 @@
     </form>
   </div>
   <?= modal_base('team'); ?>
+  <script src="assets/javascript/section_tab.js"></script>
   <script src="assets/javascript/team.js"></script>
   <style>.vb-content { overflow-y: initial; }</style>
