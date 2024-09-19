@@ -883,13 +883,13 @@ function update_content (page, parameters = []) {
 function update_dropdown_menu (opt) {
 
   dd_menus = $(".navlink + .dropdown-menu");
-  menu_options = dd_menus.find(".dropdown-item");
+  active_options = dd_menus.find(".dropdown-item.active");
   section_tag = opt.data("value");
   section_switcher = $("#section_selector + .dropdown-menu");
 
   // Nasconde i dropdown della navbar e
   // ne rende disponibile le opzioni
-  menu_options.show();
+  active_options.removeClass("active");
   dd_menus.removeClass("show");
 
   
@@ -900,7 +900,7 @@ function update_dropdown_menu (opt) {
 
   // Nasconde le opzioni uguale a quella desiderata
   // da tutti i dropdown-menu
-  $("a[data-value='" + section_tag + "']").hide();
+  $("a[data-value='" + section_tag + "']").addClass("active");
 }
 
 // Aggiorna la pagina con dati da server
