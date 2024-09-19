@@ -314,13 +314,13 @@
     $activity_id = $_POST["activity_id"];
 
     // Si cerca nella tabella presences una corrispondenza
-    $sql_presences = "SELECT id, activity_type, activity_id, present_ids, late_ids, missing_ids FROM presences WHERE activity_type='" . $activity_type . "' and activity_id=" . $activity_id;
-    $result_presences = $db_conn->query($sql_presences);
+    $sql_existing_presences = $sql_presences . " WHERE activity_type='" . $activity_type . "' and activity_id=" . $activity_id;
+    $sql_existing_presences = $db_conn->query($sql_presences);
 
     // Se un record Presences esiste
-    if ($result_presences->num_rows > 0) {
+    if ($sql_existing_presences->num_rows > 0) {
 
-      $presences = $result_presences->fetch_array();
+      $presences = $sql_existing_presences->fetch_array();
     } else {
 
       // Altrimenti creiamo il nuovo record presences

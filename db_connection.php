@@ -34,6 +34,10 @@
       die("Connessione fallita: " . $db_conn->connect_error);
   }
 
+  function get_last_record_query ($model) {
+    return "SELECT * FROM " . $model . " ORDER BY id DESC LIMIT 1";
+  }
+
 	$dates_to_tx = "dates d ON d.object_type = 'event' AND d.object_id = tx.id";
 	$fields_to_tx = "fields f ON f.id = tx.field";
 	$teams_to_tx = "teams t_team ON t_team.id = tx.team";
@@ -462,6 +466,18 @@
       files f
     WHERE
       filetype = 'video'";
+
+  $sql_presences = "
+    SELECT
+      id,
+      activity_type,
+      activity_id,
+      present_ids,
+      late_ids,
+      missing_ids,
+      notes
+    FROM
+      presences";
 
   $sql_registry = "
     SELECT
