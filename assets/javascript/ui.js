@@ -8,13 +8,13 @@ var calendar_words = {
 };
 
 var mandatory_params = {
-  account  : ["name_last", "name_first"],
+  account  : ["name_last", "name_first", "birth_date", "sex", "phone", "password", "account_type"],
   club     : ["name"],
-  event    : ["name", "type", "town"],
+  event    : ["name", "type", "town", "place", "date_on", "time_start"],
   field    : ["name", "town"],
   game     : ["type", "side", "field", "team", "opponent", "date_on", "time_start"],
   team     : ["name"],
-  training : ["type", "team", "field", "date_on", "time_start"]
+  training : ["type", "team", "field", "date_on", "time_start", "time_stop"]
 };
 
 // Aree e Sezioni
