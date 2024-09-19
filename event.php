@@ -46,12 +46,10 @@
             <li>Nome</li>
             <li>Nome abbreviato</li>
             <li>Tipo</li>
-            <li>Campo</li>
             <li>Comune</li>
             <li>Sede</li>
+            <li>Campo</li>
             <li>Data</li>
-            <li style="display: none;">Frequenza</li>
-            <li style="display: none;">Giorno</li>
             <li>Ora inizio</li>
             <li>Ora fine</li>
           </ul>
@@ -72,12 +70,10 @@
             <li><?= vb_text ($model, "name", $object["name"]); ?></li>
             <li><?= vb_text ($model, "name_short", $object["name_short"]); ?></li>     
             <li><?= vb_dropdown ($model, "type", $object["type"], $type_options); ?></li>
-            <li><?= vb_dropdown ($model, "field", $object["field_id"], $field_options); ?></li>
             <li><?= vb_dropdown ($model, "town", $object["town"], $town_options); ?></li>
             <li><?= vb_text ($model, "place", $object["place"]); ?></li>
+            <li><?= vb_dropdown ($model, "field", $object["field_id"], $field_options); ?></li>
             <li><?= vb_date ($model, "date_on", format_to_ddmmyyyy($object["date_on"])); ?></li>
-            <li <?= vb_dropdown ($model, "frequence", "once", $frequence_options); ?></li>
-            <li <?= vb_dropdown ($model, "week_day", $object["week_day"], $week_day_options); ?></li>
             <li><?= vb_text ($model, "time_start", $object["time_start"]); ?></li>
             <li><?= vb_text ($model, "time_stop", $object["time_stop"]); ?></li>
           </ul>
