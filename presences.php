@@ -116,7 +116,7 @@
 ?>
 
     </div>
-    <table id="list_presences">
+    <table id="list_presences" class="vb-report mt-4">
       <thead>
         <tr>
           <th class="presence name-last"><?= $lang_it["name-last"] ?></th>
