@@ -30,15 +30,15 @@
     $field_id = $model . "_" . $param;
     $field_name = $model . "[" . $param . "]";
 
-    $team_name = "";
+    $selected_name = "";
     if (empty($value)) {
       $value = "";
     } else {
       if (!empty($attributes["select_all"])) {
-        $team_name = $attributes["select_all"];
+        $selected_name = $attributes["select_all"];
       } else {
         foreach($options as $opt) {
-          if ($opt["value"] == $value) { $team_name = $opt["label"]; }
+          if ($opt["value"] == $value) { $selected_name = $opt["label"]; }
         }
       }
     }
@@ -59,7 +59,7 @@
     $code .= '<input type="hidden" name="' . $field_name . '" value="' . $value . '" />';
     $code .= '<button class="btn ' . $btn_size . 'btn-secondary text-white" disabled>' . $label . '</button>';
     $code .= '<div class="btn-group ' . str_replace("btn", "btn-group", $btn_size) . 'btn-group-append">';
-    $code .= '<button id="' . $field_id . '" class="btn ' . $btn_size . $btn_color . ' text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $team_name . '</button>';
+    $code .= '<button id="' . $field_id . '" class="btn ' . $btn_size . $btn_color . ' text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $selected_name . '</button>';
     $code .= '<div class="dropdown-menu" aria-labelledby="' . $field_name . '">';
     $code .= '<a class="dropdown-item" href="#" data-value=""></a>';
     foreach ($options as $opt) {
