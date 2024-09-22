@@ -255,6 +255,7 @@
       t.id,
       t.name,
       t.name_short,
+      tc.sector AS sector,
       tc.category_name AS category_name,
       tc.level AS level,
       tc.composition AS composition,

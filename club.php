@@ -12,19 +12,22 @@
   $town_options = get_towns();
 
   // Settori (e relative squadre) della società
+  global $sector_order;
   $related_teams = get_club_teams_summary ($object["id"]);
   $club_sectors = array();
-  global $team_sectors;
+
   foreach ($related_teams as $team) {
-    foreach ($team_sectors as $key => $categories) {
-      if (in_array($team["category_name"], $categories)) {
-        if (!in_array($key, $club_sectors)) {
-          $club_sectors[] = $key;
-        }
-        break;  // Exit inner loop once a match is found for efficiency
-      }
+    if (in_array($team["category_name"], $categories)) {
+      $club_sectors[] = $key;
     }
   }
+
+  // Funzione di confronto personalizzata
+  usort($club_sectors, function($a, $b) use ($sector_order) {
+    $pos_a = array_search($a, $sector_order);
+    $pos_b = array_search($b, $sector_order);
+    return $pos_a - $pos_b;
+  });
 ?>
   <div class="vb-content vb-tab mt-4">
 
