@@ -446,6 +446,31 @@ div.btn-link.active:hover {
   background-color: var(--air-light);
 }
 
+/* Tabella dei report */
+/* inizio */
+.vb-report tbody tr td {
+  height: 32px;
+}
+
+.vb-report thead tr th,
+.vb-report tfoot tr th {
+  font-size: var(--size-s);
+  font-weight: 400 !important;
+  color: var(--hazelnut-dark);
+  height: 24px;
+  padding: 0 5px;
+}
+
+.vb-report thead th {
+  border-bottom: 1px solid var(--hazelnut);
+}
+
+.vb-report tfoot th {
+  border-top: 1px solid var(--hazelnut);
+}
+/* fine */
+/* Tabella dei report */
+
 .form-navbar {
   height: 40px;
   padding-top: 6px;

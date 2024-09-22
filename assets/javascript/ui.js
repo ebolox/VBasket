@@ -56,16 +56,20 @@ $(document).ready( function () {
   $("#navlink_account").click( function () { edit_object ("account", $("#logged_id").val()); });
 
   // Link con opzioni a dropdown nascosto
-  $.each(["activity", "book", "media"],  function (i, param) {
+  $.each(["activity", "book", "media", "report"],  function (i, param) {
     btn_link = $("#navlink_" + param)
     dropdown_menu = $("#navlink_" + param + " + .dropdown-menu");
 
     btn_link.click( function () { show_dropdown_menu (event, $(this), true); });
     btn_link.mouseenter( function () { show_dropdown_menu (event, $(this), true); });
     btn_link.parent().mouseleave( function () { show_dropdown_menu (event, $(this)); });
-
-    dropdown_menu.find(".dropdown-item").click( function () { update_section_by_navbar ($(this), param); });
     dropdown_menu.mouseleave( function () { show_dropdown_menu (event, $(this)); });
+
+    dropdown_menu.find(".dropdown-item").click( function () {
+      param == "report" ?
+        update_content_to_report ($(this)) :
+        update_section_by_navbar ($(this), param);
+    });
   });
 
   // $("#navlink_calendar").click(); :: esegue funzione update_calendar
@@ -878,7 +882,22 @@ function update_content (page, parameters = []) {
       }
 
       console.log("update_content complete");
-    },
+    }
+  });
+}
+
+// Aggiorna il content con il report desiderata
+function update_content_to_report (btn) {
+
+  page = btn.data("value");
+  parameters = { last_view: "calendar" }
+
+  update_frontend("ui_content", page + ".php", {
+    parameters: $.param(parameters),
+    asynchronous: true,
+    evalScripts: true,
+    onLoading: function() { console.log("update_content loading"); },
+    onComplete: function() { console.log("update_content complete"); }
   });
 }
 

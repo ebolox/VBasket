@@ -3,6 +3,7 @@
   require_once("ext/rachid/pluralizer.php");
 
   global $vb;
+  global $lang_it;
   $rachid = init_pluralizer();
 
   $account_id = get_account_id();
@@ -23,16 +24,22 @@
     array_push($activity_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
 
-  $book_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
+  //$book_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
   $book_options = array();
   foreach ($vb["book"] as $sect) {
     array_push($book_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
   }
 
-  $media_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
+  //$media_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
   $media_options = array();
   foreach ($vb["media"] as $sect) {
     array_push($media_options, array("value" => $sect, "label" => $lang_it[$rachid->pluralize($sect)]));
+  }
+
+  //$report_attributes = array("btn_color" => "btn-vb hover-by-parent", "btn_hidden" => true, "btn_group" => false, "label_icon" => true);
+  $report_options = array();
+  foreach ($vb["report"] as $sect) {
+    array_push($report_options, array("value" => $sect, "label" => $lang_it[$sect]));
   }
 
   $col_size = is_mobile() ? "3" : "2";
@@ -56,6 +63,7 @@
           <?= link_text ("navlink", "activity", "Attività", "bi bi-activity", $activity_options) ?>
           <?= link_text ("navlink", "book", "Segreteria", "bi bi-inboxes", $book_options) ?>
           <?= link_text ("navlink", "media", "Media", "bi bi-images", $media_options) ?>
+          <?= link_text ("navlink", "report", "Report", "bi bi-file-earmark-medical", $report_options) ?>
         </div>
 <?php } ?>
 

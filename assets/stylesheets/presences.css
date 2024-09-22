@@ -5,27 +5,8 @@
   margin-top: 12px;
 }
 
-#list_presences tbody tr td {
-  height: 32px;
-}
-
 #list_presences tbody tr:first-child td {
   padding-top: 8px;
-}
-
-thead th.presence {
-  border-bottom: 1px solid var(--hazelnut);
-}
-
-tfoot th.presence {
-  border-top: 1px solid var(--hazelnut);
-}
-
-th.presence {
-  font-size: var(--size-s);
-  font-weight: 400 !important;
-  color: var(--hazelnut-dark);
-  height: 24px;
 }
 
 th.presence.name_first,

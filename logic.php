@@ -1488,9 +1488,9 @@
 
     // Converte la stringa JSON in array PHP
     $presences_id = $_POST["id"];
-    $present_ids = $_POST['present_ids'] == "" ? "null" : $_POST['present_ids'];
-    $late_ids = $_POST['late_ids'] == "" ? "null" : $_POST['late_ids'];
-    $missing_ids = $_POST['missing_ids'] == "" ? "null" : $_POST['missing_ids'];
+    $present_ids = $_POST['present_ids'] == "" ? "" : $_POST['present_ids'];
+    $late_ids = $_POST['late_ids'] == "" ? "" : $_POST['late_ids'];
+    $missing_ids = $_POST['missing_ids'] == "" ? "" : $_POST['missing_ids'];
 
     // Aggiorna i 3 ids
     $request = $db_conn->prepare("UPDATE presences SET present_ids = ?, late_ids = ?, missing_ids = ? WHERE id = ?");
