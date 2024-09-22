@@ -15,6 +15,25 @@
   // Nomi dei giorni (3 caratteri)
   $days_short = array("Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom");
 
+  // Sostantivi divisi per maschili e femminili
+  $female_words = array(
+    "activity",
+    "club",
+    "game",
+    "image",
+    "party",
+    "roster",
+    "team",
+    "town"
+  );
+
+  // Estensioni dei file ammessi
+  $file_extensions = array(
+    "image" => ["jpg", "jpeg", "png", "gif", "bmp", "tiff", "svg"],
+    "video" => ["mp4", "avi", "mov", "wmv", "flv", "mkv", "webm"],
+    "audio" => ["mp3", "wav", "ogg", "flac", "aac", "wma", "m4a"]
+  );
+
   // Generale
   $lang_it = array(
     "account" => "Profilo",
@@ -130,18 +149,72 @@
     "Dicembre"
   );
 
-  // Sostantivi divisi per maschili e femminili
-  $female_words = array(
-    "activity",
-    "club",
-    "game",
-    "image",
-    "party",
-    "roster",
-    "team",
-    "town"
+  // Ordine visualizzazione dei settori
+  $sector_order = array("senior", "youth", "minibasket");
+
+  // Chiave = valore
+  $team_category_values = array(
+    'Amatoriale',
+    'Pulcini',
+    'Scoiattoli',
+    'Aquilotti',
+    'Esordienti',
+    'Under 13',
+    'Under 14',
+    'Under 15',
+    'Under 16',
+    'Under 17',
+    'Under 18',
+    'Under 19',
+    'Under 20',
+    'Senior'
+  );
+
+  // Chiave = valore
+  $team_level_values = array(
+    'Campino',
+    'Arci/Uisp',
+    'Unica',
+    'Silver',
+    'Gold',
+    'Elite',
+    'Eccellenza',
+    'Divisione 4',
+    'Divisione 3',
+    'Divisione 2',
+    'Divisione 1',
+    'Serie C',
+    'Serie B i',
+    'Serie B n',
+    'Serie A2',
+    'Serie A'
+  );
+
+  // Chiave = valore
+  $team_composition_values = array(
+    'carrozzina',
+    'femminile',
+    'mista',
+    'maschile'
+  );
+
+  // Aree e Sezioni
+  $vb = array(
+    "activity" => array("event", "game", "training"),
+    "book" => array("account", "club", "field", "team"),
+    "media" => array("file", "image", "screen", "video"),
+    "report" => array("report_qualifications", "report_presences", "report_payments")
   );
 // Fine
+
+  // Parametri dei btn-icon
+  $btn_params = array(
+    "new" => array("color" => "success", "icon_class" => "bi bi-plus-lg", "disabled" => false),
+    "edit" => array("color" => "primary", "icon_class" => "bi bi-pencil", "disabled" => true),
+    "delete" => array("color" => "danger", "icon_class" => "bi bi-trash3", "disabled" => true),
+    "print" => array("color" => "primary", "icon_class" => "bi bi-printer", "disabled" => false),
+    "save" => array("color" => "success", "icon_class" => "bi bi-floppy", "disabled" => true)
+  );
 
 // Dropdown: Inizio
   // Opzioni Campo di allenamento
@@ -177,46 +250,6 @@
   );
 // Fine
 
-  // Parametri dei btn-icon
-  $btn_params = array(
-    "new" => array("color" => "success", "icon_class" => "bi bi-plus-lg", "disabled" => false),
-    "edit" => array("color" => "primary", "icon_class" => "bi bi-pencil", "disabled" => true),
-    "delete" => array("color" => "danger", "icon_class" => "bi bi-trash3", "disabled" => true),
-    "print" => array("color" => "primary", "icon_class" => "bi bi-printer", "disabled" => false),
-    "save" => array("color" => "success", "icon_class" => "bi bi-floppy", "disabled" => true)
-  );
-
-  // Aree e Sezioni
-  $vb = array(
-    "activity" => array("event", "game", "training"),
-    "book" => array("account", "club", "field", "team"),
-    "media" => array("file", "image", "screen", "video")
-  );
-
-  // Settori di appartenenza Squadre
-  $team_sectors = array(
-    "minibasket" => array(
-      "Pulcini",
-      "Scoiattoli",
-      "Aquilotti",
-      "Esordienti"
-    ),
-    "youth" => array(
-      "Under 13",
-      "Under 14",
-      "Under 15",
-      "Under 16",
-      "Under 17",
-      "Under 18",
-      "Under 19",
-      "Under 20"
-    ),
-    "senior" => array(
-      "Senior",
-      "Amatoriale"
-    )
-  );
-
   // Elenco degli objectable
   $objectable_models = array("account", "club", "event", "field", "screen", "team", "training");
 
@@ -231,11 +264,4 @@
     array("value" => "document-id", "label" => "Documento"),
     array("value" => "sport-fitness", "label" => "Idoneità")
   );
-
-  // Estensioni dei file ammessi
-  $file_extensions = [
-    "image" => ["jpg", "jpeg", "png", "gif", "bmp", "tiff", "svg"],
-    "video" => ["mp4", "avi", "mov", "wmv", "flv", "mkv", "webm"],
-    "audio" => ["mp3", "wav", "ogg", "flac", "aac", "wma", "m4a"]
-  ]
 ?>
