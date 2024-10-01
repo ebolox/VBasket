@@ -102,8 +102,16 @@ ul {
   margin-top: 10%;
 }
 
+.form-control {
+  font-size: var(--size-m);
+}
+
 .bg-basket {
   background-color: #c6c9eb !important;
+}
+
+.text-vb {
+  color: var(--cacao);
 }
 
 .btn-vb {
@@ -119,6 +127,7 @@ ul {
 }
 
 .btn {
+  font-size: var(--size-m);
   cursor: pointer;
 }
 
