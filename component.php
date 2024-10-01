@@ -573,7 +573,8 @@
     if (empty($label_on)) { $label_on = icon_selected(true, "large"); }
     if (empty($label_off)) { $label_off = icon_selected(false, "large"); }
 
-    $code = '<button class="form-control vb-boolean" id="' . $btn_id . '" name="' . $btn_name . '" data-value="' . $value . '">';
+    $code = '<button class="form-control vb-boolean w-40" id="' . $btn_id . '" name="' . $btn_name . '">';
+    $code .= '<input type="hidden" name="' . $btn_name . '" value="' . $value . '">';
     $code .= '<span class="vb-boolean-label">' . ($value ? $label_on : $label_off) . '</span>';
     $code .= '<sub class="vb-boolean-on">' . $label_on . '</sub>';
     $code .= '<sub class="vb-boolean-off">' . $label_off . '</sub>';
@@ -597,7 +598,7 @@
 
     $code = '<div class="vb-date">';
     $code .= '<button class="btn form-control btn-edit" style="' . (empty($value) ? '' : ' display: none;') . '">' . icon_pencil() . '</button>';
-    $code .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" class="form-control" value="' . $value . '" />';
+    $code .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" class="form-control" value="' . $value . '" style="' . (!empty($value) ? '' : ' display: none;') . '" />';
     if (isset($params["icon"])) {
       $code .= '<i class="' . $params["icon"] . ' input-prefix text-secondary"></i>';
     }

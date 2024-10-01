@@ -22,7 +22,7 @@ $(document).ready( function () {
   // Gestione campi booleani
   $.each(["main", "archived"],  function (i, param) {
     $("#" + model + "_" + param).click(function () {
-      set_boolean ($(this));
+      set_boolean (event, $(this));
       update_object (model, object_id, param, $(this).data("value"));
     });
   });

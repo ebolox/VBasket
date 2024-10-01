@@ -659,10 +659,10 @@ div.btn-link.active:hover {
 .vb-boolean:focus,
 .vb-boolean:hover {
   color: var(--apricot);
+  background-color: transparent !important;
 }
 .vb-boolean > .vb-boolean-on,
-.vb-boolean > .vb-boolean-off,
-.vb-boolean > .vb-boolean-label {
+.vb-boolean > .vb-boolean-off {
   display: none;
 }
 

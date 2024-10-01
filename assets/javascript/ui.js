@@ -631,17 +631,23 @@ function print_screen (btn) {
 
 // Click su pulsante booleano
 // cambia lo stato e il valore
-function set_boolean (btn) {
-  label_on = btn.data("on");
-  label_off = btn.data("off");
-  status_actual = parseInt(btn.data("value"));
+function set_boolean (event, btn) {
 
-  if (status_actual) {
-    btn.data("value", 0);
-    btn.empty().html(label_off);
+  event.preventDefault();
+
+  btn_input = btn.find("input[type='hidden']");
+  btn_label = btn.find("span.vb-boolean-label");
+  status_actual = parseInt(btn_input.val());
+
+  label_on = btn.find("sub.vb-boolean-on").html();
+  label_off = btn.find("sub.vb-boolean-off").html();
+
+  if (status_actual == 1) {
+    btn_input.val(0);
+    btn_label.empty().html(label_off);
   } else {
-    btn.data("value", 1);
-    btn.empty().html(label_on);
+    btn_input.val(1);
+    btn_label.empty().html(label_on);
   }
 }
 
