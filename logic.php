@@ -382,18 +382,19 @@
   function edit_presences () {
 
     global $db_conn;
+    global $sql_presences;
 
     $activity_type = $_POST["activity_type"];
     $activity_id = $_POST["activity_id"];
 
     // Si cerca nella tabella presences una corrispondenza
     $sql_existing_presences = $sql_presences . " WHERE activity_type='" . $activity_type . "' and activity_id=" . $activity_id;
-    $sql_existing_presences = $db_conn->query($sql_presences);
+    $result_presences = $db_conn->query($sql_existing_presences);
 
     // Se un record Presences esiste
-    if ($sql_existing_presences->num_rows > 0) {
+    if ($result_presences->num_rows > 0) {
 
-      $presences = $sql_existing_presences->fetch_array();
+      $presences = $result_presences->fetch_array();
     } else {
 
       // Altrimenti creiamo il nuovo record presences

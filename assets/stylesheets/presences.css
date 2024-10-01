@@ -22,6 +22,12 @@ th.presence.present {
   min-width: 40px;
 }
 
+td.presence.late i.btn,
+td.presence.missing i.btn,
+td.presence.present i.btn {
+  color: var(--cacao);
+}
+
 .presence.late,
 .presence.missing,
 .presence.present {

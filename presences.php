@@ -131,13 +131,14 @@
 
       <tbody>
 <?php
-  $btn_icon = icon("bi bi-dash-circle-dotted", ["is_clickable" => true]);
-
   foreach ($actors as $actor) {
     if ($actor["role"] == "player") {
       $name_last = isset($actor["name_last"]) ? ((is_mobile() && strlen($actor["name_last"]) > 15) ? substr($actor["name_last"], 0, 7) . "..." : $actor["name_last"]) : "-";
       $name_first = isset($actor["name_first"]) ? ((is_mobile() && strlen($actor["name_first"]) > 15) ? substr($actor["name_first"], 0, 7) . "..." : $actor["name_first"]) : "-";
       $birth_year = isset($actor["birth_date"]) ? "(" . substr($actor["birth_date"], 2, 2) . ")" : "-";
+
+
+      $btn_icon = icon("bi bi-record-circle", ["is_clickable" => true]);
 ?>
         <tr data-actor-id="<?= $actor["id"] ?>">
           <?php if (is_mobile()) { ?>

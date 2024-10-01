@@ -32,7 +32,7 @@ function set_presence_check (btn) {
   late_cell = row.find(".presence.late").first();
   missing_cell = row.find(".presence.missing").first();
 
-  icon_off = "bi-dash-circle-dotted";
+  icon_off = "bi-record-circle";
   icon_on = presence_icon (btn);
   icon_present_on = presence_icon (present_cell);
   icon_late_on = presence_icon (late_cell);
@@ -64,9 +64,9 @@ function set_presence_initial () {
   raw_late_ids = $("#presences_late_ids").val();
   raw_missing_ids = $("#presences_missing_ids").val();
 
-  present_ids = (isNaN(raw_present_ids) || raw_present_ids == "") ? "" : raw_present_ids.split(',').map(id => parseInt(id));
-  late_ids = (isNaN(raw_late_ids) || raw_late_ids == "") ? "" : raw_late_ids.split(',').map(id => parseInt(id));
-  missing_ids = (isNaN(raw_missing_ids) || raw_missing_ids == "") ? "" : raw_missing_ids.split(',').map(id => parseInt(id));
+  present_ids = raw_present_ids == "" ? "" : raw_present_ids.split(',').map(id => parseInt(id));
+  late_ids = raw_late_ids == "" ? "" : raw_late_ids.split(',').map(id => parseInt(id));
+  missing_ids = raw_missing_ids == "" ? "" : raw_missing_ids.split(',').map(id => parseInt(id));
 
   if (present_ids.length > 0) {
 
