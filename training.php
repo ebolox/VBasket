@@ -1,5 +1,5 @@
 <?php
-  include('logic.php');
+  if (!(isset($_GET) && !empty($_GET["watch"])) && !(isset($_POST) && $_POST["action"] == "create_object")) { include('logic.php'); }
 
   $model = "training";
   $object = get_object_tab();
@@ -14,6 +14,12 @@
   $type_options = array(
     array("value" => "technique", "label" => "Tecnico", "icon_class" => "dribbble"),
     array("value" => "athletic", "label" => "Atletico", "icon_class" => "stopwatch")
+  );
+
+  // Opzioni Campo di allenamento
+  $field_options = array(
+    array("value" => "1", "label" => "Pieraccini", "icon_class" => "1-square-fill"),
+    array("value" => "2", "label" => "Altobelli", "icon_class" => "2-square-fill")
   );
 ?>
   <div class="vb-content vb-tab mt-4">
@@ -39,6 +45,7 @@
             <li>Data</li>
             <li>Ora inizio</li>
             <li>Ora fine</li>
+            <li>Settimanale</li>
           </ul>
 
         </div>
@@ -61,6 +68,7 @@
             <li><?= vb_date ($model, "date_on", format_to_ddmmyyyy($object["date_on"])); ?></li>
             <li><?= vb_text ($model, "time_start", $object["time_start"]); ?></li>
             <li><?= vb_text ($model, "time_stop", $object["time_stop"]); ?></li>
+            <li><?= vb_boolean ($model, "weekly", false); ?></li>
           </ul>
 
         </div>

@@ -125,6 +125,10 @@ function create_object () {
       params[param] = parameters[model][param];
     }
 
+    if (model == "training" && parameters[model]["weekly"] == "1") {
+      params["weekly"] = 1;
+    }
+
     update_frontend("ui_content", "logic.php", {
       parameters: $.param(params),
       method: "POST",
