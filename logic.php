@@ -323,6 +323,34 @@
     return $code;
   }
 
+  // Ritorna lista di tutte le squadre della stagione corrente,
+  // associate o associabili ad un profilo
+  function edit_account_teams ($account_id) {
+    global $db_conn;
+    global $sql_teams;
+
+    if (!isset($account_id)) { $account_id = get_account_id(); }
+
+    $sql = $sql_teams . " WHERE tx.season = '" . date("Y") . "';";
+    $result = do_ask($sql);
+
+    $icon_on = icon ("check-lg", array("icon_color" => "success", "is_clickable" => true));
+    $icon_off = icon ("square", array("icon_color" => "vb", "is_clickable" => true));
+
+    $code = '<table>';
+    $code .= '<tbody>';
+    foreach ($result as $team) {
+      $code .= '<tr>';
+      $code .= '<td>' . vb_boolean ("account_team", $team["id"], false, $icon_on, $icon_off) . '</td>';
+      $code .= '<td>' . $team["name"] . '</td>';
+      $code .= '</tr>';
+    }
+    $code .= '</tbody>';
+    $code .= '</table>';
+
+    return $code;
+  }
+
   // Recupera i dati dell'object desiderato
   function edit_object () {
     global $db_conn;
@@ -479,6 +507,19 @@
   function get_account_id () {
 
     return (!empty($_POST) && !empty($_POST["account_id"])) ? $_POST["account_id"] : ((!empty($_SESSION["POST"]) && !empty($_SESSION["POST"]["account_id"])) ? $_SESSION["POST"]["account_id"] : 1);
+  }
+
+  // Ritorna le squadre associate ad un profilo
+  function get_account_teams ($account_id) {
+    global $db_conn;
+    global $sql_account_teams;
+
+    if (!isset($account_id)) { $account_id = get_account_id(); }
+
+    $sql = $sql_account_teams . " WHERE r.account_id = '" . $account_id . "';";
+    $result = do_ask($sql);
+
+    return $result;
   }
 
   // Ritorna la tabella delle attività settimanali
@@ -1466,6 +1507,33 @@
 
     $name = compose_account_name($_POST["id"]);
     return $name == null ? "" : trim(htmlspecialchars_decode($name, ENT_QUOTES));
+  }
+
+  // Elenco delle squadre con
+  // possibilità di diss/associare più squadre
+  function show_account_teams ($teams) {
+
+    $team_ids = "";
+
+    $code = '<ul id="account_teams">';
+    if (count($teams) == 0) {
+      $code .= '<li>' . button_icon ("bi-plus-lg", "success", array("id" => "account_team_modify", "shape" => "circle")) . '</li>';
+    } else {
+      foreach ($teams as $key => $team) {
+        $code .= '<li class="account-team">';
+        $code .= $team["team_name"];
+        if ($key == 0) {
+          $code .= button_icon ("bi-arrow-left-right", "primary", array("id" => "account_team_modify", "shape" => "circle", "margin" => "ml-4"));
+        }
+        $code .= '</li>';
+
+        $team_ids .= $team["team_id"] . ",";
+      }
+    }
+    $code .= '</ul>';
+    $code .= '<input type="hidden" name="account[team_ids]" id="account_team_ids" value=" ' . trim($team_ids, ",") . ' ">';
+
+    return $code;
   }
 
   function unknown_action () {

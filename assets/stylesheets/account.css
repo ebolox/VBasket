@@ -19,3 +19,44 @@
   min-width: 150px !important;
   max-width: 200px !important;
 }
+
+li.play-with-1-teams {
+  height: 45px !important;
+}
+li.play-with-2-teams {
+  height: 66px !important;
+}
+li.play-with-3-teams {
+  height: 87px !important;
+}
+li.play-with-4-teams {
+  height: 108px !important;
+}
+li.play-with-5-teams {
+  height: 129px !important;
+}
+
+ul#account_teams {
+  padding-left: 10px;
+}
+
+ul#account_teams > li.account-team {
+  color: var(--cacao);
+  height: 21px;
+}
+
+table#list_account_teams {
+  margin: 0 auto;
+}
+
+table#list_account_teams tr {
+  color: var(--cacao);
+  cursor: pointer;
+}
+table#list_account_teams tr:hover {
+  color: var(--apricot-light);
+}
+
+table#list_account_teams tr > td:first-child {
+  min-width: 200px;
+}

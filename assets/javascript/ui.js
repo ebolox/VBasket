@@ -476,6 +476,32 @@ function main_menu_selected (selected) {
 
 }
 
+// Compone e mostra/nasconde la modale info squadra
+function modal_account_teams (account_id, account_name, show) {
+
+  modal_id = "modal_account_teams";
+
+  // Se show è false o esiste già, la modale si chiude
+  modal_hide (modal_id, show);
+
+  modal_show (modal_id);
+
+  params = {
+    action: "list_account_teams",
+    account_id: account_id,
+    account_name: account_name
+  };
+
+  update_frontend(modal_id + "_content", "account_team.php", {
+    parameters: $.param(params),
+    method: "POST",
+    asynchronous: true,
+    evalScripts: true,
+    onLoading: function () { console.log("update_account_teams_results loading"); },
+    onComplete: function () { console.log("update_account_teams_results complete"); }
+  });
+}
+
 // Compone e mostra/nasconde la modale di scelte
 function modal_choice (show, title = false, choices = {}) {
 

@@ -1,5 +1,10 @@
 $(document).ready( function () {
 
+  named = $("input[name='account[named]']").val();
+  name_first = $("#" + model + "_name_first").val();
+  name_last = $("#" + model + "_name_last").val();
+  nickname = $("#" + model + "_nickname").val();
+
   // Gestione campi di testo
   $.each(["name_last", "name_first", "nickname", "email", "phone", "document_id"],  function (i, param) {
     $("#" + model + "_" + param).change( function () { update_account (param, $(this).val()); });
@@ -25,15 +30,21 @@ $(document).ready( function () {
   // Pikaday initialization
   var picker_sport_fitness = init_pikaday (model, "sport_fitness");
   var picker_birth_date = init_pikaday (model, "birth_date");
+
+  // Pulsanti gestione squadre associate
+  $("#account_team_modify").click( function () {
+
+    account_id = $("input[name='account[id]']").val();
+    account_name = name_last + " " + name_first;
+    modal_account_teams (account_id, account_name, true);
+  });
+
+  // Gestione modale account_teams
+  set_modal_account_teams_events ();
 });
 
 // Aggiorna il nome account
 function set_account_name () {
-
-  named = $("input[name='account[named]']").val();
-  name_first = $("#" + model + "_name_first").val();
-  name_last = $("#" + model + "_name_last").val();
-  nickname = $("#" + model + "_nickname").val();
 
   switch (named) {
     case "f+l":
@@ -51,6 +62,44 @@ function set_account_name () {
   }
 
   $("#" + model + "_alias").text(name_full);
+}
+
+// Assegna gli eventi ai pulsanti della modale squadre del profilo
+function set_modal_account_teams_events () {
+
+  // De/Selezione squadra
+  $("#list_account_teams tr").click( function () { toggle_team ($(this)); });
+
+  $("#modal_account_teams button.close").click( function () { modal_hide ("modal_account_teams"); });
+}
+
+function toggle_team (tr) {
+console.log(tr.attr("id"));
+  team_id = parseInt(tr.attr("id").replace("team_", ""));
+  btn = tr.find("td:first i.bi");
+  field_team_ids = $("input[name='account[team_ids]']");
+
+  team_ids_string = field_team_ids.val();
+  team_ids = team_ids_string.split(",");
+
+  icon_on = "bi-check-lg text-success";
+  icon_off = "bi-x-lg text-warning";
+
+  if (btn.attr("class").match("check")) {
+
+    team_ids = team_ids.filter(function(value) {
+      return value !== team_id;
+    });
+
+    btn.removeClass(icon_on).addClass(icon_off);
+  } else {
+
+    team_ids[team_ids.length] = team_id;
+
+    btn.removeClass(icon_off).addClass(icon_on);
+  }
+
+  field_team_ids.val(team_ids.join(","));
 }
 
 // Aggiorna i dati dell'account

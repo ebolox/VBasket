@@ -588,11 +588,31 @@ div.btn-link.active:hover {
   padding-right: 20px;
 }
 
+
 .form-data > li,
 .form-label > li {
   height: var(--size-32) !important;
   padding: 0;
   margin-bottom: 16px;
+}
+.form-data.hidden > li:not(.form-title),
+.form-label.hidden > li:not(.form-title) {
+  display: none;
+}
+.form-data > li.form-title,
+.form-label > li.form-title {
+  color: var(--cacao);
+  font-size: var(--size-m);
+  padding-top: 5px;
+  cursor: pointer;
+}
+.form-data > li.form-title:hover,
+.form-label > li.form-title:hover {
+  color: var(--apricot-dark);
+}
+.form-data:not(:first-child) > li.form-title,
+.form-label:not(:first-child) > li.form-title {
+  border-top: 1px solid var(--sea-light);
 }
 
 .form-data li.btn-boolean,
