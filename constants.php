@@ -256,40 +256,6 @@
     "save" => array("color" => "success", "icon_class" => "bi bi-floppy", "disabled" => true)
   );
 
-// Dropdown: Inizio
-  // Opzioni Campo di allenamento
-  $field_options = array(
-    array("value" => "1", "label" => "Pieraccini", "icon_class" => "1-square-fill"),
-    array("value" => "2", "label" => "Altobelli", "icon_class" => "2-square-fill")
-  );
-
-  // Liste valore, nome delle colonne e attributi della dropdown Frequenza
-  $frequence_attributes = array(
-    "btn_color" => "btn-primary"
-  );
-  $frequence_options = array(
-    array("value" => "once", "label" => "Una volta"),
-    array("value" => "week_once", "label" => "Uno alla settimana"),
-    array("value" => "week_work", "label" => "Solo feriali"),
-    array("value" => "week_end", "label" => "Solo festivi"),
-    array("value" => "daily", "label" => "Ogni giorno")
-  );
-
-  // Liste valore, nome delle colonne e attributi della dropdown Frequenza
-  $week_day_attributes = array(
-    "btn_color" => "btn-primary"
-  );
-  $week_day_options = array(
-    array("value" => 0, "label" => $days[0]),
-    array("value" => 1, "label" => $days[1]),
-    array("value" => 2, "label" => $days[2]),
-    array("value" => 3, "label" => $days[3]),
-    array("value" => 4, "label" => $days[4]),
-    array("value" => 5, "label" => $days[5]),
-    array("value" => 6, "label" => $days[6])
-  );
-// Fine
-
   // Elenco degli objectable
   $objectable_models = array("account", "club", "event", "field", "screen", "team", "training");
 
