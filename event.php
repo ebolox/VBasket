@@ -25,6 +25,12 @@
     array("value" => "guest", "label" => "Trasferta")
   );
 
+  // Opzioni Campo di allenamento
+  $field_options = array(
+    array("value" => "1", "label" => "Pieraccini", "icon_class" => "1-square-fill"),
+    array("value" => "2", "label" => "Altobelli", "icon_class" => "2-square-fill")
+  );
+
   $town_options = get_towns();
 ?>
   <div class="vb-content vb-tab mt-4">
