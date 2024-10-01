@@ -8,7 +8,7 @@
   // Liste valore, nome delle opzioni e attributi del pulsante Campo
   $field_attributes = array("btn_color" => "btn-primary");
   $field_options = array(
-    array("value" => "all", "label" => "Tutti"),
+    array("value" => "all m p", "label" => $lang_it["all m p"]),
     array("value" => "a", "label" => "Altobelli"),
     array("value" => "b", "label" => "Bucci Pieraccini")
   );
@@ -16,25 +16,25 @@
   // Liste valore, nome delle opzioni e attributi del pulsante Orario
   $hour_attributes = array("btn_color" => "btn-primary");
   $hour_options = array(
-    array("value" => "sport", "label" => "Sportivo"),
-    array("value" => "morning", "label" => "Mattina"),
-    array("value" => "all", "label" => "Tutto")
+    array("value" => "sport", "label" => $lang_it["sport agg m s"]),
+    array("value" => "morning", "label" => $lang_it["morning"]),
+    array("value" => "all m s", "label" => $lang_it["all m s"])
   );
 
   // Liste valore, nome delle opzioni e attributi del pulsante Attività
   $activity_attributes = array("btn_color" => "btn-primary");
   $activity_options = array(
-    array("value" => "all", "label" => "Tutte"),
-    array("value" => "games", "label" => "Solo partite"),
-    array("value" => "trainings", "label" => "Solo allenamenti"),
-    array("value" => "events", "label" => "Solo eventi")
+    array("value" => "all m f", "label" => $lang_it["all f s"]),
+    array("value" => "games", "label" => $lang_it["only games"]),
+    array("value" => "trainings", "label" => $lang_it["only trainings"]),
+    array("value" => "events", "label" => $lang_it["only events"])
   );
 
   // Liste valore, nome delle opzioni e attributi del pulsante Squadre
   $team_attributes = array("btn_color" => "btn-primary");
   $team_opts = array(
-    array("value" => "handled", "label" => "Gestite"),
-    array("value" => "all", "label" => "Tutte")
+    array("value" => "handled f p", "label" => $lang_it["handled f p"]),
+    array("value" => "all f p", "label" => $lang_it["all f p"])
   );
   $team_db = get_teams();
   $team_options = $team_opts + $team_db;
@@ -44,16 +44,16 @@
     <div class="col"></div>
     <div class="col-10 text-left">
       <div class="form-group mb-0 ml-3">
-        <?= button_dropdown($model, "fields", "Campo", "all", $field_options, $field_attributes); ?>
+        <?= button_dropdown($model, "fields", $lang_it["field"], "all m p", $field_options, $field_attributes); ?>
       </div>
       <div class="form-group mb-0 ml-3">
-        <?= button_dropdown($model, "hours", "Orario", "sport", $hour_options, $hour_attributes); ?>
+        <?= button_dropdown($model, "hours", $lang_it["time"], "sport add m s", $hour_options, $hour_attributes); ?>
       </div>
       <div class="form-group mb-0 ml-3">
-        <?= button_dropdown($model, "teams", "Squadre", "handled", $team_options, $team_attributes); ?>
+        <?= button_dropdown($model, "teams", $lang_it["teams"], "handled f p", $team_options, $team_attributes); ?>
       </div>
       <div class="form-group mb-0 ml-3">
-        <?= button_dropdown($model, "activities", "Attività", "all", $activity_options, $activity_attributes); ?>
+        <?= button_dropdown($model, "activities", $lang_it["activity"], "all f p", $activity_options, $activity_attributes); ?>
       </div>
     </div>
     <div class="col"></div>
@@ -97,7 +97,7 @@
   for ($i = 10; $i < 24; $i++) {
     
     $hour = sprintf('%02d', $i);
-    $shown = $i < 16 ? " style=\"display: none;\"" : "";
+    $shown = $i < 15 ? " style=\"display: none;\"" : "";
 ?>
           <tr id="hour_<?= $i ?>"<?= $shown ?>>
             <td><span class="hours"><?= $i ?></span><span class="minutes">00</span></td>

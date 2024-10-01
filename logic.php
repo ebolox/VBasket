@@ -558,7 +558,7 @@
   function get_activity_data_for_calendar ($act_type, $act) {
 
     $act_id = $act["id"];
-		$week_day = $act["date_on"] != "" ? date('N', strtotime($act["date_on"])) : $act["week_day"];
+		$week_day = date('N', strtotime($act["date_on"]));
 		$hour_start = substr($act["time_start"], 0, 2);
     $time_start = substr($act["time_start"], -2);
 		$hour_stop = $act["time_stop"] != "" ? substr($act["time_stop"], 0, 2) : ((int)$hour_start + 2);
@@ -704,20 +704,23 @@
     $days_to_subtract = $current_day_of_week - 1;
     $last_monday = clone $current_date;
     $last_monday->sub(new DateInterval("P{$days_to_subtract}D"));
+    $next_monday = clone($last_monday);
+    $next_monday->modify("+7 days");
 
     // Formatta la data nel formato desiderato (YYYY-MM-DD)
-    $last_monday_formatted = $last_monday->format('Y-m-d');
+    $start_date = $last_monday->format('Y-m-d');
+    $stop_date = $next_monday->format('Y-m-d');
 
-    $conditions = " where (d.date_on >= '" . $last_monday_formatted . "' or d.week_day is not NULL)";
-    if ($team_tag == "all") {
+    $conditions = " WHERE (d.date_on >= '" . $start_date . "' AND d.date_on < '" . $stop_date . "')";
+    if ($team_tag == "all f p") {
       $conditions .= ";";
-    } elseif ($team_tag == "handled") {
+    } elseif ($team_tag == "handled f p") {
       $conditions .= " and tx.team in (" . implode(", ", handled_team_ids($account_id)) . ");";
     } else {
       $conditions .= " and tx.team = " . $team_tag . ";";
     }
 
-    if ($activity_tag == "all") {
+    if ($activity_tag == "all f p") {
       $result_events = get_events ();
       $result_games = get_games ($conditions);
       $result_trainings = get_trainings ($conditions);

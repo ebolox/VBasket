@@ -165,7 +165,6 @@ a.btn-link.active:hover {
   color: var(--apricot-dark);
   background-color: transparent;
   text-decoration: none;
-  pointer-events: none;
   cursor: pointer;
 }
 

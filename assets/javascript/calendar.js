@@ -141,9 +141,9 @@ function show_activity_menu_contextual (box) {
 // Mostra il calendario col campo scelto
 function show_calendar_for_field (tag) {
 
-  if (tag == "all") {
+  if (tag == "all m p") {
     colspan = 2;
-	tag_hidden_field = "none";
+    tag_hidden_field = "none";
   } else {
     colspan = 1;
 	tag == "a" ?
@@ -167,7 +167,7 @@ function show_calendar_for_hour (tag) {
   hour_rows = $("#calendar_board table tbody tr");
   hours = {
     "morning": [10, 11, 12, 13, 14, 15],
-    "sport": [16, 17, 18, 19, 20, 21, 22, 23]
+    "sport agg m s": [16, 17, 18, 19, 20, 21, 22, 23]
   };
 
   if (tag == "all") {
