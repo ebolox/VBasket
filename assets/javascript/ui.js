@@ -398,7 +398,7 @@ function go_to (filename, params = false) {
 function init_pikaday (model, object_id) {
 
   var calendar_picker = new Pikaday({
-    field: $("#" + model + "_date_on")[0],
+    field: $("#" + model + "_" + object_id)[0],
     format: 'D/M/YYYY',
     i18n: calendar_words,
     toString(date, format) {
