@@ -1319,7 +1319,6 @@
       $response["type"] = "";
       $response["field_id"] = "";
       $response["field"] = "";
-      $response["week_day"] = "";
       $response["date_on"] = "";
       $response["time_start"] = "";
       $response["time_stop"] = "";
@@ -1473,7 +1472,7 @@
               $_POST["model"] :
               $rachid->pluralize($_POST["model"]);
 
-    if (in_array($_POST["param"], array("date_on", "week_day", "time_start", "time_stop"))) {
+    if (in_array($_POST["param"], array("date_on", "time_start", "time_stop"))) {
       $sql = "UPDATE dates set " . $_POST["param"] . "='" . $_POST["value"] . "' WHERE object_type='" . $_POST["model"] . "' AND object_id=" . $_POST["id"];
     } else {
       $sql = "UPDATE " . $table . " set " . $_POST["param"] . "='" . $_POST["value"] . "' WHERE id=" . $_POST["id"];

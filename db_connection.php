@@ -112,8 +112,7 @@
       f.name AS field,
       d.date_on AS date_on,
       d.time_start AS time_start,
-      d.time_stop AS time_stop,
-      d.week_day AS week_day
+      d.time_stop AS time_stop
     FROM events e
     LEFT JOIN towns AS tw ON e.town = tw.id
     LEFT JOIN dates d ON d.object_type = 'event' AND d.object_id = e.id
@@ -135,8 +134,7 @@
       f.name AS field,
       d.date_on AS date_on,
       d.time_start AS time_start,
-      d.time_stop AS time_stop,
-      d.week_day AS week_day
+      d.time_stop AS time_stop
     FROM games g
     LEFT JOIN dates d ON d.object_type = 'game' AND d.object_id = g.id
     LEFT JOIN fields f ON f.id = g.field
@@ -156,8 +154,7 @@
       t_team.name_short AS team_short,
       d.date_on AS date_on,
       d.time_start AS time_start,
-      d.time_stop AS time_stop,
-      d.week_day AS week_day
+      d.time_stop AS time_stop
     FROM trainings t
     JOIN dates d ON d.object_type = 'training' AND d.object_id = t.id
     JOIN fields f ON f.id = t.field
@@ -300,8 +297,7 @@
       tx.place AS place,
       d.date_on AS date_on,
       d.time_start AS time_start,
-      d.time_stop AS time_stop,
-      d.week_day AS week_day
+      d.time_stop AS time_stop
     FROM events tx
     JOIN dates d ON d.object_type = 'event' AND d.object_id = tx.id
     JOIN " . $fields_to_tx . "
@@ -354,8 +350,7 @@
 			t_opponent.name AS opponent,
       d.date_on AS date_on,
       d.time_start AS time_start,
-      d.time_stop AS time_stop,
-      d.week_day AS week_day
+      d.time_stop AS time_stop
     FROM games tx
     JOIN dates d ON d.object_type = 'game' AND d.object_id = tx.id
     JOIN " . $fields_to_tx . "
@@ -586,8 +581,7 @@
       t_team.name_short AS team_short,
       d.date_on AS date_on,
       d.time_start AS time_start,
-      d.time_stop AS time_stop,
-      d.week_day AS week_day
+      d.time_stop AS time_stop
     FROM trainings tx
     JOIN dates d ON d.object_type = 'training' AND d.object_id = tx.id
     JOIN " . $fields_to_tx . "
