@@ -166,34 +166,79 @@
     $model = $_POST["model"];
     $action = $_POST["action"];
 
-    $object_cols = "";
-    $object_values = "";
-    $date_cols = "";
-    $date_values = "";
     $dated = (isset($_POST["date_on"]) && !empty($_POST["date_on"]));
 
-    foreach ($_POST as $key => $val) {
-      if (!in_array($key, ["model", "action", "date_on", "time_stop", "time_start"])) {
-        $object_cols .= $key . ",";
-        $object_values .= "'" . $val . "',";
-      }
+    if (!isset($_POST["id"]) || empty($_POST["id"])) {
+      $_POST["id"] = get_max_id ($model);
+    }
 
-      if ($dated) {
-        if (in_array($key, ["date_on", "time_stop", "time_start"])) {
-          $date_cols .= $key . ",";
-          $date_values .= ($key == "date_on") ? "'" . format_date_from_it($val) . "'," : "'" . $val . "',";
-        }
+    $repeat = 1;
+    if (isset($_POST["weekly"]) && $_POST["weekly"] == 1) {
+      if (isset($_POST["date_on"])) {echo $_POST["date_on"];
+        $next_year = date("Y") + 1;
+        $start_date = DateTime::createFromFormat('d/m/Y', $_POST["date_on"]);
+        $end_date = new DateTime($next_year . "-06-29");
+
+        // Calcola la differenza in giorni tra le due date
+        $interval = $start_date->diff($end_date);
+
+        // Calcola il numero di settimane, includendo sia la prima che l'ultima settimana
+        $repeat = ceil($interval->days / 7) + 1;
       }
     }
 
-    $sql_object = "INSERT INTO " . $rachid->pluralize($model) . " (" . trim($object_cols, ",") . ") VALUES (" . trim($object_values, ",") . ");";
+    $objects = "";
+    $dates = "";
+    for ($week = 0; $week < $repeat; $week++) {
+      // Se esiste weekly, incrementa il date_on di 7 giorni ogni iterazione
+      if (isset($_POST["date_on"])) {
+        if ($week > 0) {
+          // Incrementa di 7 giorni
+          $_POST["date_on"] = date('Y-m-d', strtotime($_POST["date_on"] . ' + 7 days'));
+        } else {
+          $_POST["date_on"] = format_date_from_it ($_POST["date_on"]);
+        }
+      }
+
+      $object_cols = "";
+      $object_values = "";
+      $date_cols = "";
+      $date_values = "";
+
+      // Genera le query di inserimento
+      foreach ($_POST as $key => $val) {
+        if (!in_array($key, ["model", "action", "id", "date_on", "time_stop", "time_start", "weekly"])) {
+          $object_cols .= $key . ",";
+          $object_values .= "'" . $val . "',";
+        }
+
+        if ($dated) {
+          if (in_array($key, ["date_on", "time_stop", "time_start"])) {
+            $date_cols .= $key . ",";
+            $date_values .= "'" . $val . "',";
+          }
+        }
+      }
+
+      // Query di inserimento nella tabella principale (pluralizzata)
+      $objects .= "(" . $_POST["id"] . "," . trim($object_values, ",") . "),";
+
+      // Se è datato, inserisce i dati nella tabella 'dates'
+      if ($dated) {
+        $dates .= "('" . $model . "', " . $_POST["id"] . ", " . trim($date_values, ",") . "),";
+      }
+
+      $_POST["id"]++;
+    }
+
+    // Query di inserimento nella tabella principale (pluralizzata)
+    $sql_object = "INSERT INTO " . $rachid->pluralize($model) . " (id," . trim($object_cols, ",") . ") VALUES " . trim($objects, ",");
     $result_object = $db_conn->query($sql_object);
 
-    $_POST["id"] = $db_conn->insert_id;
-
+    // Se è datato, inserisce i dati nella tabella 'dates'
     if ($dated) {
-      $sql_date = "INSERT INTO dates (object_type,object_id," . trim($date_cols, ",") . ") VALUES ('" . $model . "', " . $_POST["id"] . ", " . trim($date_values, ",") . ");";
-      $result_date = $db_conn->query($sql_date);
+        $sql_date = "INSERT INTO dates (object_type,object_id," . trim($date_cols, ",") . ") VALUES " . trim($dates, ",");
+        $result_date = $db_conn->query($sql_date);
     }
 
     $content = include($model . ".php");
@@ -942,50 +987,22 @@
     return $filename;
   }
 
-  function get_missing_image ($model_name) {
-
-    return $model_name == "account" ? "papero_vb.jpg" : "logo_big.jpg";
-  }
-
-  // Ritorna lista degli objectable per tipo
-  function get_objectables ($object_type, $object_id) {
+  function get_max_id ($model) {
 
     global $db_conn;
     $rachid = init_pluralizer();
 
-    if (empty($object_type)) {
+    $sql_max_id = "SELECT MAX(id) AS max_id FROM " . $rachid->pluralize($model);
+    $result = $db_conn->query($sql_max_id);
 
-      // Se non ci sono associazioni
-      return array();
+    if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      $id = $row['max_id'] + 1;
+    } else {
+      $id = 1;
     }
 
-    $cols = $object_type == "team" ? "name, name_short" : "name";
-    // Se il file è associato ad un objectables
-    $sql = "SELECT id, " . $cols . " FROM " . $rachid->pluralize($object_type) . " WHERE id=" . $object_id;
-    $result = $db_conn->query($sql);
-    $item_associated = $result->fetch_array();
-
-    return $item_associated;
-  }
-
-  // Ritorna i dati dell'objectable di uno specifico oggetto
-  function get_object_related_data ($data_type, $object_type, $object_id) {
-
-    global $db_conn;
-    $rachid = init_pluralizer();
-
-    if (empty($object_type)) {
-
-      // Se non ci sono associazioni
-      return array();
-    }
-
-    // Se l'oggetto esiste, chiediamo i dati correlati
-    $sql = "SELECT * FROM " . $data_type . " WHERE " . $object_type . "_id=" . $object_id;
-    $result = $db_conn->query($sql);
-    $item_associated = $result->fetch_array();
-
-    return $item_associated;
+    return $id;
   }
 
   // Ritorna la tabella dei file media desiderati
@@ -1068,6 +1085,52 @@
     }
 
     return $results;
+  }
+
+  function get_missing_image ($model_name) {
+
+    return $model_name == "account" ? "papero_vb.jpg" : "logo_big.jpg";
+  }
+
+  // Ritorna lista degli objectable per tipo
+  function get_objectables ($object_type, $object_id) {
+
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    if (empty($object_type)) {
+
+      // Se non ci sono associazioni
+      return array();
+    }
+
+    $cols = $object_type == "team" ? "name, name_short" : "name";
+    // Se il file è associato ad un objectables
+    $sql = "SELECT id, " . $cols . " FROM " . $rachid->pluralize($object_type) . " WHERE id=" . $object_id;
+    $result = $db_conn->query($sql);
+    $item_associated = $result->fetch_array();
+
+    return $item_associated;
+  }
+
+  // Ritorna i dati dell'objectable di uno specifico oggetto
+  function get_object_related_data ($data_type, $object_type, $object_id) {
+
+    global $db_conn;
+    $rachid = init_pluralizer();
+
+    if (empty($object_type)) {
+
+      // Se non ci sono associazioni
+      return array();
+    }
+
+    // Se l'oggetto esiste, chiediamo i dati correlati
+    $sql = "SELECT * FROM " . $data_type . " WHERE " . $object_type . "_id=" . $object_id;
+    $result = $db_conn->query($sql);
+    $item_associated = $result->fetch_array();
+
+    return $item_associated;
   }
 
   // Recupera i dati dell'object
@@ -1269,19 +1332,6 @@
     return $team_ids;
   }
 
-  // Ritorna le squadre associate ad un profilo
-  function handled_teams ($account_id) {
-    global $db_conn;
-    global $sql_account_teams;
-
-    if (!isset($account_id)) { $account_id = get_account_id(); }
-
-    $sql = $sql_account_teams . " WHERE r.account_id = '" . $account_id . "';";
-    $result = do_ask($sql);
-
-    return $result;
-  }
-
   // Inizializza un tabellone elettronico
   function init_eboard () {
   }
@@ -1373,7 +1423,7 @@
     return filter_var($variable, FILTER_VALIDATE_INT) !== false && $variable > 0;
   }
 
-  // Ritora il numero di maglia
+  // Ritorna il numero di maglia
   function jersey_number ($nr) {
     return !empty($nr) ? $nr : "-";
   }
